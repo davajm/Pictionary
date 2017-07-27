@@ -12,8 +12,11 @@ namespace Pictionary
 {
     public partial class main : Form
     {
+        ErrorProvider ep;
         public main()
         {
+            ep = new ErrorProvider();
+            ep.BlinkStyle = ErrorBlinkStyle.NeverBlink;
             InitializeComponent();
         }
 
@@ -46,14 +49,57 @@ namespace Pictionary
 
         private void btnHost_Click(object sender, EventArgs e)
         {
-            Client ng = new Client(true, txtHostName.Text);
+            int errors = 0;
+            ep.Clear();
+
+            if (txtHostName.TextLength <= 0)
+            {
+                ep.SetError(txtHostName, "Please provide a name");
+                errors++;
+            }
+            if (txtHostPort.TextLength <= 0)
+            {
+                ep.SetError(txtHostPort, "Please provide a port number");
+                errors++;
+            }
+
+            if (errors > 0)
+            {
+                return;
+            }
+
+            Client ng = new Client(true, txtHostName.Text, Int32.Parse(txtHostPort.Text));
             ng.Show();
         }
 
         private void btnJoin_Click(object sender, EventArgs e)
         {
-            Client ng = new Client(false, txtJoinName.Text);
+            int errors = 0;
+            ep.Clear();
+            if (txtJoinName.TextLength <= 0)
+            {
+                ep.SetError(txtHostName, "Please provide a name");
+                errors++;
+            }
+            if (txtJoinPort.TextLength <= 0)
+            {
+                ep.SetError(txtHostPort, "Please provide a port number");
+                errors++;
+            }   
+            if (errors > 0)
+            {
+                return;
+            }
+            Client ng = new Client(false, txtJoinName.Text, Int32.Parse(txtJoinPort.Text));
             ng.Show();
+        }
+
+        private void IntOnly(object sender, KeyPressEventArgs e)
+        {
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
+            {
+                e.Handled = true;
+            }
         }
     }
 }

@@ -39,7 +39,7 @@
             this.btnJoin = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
-            this.textBox2 = new System.Windows.Forms.TextBox();
+            this.txtJoinPort = new System.Windows.Forms.TextBox();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.grpHostGame = new System.Windows.Forms.GroupBox();
             this.label8 = new System.Windows.Forms.Label();
@@ -52,7 +52,7 @@
             this.textBox7 = new System.Windows.Forms.TextBox();
             this.textBox5 = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
-            this.textBox3 = new System.Windows.Forms.TextBox();
+            this.txtHostPort = new System.Windows.Forms.TextBox();
             this.groupBox1.SuspendLayout();
             this.grpJoinGame.SuspendLayout();
             this.grpHostGame.SuspendLayout();
@@ -121,12 +121,12 @@
             this.grpJoinGame.Controls.Add(this.btnJoin);
             this.grpJoinGame.Controls.Add(this.label3);
             this.grpJoinGame.Controls.Add(this.label2);
-            this.grpJoinGame.Controls.Add(this.textBox2);
+            this.grpJoinGame.Controls.Add(this.txtJoinPort);
             this.grpJoinGame.Controls.Add(this.textBox1);
             this.grpJoinGame.Enabled = false;
-            this.grpJoinGame.Location = new System.Drawing.Point(355, 30);
+            this.grpJoinGame.Location = new System.Drawing.Point(281, 12);
             this.grpJoinGame.Name = "grpJoinGame";
-            this.grpJoinGame.Size = new System.Drawing.Size(507, 204);
+            this.grpJoinGame.Size = new System.Drawing.Size(648, 599);
             this.grpJoinGame.TabIndex = 6;
             this.grpJoinGame.TabStop = false;
             this.grpJoinGame.Visible = false;
@@ -135,7 +135,7 @@
             // 
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(337, 79);
+            this.label4.Location = new System.Drawing.Point(192, 215);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(51, 20);
             this.label4.TabIndex = 19;
@@ -143,7 +143,7 @@
             // 
             // txtJoinName
             // 
-            this.txtJoinName.Location = new System.Drawing.Point(341, 102);
+            this.txtJoinName.Location = new System.Drawing.Point(196, 238);
             this.txtJoinName.Name = "txtJoinName";
             this.txtJoinName.Size = new System.Drawing.Size(160, 20);
             this.txtJoinName.TabIndex = 18;
@@ -151,7 +151,7 @@
             // btnJoin
             // 
             this.btnJoin.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnJoin.Location = new System.Drawing.Point(107, 136);
+            this.btnJoin.Location = new System.Drawing.Point(255, 353);
             this.btnJoin.Name = "btnJoin";
             this.btnJoin.Size = new System.Drawing.Size(101, 33);
             this.btnJoin.TabIndex = 16;
@@ -163,7 +163,7 @@
             // 
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(194, 19);
+            this.label3.Location = new System.Drawing.Point(379, 276);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(38, 20);
             this.label3.TabIndex = 8;
@@ -173,22 +173,24 @@
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(19, 19);
+            this.label2.Location = new System.Drawing.Point(192, 276);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(85, 20);
             this.label2.TabIndex = 7;
             this.label2.Text = "IP address";
             // 
-            // textBox2
+            // txtJoinPort
             // 
-            this.textBox2.Location = new System.Drawing.Point(198, 42);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(51, 20);
-            this.textBox2.TabIndex = 6;
+            this.txtJoinPort.Location = new System.Drawing.Point(383, 299);
+            this.txtJoinPort.MaxLength = 5;
+            this.txtJoinPort.Name = "txtJoinPort";
+            this.txtJoinPort.Size = new System.Drawing.Size(51, 20);
+            this.txtJoinPort.TabIndex = 6;
+            this.txtJoinPort.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.IntOnly);
             // 
             // textBox1
             // 
-            this.textBox1.Location = new System.Drawing.Point(23, 42);
+            this.textBox1.Location = new System.Drawing.Point(196, 299);
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(160, 20);
             this.textBox1.TabIndex = 5;
@@ -205,11 +207,11 @@
             this.grpHostGame.Controls.Add(this.textBox7);
             this.grpHostGame.Controls.Add(this.textBox5);
             this.grpHostGame.Controls.Add(this.label1);
-            this.grpHostGame.Controls.Add(this.textBox3);
+            this.grpHostGame.Controls.Add(this.txtHostPort);
             this.grpHostGame.Enabled = false;
-            this.grpHostGame.Location = new System.Drawing.Point(324, 264);
+            this.grpHostGame.Location = new System.Drawing.Point(281, 12);
             this.grpHostGame.Name = "grpHostGame";
-            this.grpHostGame.Size = new System.Drawing.Size(567, 347);
+            this.grpHostGame.Size = new System.Drawing.Size(648, 599);
             this.grpHostGame.TabIndex = 7;
             this.grpHostGame.TabStop = false;
             this.grpHostGame.Visible = false;
@@ -218,7 +220,7 @@
             // 
             this.label8.AutoSize = true;
             this.label8.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label8.Location = new System.Drawing.Point(17, 16);
+            this.label8.Location = new System.Drawing.Point(207, 150);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(51, 20);
             this.label8.TabIndex = 17;
@@ -226,14 +228,14 @@
             // 
             // txtHostName
             // 
-            this.txtHostName.Location = new System.Drawing.Point(21, 39);
+            this.txtHostName.Location = new System.Drawing.Point(211, 173);
             this.txtHostName.Name = "txtHostName";
             this.txtHostName.Size = new System.Drawing.Size(160, 20);
             this.txtHostName.TabIndex = 16;
             // 
             // numericUpDown1
             // 
-            this.numericUpDown1.Location = new System.Drawing.Point(21, 255);
+            this.numericUpDown1.Location = new System.Drawing.Point(211, 389);
             this.numericUpDown1.Name = "numericUpDown1";
             this.numericUpDown1.Size = new System.Drawing.Size(209, 20);
             this.numericUpDown1.TabIndex = 6;
@@ -241,7 +243,7 @@
             // btnHost
             // 
             this.btnHost.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnHost.Location = new System.Drawing.Point(80, 306);
+            this.btnHost.Location = new System.Drawing.Point(270, 440);
             this.btnHost.Name = "btnHost";
             this.btnHost.Size = new System.Drawing.Size(101, 33);
             this.btnHost.TabIndex = 15;
@@ -253,7 +255,7 @@
             // 
             this.label7.AutoSize = true;
             this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label7.Location = new System.Drawing.Point(17, 232);
+            this.label7.Location = new System.Drawing.Point(207, 366);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(113, 20);
             this.label7.TabIndex = 14;
@@ -263,7 +265,7 @@
             // 
             this.label6.AutoSize = true;
             this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label6.Location = new System.Drawing.Point(17, 122);
+            this.label6.Location = new System.Drawing.Point(207, 256);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(96, 20);
             this.label6.TabIndex = 13;
@@ -273,7 +275,7 @@
             // 
             this.label5.AutoSize = true;
             this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label5.Location = new System.Drawing.Point(17, 176);
+            this.label5.Location = new System.Drawing.Point(207, 310);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(78, 20);
             this.label5.TabIndex = 12;
@@ -281,7 +283,7 @@
             // 
             // textBox7
             // 
-            this.textBox7.Location = new System.Drawing.Point(21, 199);
+            this.textBox7.Location = new System.Drawing.Point(211, 333);
             this.textBox7.Name = "textBox7";
             this.textBox7.Size = new System.Drawing.Size(209, 20);
             this.textBox7.TabIndex = 11;
@@ -289,7 +291,7 @@
             // 
             // textBox5
             // 
-            this.textBox5.Location = new System.Drawing.Point(21, 145);
+            this.textBox5.Location = new System.Drawing.Point(211, 279);
             this.textBox5.Name = "textBox5";
             this.textBox5.Size = new System.Drawing.Size(209, 20);
             this.textBox5.TabIndex = 9;
@@ -298,26 +300,28 @@
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(17, 66);
+            this.label1.Location = new System.Drawing.Point(207, 200);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(96, 20);
             this.label1.TabIndex = 8;
             this.label1.Text = "Port number";
             // 
-            // textBox3
+            // txtHostPort
             // 
-            this.textBox3.Location = new System.Drawing.Point(21, 89);
-            this.textBox3.Name = "textBox3";
-            this.textBox3.Size = new System.Drawing.Size(209, 20);
-            this.textBox3.TabIndex = 6;
+            this.txtHostPort.Location = new System.Drawing.Point(211, 223);
+            this.txtHostPort.MaxLength = 5;
+            this.txtHostPort.Name = "txtHostPort";
+            this.txtHostPort.Size = new System.Drawing.Size(209, 20);
+            this.txtHostPort.TabIndex = 6;
+            this.txtHostPort.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.IntOnly);
             // 
             // main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(932, 623);
-            this.Controls.Add(this.grpHostGame);
             this.Controls.Add(this.groupBox1);
+            this.Controls.Add(this.grpHostGame);
             this.Controls.Add(this.grpJoinGame);
             this.Name = "main";
             this.Text = "Pictionary";
@@ -342,7 +346,7 @@
         private System.Windows.Forms.GroupBox grpJoinGame;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.TextBox textBox2;
+        private System.Windows.Forms.TextBox txtJoinPort;
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.GroupBox grpHostGame;
         private System.Windows.Forms.Label label8;
@@ -355,7 +359,7 @@
         private System.Windows.Forms.TextBox textBox7;
         private System.Windows.Forms.TextBox textBox5;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.TextBox textBox3;
+        private System.Windows.Forms.TextBox txtHostPort;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.TextBox txtJoinName;
         private System.Windows.Forms.Button btnJoin;

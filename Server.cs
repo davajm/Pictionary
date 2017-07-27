@@ -34,21 +34,21 @@ namespace Pictionary
 
 
 
-        public Server()
+        public Server(int port)
         {
             clients = new List<ClientInfo>();
             state = State.WaitingForPlayers;
-            StartServer();
+            StartServer(port);
         }
-        private void StartServer()
+        private void StartServer(int port)
         {
             try
             {
                 //We are using TCP sockets
                 server = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
-                //Assign the any IP of the machine and listen on port number 1000
-                IPEndPoint ipEndPoint = new IPEndPoint(IPAddress.Any, 1000);
+                //Assign the any IP of the machine and listen on provided port
+                IPEndPoint ipEndPoint = new IPEndPoint(IPAddress.Any, port);
 
                 //Bind and listen on the given address
                 server.Bind(ipEndPoint);

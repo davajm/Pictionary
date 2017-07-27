@@ -26,21 +26,21 @@ namespace Pictionary
         private byte[] byteData = new byte[1024];
 
 
-        public Client(bool isServer, string userName)
+        public Client(bool isServer, string userName, int port)
         {
             this.isServer = isServer;
             this.userName = userName;
             if (isServer)
             {
-                server = new Server();
+                server = new Server(port);
             }
             byteData = new byte[1024];
             InitializeComponent();
-            ConnectToServer();
+            ConnectToServer(port);
             playerList.AddPlayer(userName);
         }
 
-        private void ConnectToServer()
+        private void ConnectToServer(int port)
         {
             try
             {
@@ -49,7 +49,7 @@ namespace Pictionary
                 IPAddress ipAddress = IPAddress.Parse("127.0.0.1");
 
                 //Server is listening on port 1000
-                IPEndPoint ipEndPoint = new IPEndPoint(ipAddress, 1000);
+                IPEndPoint ipEndPoint = new IPEndPoint(ipAddress, port);
 
                 //Connect to the server
                 client.BeginConnect(ipEndPoint, new AsyncCallback(OnConnect), null);
@@ -127,6 +127,9 @@ namespace Pictionary
                         playerList.Invoke((MethodInvoker)delegate {
                             playerList.AddPlayer(msgReceived.strName);
                         });
+                        chat.Invoke((MethodInvoker)delegate {
+                            chat.Text += "<<<" + msgReceived.strName + " has joined the room>>>\r\n";
+                        });
                         break;
 
                     // If a user has disconnected
@@ -160,9 +163,6 @@ namespace Pictionary
                             {
                                 playerList.AddPlayer(names[i]);
                             }
-                        });
-                        chat.Invoke((MethodInvoker)delegate {
-                            chat.Text += "<<<" + msgReceived.strName + " has joined the room>>>\r\n";
                         });
                         break;
                 }
