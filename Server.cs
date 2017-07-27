@@ -12,19 +12,32 @@ namespace Pictionary
 {
     class Server
     {
-        struct ClientInfo
+        public class ClientInfo
         {
-            public Socket socket;   //Socket of the client
-            public string strName;  //Name by which the user logged into the chat room
+            public Socket socket;   // Socket of the client
+            public string strName;  // Username
+            public bool isReady;    // Ready for game sta
+            public int score;       // User score
+            public bool isDrawing;  // Determines if the user is currently drawing
+        }
+        enum State
+        {
+            WaitingForPlayers,
+            ChoosingWord,
+            Drawing
         }
 
         List<ClientInfo> clients;
         Socket server;
         byte[] byteData = new byte[1024];
+        State state;
+
+
 
         public Server()
         {
             clients = new List<ClientInfo>();
+            state = State.WaitingForPlayers;
             StartServer();
         }
         private void StartServer()
@@ -80,6 +93,42 @@ namespace Pictionary
             }
         }
 
+        /// <summary>
+        /// Function to start a new game
+        /// </summary>
+        /// <param name="rounds"> Amount of rounds </param>
+        /// <param name="time"> Time per round in seconds </param>
+        private void NewGame(int rounds, int time)
+        {
+            for (int i = 0; i < rounds; i++)
+            {
+                foreach (ClientInfo client in clients)
+                {
+                    client.isDrawing = true;
+
+                    Data msgToSend = new Data();
+                    byte[] message;
+
+                    msgToSend.cmdCommand = Command.Drawing;
+                    msgToSend.strMessage = null;
+                    msgToSend.strName = client.strName;
+
+                    message = msgToSend.ToByte();
+
+                    foreach (ClientInfo clientInfo in clients)
+                    {
+                        if (client != clientInfo)
+                        {
+                            client.isDrawing = false;
+                        }
+                        //Send the message to all users
+                        clientInfo.socket.BeginSend(message, 0, message.Length, SocketFlags.None, new AsyncCallback(OnSend), clientInfo.socket);
+                    }
+                    Thread.Sleep(time*1000);
+                }
+            }
+        }
+
         private void OnReceive(IAsyncResult ar)
         {
             try
@@ -111,11 +160,11 @@ namespace Pictionary
                         ClientInfo clientInfo = new ClientInfo();
                         clientInfo.socket = clientSocket;
                         clientInfo.strName = msgReceived.strName;
+                        clientInfo.score = 0;
+                        clientInfo.isReady = false;
+                        clientInfo.isDrawing = false;
 
                         clients.Add(clientInfo);
-
-                        //Set the text of the message that we will broadcast to all users
-                        msgToSend.strMessage = "<<<" + msgReceived.strName + " has joined the room>>>";
                         break;
 
                     case Command.Logout:
@@ -123,15 +172,13 @@ namespace Pictionary
                         //When a user wants to log out of the server then we search for her 
                         //in the list of clients and close the corresponding connection
 
-                        int nIndex = 0;
                         foreach (ClientInfo client in clients)
                         {
                             if (client.socket == clientSocket)
                             {
-                                clients.RemoveAt(nIndex);
+                                clients.Remove(client);
                                 break;
                             }
-                            ++nIndex;
                         }
 
                         clientSocket.Close();
@@ -143,6 +190,17 @@ namespace Pictionary
 
                         //Set the text of the message that we will broadcast to all users
                         msgToSend.strMessage = msgReceived.strName + ": " + msgReceived.strMessage;
+                        break;
+
+                    case Command.Ready:
+                        foreach (ClientInfo client in clients)
+                        {
+                            if (client.socket == clientSocket)
+                            {
+                                client.isReady = true;
+                                break;
+                            }
+                        }
                         break;
 
                     case Command.List:
@@ -177,8 +235,7 @@ namespace Pictionary
                             msgToSend.cmdCommand != Command.Login)
                         {
                             //Send the message to all users
-                            clientInfo.socket.BeginSend(message, 0, message.Length, SocketFlags.None,
-                                new AsyncCallback(OnSend), clientInfo.socket);
+                            clientInfo.socket.BeginSend(message, 0, message.Length, SocketFlags.None, new AsyncCallback(OnSend), clientInfo.socket);
                         }
                     }
                 }
@@ -188,6 +245,35 @@ namespace Pictionary
                 {
                     //Start listening to the message send by the user
                     clientSocket.BeginReceive(byteData, 0, byteData.Length, SocketFlags.None, new AsyncCallback(OnReceive), clientSocket);
+                }
+
+                // Check if all players are ready
+                if (state == State.WaitingForPlayers)
+                {
+                    bool startGame = true;
+                    foreach (ClientInfo client in clients)
+                    {
+                        if (!client.isReady)
+                        {
+                            startGame = false;
+                            break;
+                        }
+                    }
+                    if (startGame) // New game
+                    {
+                        msgToSend.cmdCommand = Command.StartGame;
+                        msgToSend.strMessage = null;
+                        msgToSend.strName = null;
+                        message = msgToSend.ToByte();
+
+                        foreach (ClientInfo clientInfo in clients)
+                        {
+                            //Send the message to all users
+                            clientInfo.socket.BeginSend(message, 0, message.Length, SocketFlags.None, new AsyncCallback(OnSend), clientInfo.socket);
+                        }
+                        state = State.Drawing;
+                        NewGame(10, 2);
+                    }
                 }
             }
             catch (Exception ex)

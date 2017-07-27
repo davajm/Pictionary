@@ -8,17 +8,22 @@ namespace Pictionary
 {
     public enum Command
     {
-        Login,      //Log into the server
-        Logout,     //Logout of the server
-        Message,    //Send a text message to all the chat clients
-        List,       //Get a list of users in the chat room from the server
-        Null        //No command
+        Login,          // Login to server
+        Logout,         // Logout of the server
+        Message,        // Send message (used for chatting)
+        List,           // Get a list of all the users in the game
+        Ready,          // Indicates that user is ready for a new game
+        StartGame,      // Indicates the start of the game
+        StopGame,       // Stops game
+        Drawing,        // Indicates the user that's currently drawing
+        StopDrawing,    // Round's over, stop drawing
+        Null            // No command
     }
     public class Data  
     {
         public string strName;      //Name by which the client logs into the room
         public string strMessage;   //Message text
-        public Command cmdCommand;  //Command type (login, logout, send message, etcetera)
+        public Command cmdCommand;  //Command type (see above)
 
         public Data()
         {

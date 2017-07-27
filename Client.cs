@@ -21,6 +21,7 @@ namespace Pictionary
         // Client
         Socket client;
         string userName;
+        bool connected = false;
 
         private byte[] byteData = new byte[1024];
 
@@ -36,6 +37,7 @@ namespace Pictionary
             byteData = new byte[1024];
             InitializeComponent();
             ConnectToServer();
+            playerList.AddPlayer(userName);
         }
 
         private void ConnectToServer()
@@ -80,6 +82,7 @@ namespace Pictionary
             {
                 client.EndConnect(ar);
                 SendMessage(null, Command.Login);
+                connected = true;
             }
             catch (Exception ex)
             {
@@ -122,24 +125,41 @@ namespace Pictionary
                     // If a new user has connected
                     case Command.Login:
                         playerList.Invoke((MethodInvoker)delegate {
-                            playerList.Items.Add(msgReceived.strName);
+                            playerList.AddPlayer(msgReceived.strName);
                         });
                         break;
 
                     // If a user has disconnected
                     case Command.Logout:
-                        playerList.Invoke((MethodInvoker)delegate {
-                            playerList.Items.Remove(msgReceived.strName);
+                        playerList.Invoke((MethodInvoker)delegate
+                        {
+                            playerList.RemovePlayer(msgReceived.strName);
                         });
+                        break;
+                    case Command.Drawing:
+                        //playerList.Invoke((MethodInvoker)delegate {
+                        //    playerList.ClearSelected();
+                        //    playerList.SelectedItem = msgReceived.strName;
+                        //});
                         break;
 
                     case Command.Message:
                         break;
+                    case Command.Ready:
+                        playerList.Invoke((MethodInvoker)delegate
+                        {
+                            playerList.Ready(msgReceived.strName);
+                        });
+                        break;
 
                     case Command.List:
-                        playerList.Invoke((MethodInvoker)delegate {
-                            playerList.Items.AddRange(msgReceived.strMessage.Split('*'));
-                            playerList.Items.RemoveAt(playerList.Items.Count - 1);
+                        playerList.Invoke((MethodInvoker)delegate
+                        {
+                            string[] names = msgReceived.strMessage.Split('*');
+                            for (int i = 0; i < names.Length-2; i++)
+                            {
+                                playerList.AddPlayer(names[i]);
+                            }
                         });
                         chat.Invoke((MethodInvoker)delegate {
                             chat.Text += "<<<" + msgReceived.strName + " has joined the room>>>\r\n";
@@ -178,11 +198,24 @@ namespace Pictionary
 
         private void Client_Load(object sender, EventArgs e)
         {
-            // Get list of players when the client has loaded
-            SendMessage(null, Command.List);
+            // Start receiving from server when client has loaded
+            if (connected)
+            {
+                // Get list of players
+                SendMessage(null, Command.List);
 
-            // Start receiving from server
-            client.BeginReceive(byteData, 0, byteData.Length, SocketFlags.None, new AsyncCallback(OnReceive), null);
+                // Begin listening
+                client.BeginReceive(byteData, 0, byteData.Length, SocketFlags.None, new AsyncCallback(OnReceive), null);
+            }
+            else
+            {
+                Close();
+            }
+        }
+
+        private void btnReady_Click(object sender, EventArgs e)
+        {
+            SendMessage(null, Command.Ready);
         }
     }
 }
