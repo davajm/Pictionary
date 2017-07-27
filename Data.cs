@@ -21,9 +21,10 @@ namespace Pictionary
     }
     public class Data  
     {
-        public string strName;      //Name by which the client logs into the room
-        public string strMessage;   //Message text
-        public Command cmdCommand;  //Command type (see above)
+        public string strName;      // Name by which the client logs into the room
+        public string strMessage;   // Message text
+        public Command cmdCommand;  // Command type (see above)
+        public int x1, x2, y1, y2;  // Coordinates for drawing
 
         public Data()
         {
@@ -32,8 +33,19 @@ namespace Pictionary
             this.strName = null;
         }
 
-        //Converts the bytes into an object of type Data
-        public Data(byte[] data)
+        public Data(byte[] data, bool isDrawPacket)
+        {
+            if (isDrawPacket)
+            {
+
+            }
+            else
+            {
+                MessagePacket(data);
+            }
+        }
+
+        public void MessagePacket(byte[] data)
         {
             //The first four bytes are for the Command
             this.cmdCommand = (Command)BitConverter.ToInt32(data, 0);
@@ -56,6 +68,12 @@ namespace Pictionary
             else
                 this.strMessage = null;
         }
+
+        private void DrawingPacket(byte[] data)
+        {
+
+        }
+
 
         //Converts the Data structure into an array of bytes
         public byte[] ToByte()

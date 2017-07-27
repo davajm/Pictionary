@@ -138,7 +138,7 @@ namespace Pictionary
 
                 //Transform the array of bytes received from the user into an
                 //intelligent form of object Data
-                Data msgReceived = new Data(byteData);
+                Data msgReceived = new Data(byteData, false);
 
                 //We will send this object in response the users request
                 Data msgToSend = new Data();

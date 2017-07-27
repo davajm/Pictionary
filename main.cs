@@ -68,7 +68,7 @@ namespace Pictionary
                 return;
             }
 
-            Client ng = new Client(true, txtHostName.Text, Int32.Parse(txtHostPort.Text));
+            Client ng = new Client(true, txtHostName.Text, "", Int32.Parse(txtHostPort.Text));
             ng.Show();
         }
 
@@ -78,20 +78,21 @@ namespace Pictionary
             ep.Clear();
             if (txtJoinName.TextLength <= 0)
             {
-                ep.SetError(txtHostName, "Please provide a name");
+                ep.SetError(txtJoinName, "Please provide a name");
                 errors++;
             }
             if (txtJoinPort.TextLength <= 0)
             {
-                ep.SetError(txtHostPort, "Please provide a port number");
+                ep.SetError(txtJoinPort, "Please provide a port number");
                 errors++;
             }   
             if (errors > 0)
             {
                 return;
             }
-            Client ng = new Client(false, txtJoinName.Text, Int32.Parse(txtJoinPort.Text));
+            Client ng = new Client(false, txtJoinName.Text, txtJoinIP.Text, Int32.Parse(txtJoinPort.Text));
             ng.Show();
+            this.Hide();
         }
 
         private void IntOnly(object sender, KeyPressEventArgs e)

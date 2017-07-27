@@ -40,7 +40,7 @@
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.txtJoinPort = new System.Windows.Forms.TextBox();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.txtJoinIP = new System.Windows.Forms.TextBox();
             this.grpHostGame = new System.Windows.Forms.GroupBox();
             this.label8 = new System.Windows.Forms.Label();
             this.txtHostName = new System.Windows.Forms.TextBox();
@@ -122,7 +122,7 @@
             this.grpJoinGame.Controls.Add(this.label3);
             this.grpJoinGame.Controls.Add(this.label2);
             this.grpJoinGame.Controls.Add(this.txtJoinPort);
-            this.grpJoinGame.Controls.Add(this.textBox1);
+            this.grpJoinGame.Controls.Add(this.txtJoinIP);
             this.grpJoinGame.Enabled = false;
             this.grpJoinGame.Location = new System.Drawing.Point(281, 12);
             this.grpJoinGame.Name = "grpJoinGame";
@@ -188,12 +188,12 @@
             this.txtJoinPort.TabIndex = 6;
             this.txtJoinPort.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.IntOnly);
             // 
-            // textBox1
+            // txtJoinIP
             // 
-            this.textBox1.Location = new System.Drawing.Point(196, 299);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(160, 20);
-            this.textBox1.TabIndex = 5;
+            this.txtJoinIP.Location = new System.Drawing.Point(196, 299);
+            this.txtJoinIP.Name = "txtJoinIP";
+            this.txtJoinIP.Size = new System.Drawing.Size(160, 20);
+            this.txtJoinIP.TabIndex = 5;
             // 
             // grpHostGame
             // 
@@ -321,8 +321,8 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(932, 623);
             this.Controls.Add(this.groupBox1);
-            this.Controls.Add(this.grpHostGame);
             this.Controls.Add(this.grpJoinGame);
+            this.Controls.Add(this.grpHostGame);
             this.Name = "main";
             this.Text = "Pictionary";
             this.groupBox1.ResumeLayout(false);
@@ -347,7 +347,7 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox txtJoinPort;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox txtJoinIP;
         private System.Windows.Forms.GroupBox grpHostGame;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.TextBox txtHostName;

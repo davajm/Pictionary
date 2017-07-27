@@ -22,6 +22,7 @@ namespace Pictionary
             this.name = name;
             InitializeComponent();
             lblName.Text = name;
+            lblScore.Text = "0";
         }
 
         public string GetName()

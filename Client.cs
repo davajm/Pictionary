@@ -26,7 +26,15 @@ namespace Pictionary
         private byte[] byteData = new byte[1024];
 
 
-        public Client(bool isServer, string userName, int port)
+        // Drawing stuff
+        private Graphics g;
+        Point p1 = new Point();
+        Point p2 = new Point();
+        bool down = false;
+
+
+
+        public Client(bool isServer, string userName, string ip, int port)
         {
             this.isServer = isServer;
             this.userName = userName;
@@ -36,17 +44,26 @@ namespace Pictionary
             }
             byteData = new byte[1024];
             InitializeComponent();
-            ConnectToServer(port);
+            ConnectToServer(ip, port);
             playerList.AddPlayer(userName);
+            g = drawingBoard.CreateGraphics();
         }
 
-        private void ConnectToServer(int port)
+        private void ConnectToServer(string ip, int port)
         {
             try
             {
                 client = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
-                IPAddress ipAddress = IPAddress.Parse("127.0.0.1");
+                IPAddress ipAddress;
+                if (ip == "")
+                {
+                    ipAddress = IPAddress.Parse("127.0.0.1");
+                }
+                else
+                {
+                    ipAddress = IPAddress.Parse(ip);
+                }
 
                 //Server is listening on port 1000
                 IPEndPoint ipEndPoint = new IPEndPoint(ipAddress, port);
@@ -118,7 +135,7 @@ namespace Pictionary
             {
                 client.EndReceive(ar);
 
-                Data msgReceived = new Data(byteData);
+                Data msgReceived = new Data(byteData, false);
                 //Accordingly process the message received
                 switch (msgReceived.cmdCommand)
                 {
@@ -216,6 +233,36 @@ namespace Pictionary
         private void btnReady_Click(object sender, EventArgs e)
         {
             SendMessage(null, Command.Ready);
+        }
+
+        private void drawingBoard_MouseMove(object sender, MouseEventArgs e)
+        {
+            System.Drawing.SolidBrush myBrush = new System.Drawing.SolidBrush(System.Drawing.Color.Red);
+            Rectangle r = new Rectangle();
+
+            switch (e.Button)
+            {
+                case MouseButtons.Left:
+
+                    if (down)
+                    {
+                        p2.X = e.X; p2.Y = e.Y;
+                        g.DrawLine(System.Drawing.Pens.Black, p1, p2);
+                    }
+                    down = true;
+                    p1.X = e.X; p1.Y = e.Y;
+                    break;
+            }
+        }
+
+        private void drawingBoard_MouseUp(object sender, MouseEventArgs e)
+        {
+            down = false;
+        }
+
+        private void drawingBoard_MouseDown(object sender, MouseEventArgs e)
+        {
+            g.FillRectangle(System.Drawing.Brushes.Black, e.X, e.Y, 1, 1);
         }
     }
 }
