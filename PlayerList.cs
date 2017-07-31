@@ -30,11 +30,12 @@ namespace Pictionary
         // Remove a player from game
         public void RemovePlayer(string name)
         {
-            foreach(Player p in players)
+            for (int i = players.Count - 1; i > 0; i--)
             {
-                if (p.GetName() == name)
+                if (players[i].GetName() == name)
                 {
-                    players.Remove(p);
+                    players.RemoveAt(i);
+                    flpPlayers.Controls.RemoveAt(i);
                 }
             }
         }

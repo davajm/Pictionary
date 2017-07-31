@@ -14,67 +14,29 @@ namespace Pictionary
 {
     public partial class Client : Form
     {
-        // Server
-        bool isServer;
-        Server server;
-
         // Client
         Socket client;
         string userName;
-        bool connected = false;
 
         private byte[] byteData = new byte[1024];
 
-
         // Drawing stuff
         private Graphics g;
-        Point p1 = new Point();
-        Point p2 = new Point();
-        bool down = false;
+        List<List<Point>> allStrokes;  // All strokesk user has drawn
+        List<Point> currentStroke;     // Current stroke user is drawing
 
+        bool mouseDown, isDrawing;
 
-
-        public Client(bool isServer, string userName, string ip, int port)
+        public Client(string userName, Socket client)
         {
-            this.isServer = isServer;
             this.userName = userName;
-            if (isServer)
-            {
-                server = new Server(port);
-            }
+            this.client = client;
             byteData = new byte[1024];
+            SendMessage(null, Command.Login);
             InitializeComponent();
-            ConnectToServer(ip, port);
-            playerList.AddPlayer(userName);
+            allStrokes = new List<List<Point>>();
+            mouseDown = false;
             g = drawingBoard.CreateGraphics();
-        }
-
-        private void ConnectToServer(string ip, int port)
-        {
-            try
-            {
-                client = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-
-                IPAddress ipAddress;
-                if (ip == "")
-                {
-                    ipAddress = IPAddress.Parse("127.0.0.1");
-                }
-                else
-                {
-                    ipAddress = IPAddress.Parse(ip);
-                }
-
-                //Server is listening on port 1000
-                IPEndPoint ipEndPoint = new IPEndPoint(ipAddress, port);
-
-                //Connect to the server
-                client.BeginConnect(ipEndPoint, new AsyncCallback(OnConnect), null);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, "Pictionary", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
         }
 
         private void OnSend(IAsyncResult ar)
@@ -85,21 +47,6 @@ namespace Pictionary
             }
             catch (ObjectDisposedException)
             {
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, "Pictionary", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-
-
-        private void OnConnect(IAsyncResult ar)
-        {
-            try
-            {
-                client.EndConnect(ar);
-                SendMessage(null, Command.Login);
-                connected = true;
             }
             catch (Exception ex)
             {
@@ -134,8 +81,12 @@ namespace Pictionary
             try
             {
                 client.EndReceive(ar);
-
-                Data msgReceived = new Data(byteData, false);
+                Data msgReceived;
+                msgReceived = new Data(byteData, false);
+                if (msgReceived.cmdCommand == Command.Stroke || msgReceived.cmdCommand == Command.NewStroke)
+                {
+                    msgReceived = new Data(byteData, true);
+                }
                 //Accordingly process the message received
                 switch (msgReceived.cmdCommand)
                 {
@@ -145,7 +96,7 @@ namespace Pictionary
                             playerList.AddPlayer(msgReceived.strName);
                         });
                         chat.Invoke((MethodInvoker)delegate {
-                            chat.Text += "<<<" + msgReceived.strName + " has joined the room>>>\r\n";
+                            chat.Text += msgReceived.strName + " has joined the room\r\n";
                         });
                         break;
 
@@ -155,14 +106,26 @@ namespace Pictionary
                         {
                             playerList.RemovePlayer(msgReceived.strName);
                         });
+                        chat.Invoke((MethodInvoker)delegate {
+                            chat.Text += msgReceived.strName + " has left the room\r\n";
+                        });
                         break;
-                    case Command.Drawing:
-                        //playerList.Invoke((MethodInvoker)delegate {
-                        //    playerList.ClearSelected();
-                        //    playerList.SelectedItem = msgReceived.strName;
-                        //});
+                    case Command.NewStroke:
+                        drawingBoard.Invoke((MethodInvoker)delegate
+                        {
+                            currentStroke = new List<Point>();
+                            currentStroke.Add(msgReceived.p1);
+                            allStrokes.Add(currentStroke);
+                            drawingBoard.Invalidate();
+                        });
                         break;
-
+                    case Command.Stroke:
+                        drawingBoard.Invoke((MethodInvoker)delegate
+                        {
+                            currentStroke.Add(msgReceived.p1);
+                            drawingBoard.Invalidate();
+                        });
+                        break;
                     case Command.Message:
                         break;
                     case Command.Ready:
@@ -180,6 +143,7 @@ namespace Pictionary
                             {
                                 playerList.AddPlayer(names[i]);
                             }
+                            playerList.AddPlayer(userName);
                         });
                         break;
                 }
@@ -208,26 +172,25 @@ namespace Pictionary
         {
             if (e.KeyCode == Keys.Enter)
             {
-                SendMessage(input.Text, Command.Message);
-                input.Clear();
+                if (input.TextLength > 0)
+                {
+                    SendMessage(input.Text, Command.Message);
+                    input.Clear();
+                }
+                e.Handled = true;
+                e.SuppressKeyPress = true;
             }
         }
 
         private void Client_Load(object sender, EventArgs e)
         {
             // Start receiving from server when client has loaded
-            if (connected)
-            {
-                // Get list of players
-                SendMessage(null, Command.List);
 
-                // Begin listening
-                client.BeginReceive(byteData, 0, byteData.Length, SocketFlags.None, new AsyncCallback(OnReceive), null);
-            }
-            else
-            {
-                Close();
-            }
+            // Get list of players
+            SendMessage(null, Command.List);
+
+            // Begin listening
+            client.BeginReceive(byteData, 0, byteData.Length, SocketFlags.None, new AsyncCallback(OnReceive), null);
         }
 
         private void btnReady_Click(object sender, EventArgs e)
@@ -235,34 +198,110 @@ namespace Pictionary
             SendMessage(null, Command.Ready);
         }
 
-        private void drawingBoard_MouseMove(object sender, MouseEventArgs e)
-        {
-            System.Drawing.SolidBrush myBrush = new System.Drawing.SolidBrush(System.Drawing.Color.Red);
-            Rectangle r = new Rectangle();
-
-            switch (e.Button)
-            {
-                case MouseButtons.Left:
-
-                    if (down)
-                    {
-                        p2.X = e.X; p2.Y = e.Y;
-                        g.DrawLine(System.Drawing.Pens.Black, p1, p2);
-                    }
-                    down = true;
-                    p1.X = e.X; p1.Y = e.Y;
-                    break;
-            }
-        }
 
         private void drawingBoard_MouseUp(object sender, MouseEventArgs e)
         {
-            down = false;
+            mouseDown = false;
         }
 
         private void drawingBoard_MouseDown(object sender, MouseEventArgs e)
         {
-            g.FillRectangle(System.Drawing.Brushes.Black, e.X, e.Y, 1, 1);
+            mouseDown = true;
+
+            // Mouse is down, start a new stroke
+            currentStroke = new List<Point>();
+
+            // Add current position to stroke
+            currentStroke.Add(e.Location);
+
+            // Add stroke to the list
+            allStrokes.Add(currentStroke);
+            try
+            {
+                //Fill the info for the message to be send
+                Data msgToSend = new Data();
+
+                msgToSend.cmdCommand = Command.NewStroke;
+                msgToSend.strName = userName;
+                msgToSend.size = 0;
+                msgToSend.shape = 0;
+                msgToSend.p1 = e.Location;
+                msgToSend.color = Color.Black;
+
+                byte[] byteData = msgToSend.DrawingToByte();
+
+                //Send it to the server
+                client.BeginSend(byteData, 0, byteData.Length, SocketFlags.None, new AsyncCallback(OnSend), null);
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Unable to send message to the server.", "Pictionary", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void drawingBoard_MouseMove(object sender, MouseEventArgs e)
+        {
+            System.Drawing.SolidBrush myBrush = new System.Drawing.SolidBrush(System.Drawing.Color.Red);
+
+            if (mouseDown)
+            {
+                currentStroke.Add(e.Location);
+                drawingBoard.Invalidate();
+                try
+                {
+                    //Fill the info for the message to be send
+                    Data msgToSend = new Data();
+
+                    msgToSend.cmdCommand = Command.Stroke;
+                    msgToSend.strName = userName;
+                    msgToSend.size = 0;
+                    msgToSend.shape = 0;
+                    msgToSend.p1 = e.Location;
+                    msgToSend.color = Color.Black;
+
+                    byte[] byteData = msgToSend.DrawingToByte();
+
+                    //Send it to the server
+                    client.BeginSend(byteData, 0, byteData.Length, SocketFlags.None, new AsyncCallback(OnSend), null);
+                }
+                catch (Exception)
+                {
+                    MessageBox.Show("Unable to send message to the server.", "Pictionary", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+        }
+
+        private void Client_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (MessageBox.Show("Are you sure you want to exit?", "Pictionary", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.No)
+            {
+                e.Cancel = true;
+                return;
+            }
+            try
+            {
+                //Send a message to logout of the server
+                Data msgToSend = new Data();
+                msgToSend.cmdCommand = Command.Logout;
+                msgToSend.strName = userName;
+                msgToSend.strMessage = null;
+
+                byte[] b = msgToSend.ToByte();
+                client.Send(b, 0, b.Length, SocketFlags.None);
+                client.Close();
+            }
+            catch (ObjectDisposedException)
+            {}
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Pictionary", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void drawingBoard_Paint(object sender, PaintEventArgs e)
+        {
+            foreach (List<Point> stroke in allStrokes.Where(x => x.Count > 1))
+                e.Graphics.DrawLines(System.Drawing.Pens.Black, stroke.ToArray());
         }
     }
 }

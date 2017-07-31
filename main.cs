@@ -7,12 +7,18 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Net.Sockets;
+using System.Net;
 
 namespace Pictionary
 {
     public partial class main : Form
     {
         ErrorProvider ep;
+        Socket client;
+        Server server;
+        string username;
+    
         public main()
         {
             ep = new ErrorProvider();
@@ -67,9 +73,9 @@ namespace Pictionary
             {
                 return;
             }
-
-            Client ng = new Client(true, txtHostName.Text, "", Int32.Parse(txtHostPort.Text));
-            ng.Show();
+            username = txtHostName.Text;
+            server = new Server(Int32.Parse(txtHostPort.Text));
+            ConnectToServer("", Int32.Parse(txtHostPort.Text));
         }
 
         private void btnJoin_Click(object sender, EventArgs e)
@@ -81,6 +87,11 @@ namespace Pictionary
                 ep.SetError(txtJoinName, "Please provide a name");
                 errors++;
             }
+            if(txtJoinIP.TextLength <= 0)
+            {
+                ep.SetError(txtJoinIP, "Please provide an IP address");
+                errors++;
+            }
             if (txtJoinPort.TextLength <= 0)
             {
                 ep.SetError(txtJoinPort, "Please provide a port number");
@@ -90,9 +101,8 @@ namespace Pictionary
             {
                 return;
             }
-            Client ng = new Client(false, txtJoinName.Text, txtJoinIP.Text, Int32.Parse(txtJoinPort.Text));
-            ng.Show();
-            this.Hide();
+            username = txtJoinName.Text;
+            ConnectToServer(txtJoinIP.Text, Int32.Parse(txtJoinPort.Text));
         }
 
         private void IntOnly(object sender, KeyPressEventArgs e)
@@ -101,6 +111,61 @@ namespace Pictionary
             {
                 e.Handled = true;
             }
+        }
+
+        private void ConnectToServer(string ip, int port)
+        {
+            try
+            {
+                client = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+
+                IPAddress ipAddress;
+                if (ip == "")
+                {
+                    ipAddress = IPAddress.Parse("127.0.0.1");
+                }
+                else
+                {
+                    ipAddress = IPAddress.Parse(ip);
+                }
+
+                //Server is listening on port 1000
+                IPEndPoint ipEndPoint = new IPEndPoint(ipAddress, port);
+
+                //Connect to the server
+                client.BeginConnect(ipEndPoint, new AsyncCallback(OnConnect), null);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Pictionary", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void OnConnect(IAsyncResult ar)
+        {
+            try
+            {
+                client.EndConnect(ar);
+                this.Invoke((MethodInvoker)delegate {
+                    Client c = new Client(username, client);
+                    this.Hide();
+                    c.ShowDialog();
+                    if (server != null)
+                    {
+                        server.StopServer();
+                    }
+                    this.Show();
+                });
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Pictionary2", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+        private void main_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            Application.Exit();
         }
     }
 }

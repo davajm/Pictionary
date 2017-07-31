@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,16 +16,29 @@ namespace Pictionary
         Ready,          // Indicates that user is ready for a new game
         StartGame,      // Indicates the start of the game
         StopGame,       // Stops game
-        Drawing,        // Indicates the user that's currently drawing
+        StartDrawing,   // Indicates the user that's currently drawing
         StopDrawing,    // Round's over, stop drawing
+        NewStroke,      // Initiate a new stroke
+        Stroke,         // Continue on current stroke
+        EraseStroke,    // Erase last stroke
+        Fill,           // Fill
+        Clear,          // Clear board
         Null            // No command
     }
+
+
     public class Data  
     {
+        /* Normal packet*/
         public string strName;      // Name by which the client logs into the room
         public string strMessage;   // Message text
         public Command cmdCommand;  // Command type (see above)
-        public int x1, x2, y1, y2;  // Coordinates for drawing
+
+        /* Drawing packet */
+        public Color color;                // Color for drawing
+        public Point p1;                   // Point (position) for drawing
+        public int size;                   // Size of brush/pen
+        public int shape;                  // Shape of brush/pen
 
         public Data()
         {
@@ -37,7 +51,7 @@ namespace Pictionary
         {
             if (isDrawPacket)
             {
-
+                DrawingPacket(data);
             }
             else
             {
@@ -71,7 +85,49 @@ namespace Pictionary
 
         private void DrawingPacket(byte[] data)
         {
+            this.cmdCommand = (Command)BitConverter.ToInt32(data, 0);
 
+            this.size = BitConverter.ToInt32(data, 4);
+
+            this.shape = BitConverter.ToInt32(data, 8);
+
+            this.color = Color.FromArgb(data[12], data[16], data[20]);
+
+            this.p1.X = BitConverter.ToInt32(data, 24);
+            this.p1.Y = BitConverter.ToInt32(data, 28);
+
+            int nameLen = BitConverter.ToInt32(data, 32);
+
+            if (nameLen > 0)
+                this.strName = Encoding.UTF8.GetString(data, 36, nameLen);
+            else
+                this.strName = null;
+        }
+
+        public byte[] DrawingToByte()
+        {
+            List<byte> result = new List<byte>();
+
+            //First four are for the Command
+            result.AddRange(BitConverter.GetBytes((int)cmdCommand));
+            result.AddRange(BitConverter.GetBytes(size));
+            result.AddRange(BitConverter.GetBytes(shape));
+            result.AddRange(BitConverter.GetBytes((int)color.R));
+            result.AddRange(BitConverter.GetBytes((int)color.G));
+            result.AddRange(BitConverter.GetBytes((int)color.B));
+            result.AddRange(BitConverter.GetBytes(p1.X));
+            result.AddRange(BitConverter.GetBytes(p1.Y));
+
+            //Add the length of the name
+            if (strName != null)
+                result.AddRange(BitConverter.GetBytes(strName.Length));
+            else
+                result.AddRange(BitConverter.GetBytes(0));
+            //Add the name
+            if (strName != null)
+                result.AddRange(Encoding.UTF8.GetBytes(strName));
+
+            return result.ToArray();
         }
 
 

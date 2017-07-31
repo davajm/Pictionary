@@ -33,7 +33,6 @@ namespace Pictionary
         State state;
 
 
-
         public Server(int port)
         {
             clients = new List<ClientInfo>();
@@ -63,6 +62,11 @@ namespace Pictionary
             }
         }
 
+        public void StopServer()
+        {
+            server.Close();
+        }
+
         private void OnAccept(IAsyncResult ar)
         {
             try
@@ -75,6 +79,7 @@ namespace Pictionary
                 //Once the client connects then start receiving the commands from her
                 clientSocket.BeginReceive(byteData, 0, byteData.Length, SocketFlags.None, new AsyncCallback(OnReceive), clientSocket);
             }
+            catch (ObjectDisposedException) { }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message, "Server", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -109,7 +114,7 @@ namespace Pictionary
                     Data msgToSend = new Data();
                     byte[] message;
 
-                    msgToSend.cmdCommand = Command.Drawing;
+                    msgToSend.cmdCommand = Command.StartDrawing;
                     msgToSend.strMessage = null;
                     msgToSend.strName = client.strName;
 
@@ -171,19 +176,15 @@ namespace Pictionary
 
                         //When a user wants to log out of the server then we search for her 
                         //in the list of clients and close the corresponding connection
-
-                        foreach (ClientInfo client in clients)
+                        for (int i = clients.Count-1; i > 0; i--)
                         {
-                            if (client.socket == clientSocket)
+                            if (clients[i].socket == clientSocket)
                             {
-                                clients.Remove(client);
+                                clients.RemoveAt(i);
                                 break;
                             }
                         }
-
                         clientSocket.Close();
-
-                        msgToSend.strMessage = "<<<" + msgReceived.strName + " has left the room>>>";
                         break;
 
                     case Command.Message:
@@ -193,15 +194,32 @@ namespace Pictionary
                         break;
 
                     case Command.Ready:
-                        foreach (ClientInfo client in clients)
+                        for (int i = clients.Count-1; i > 0; i--)
                         {
-                            if (client.socket == clientSocket)
+                            if (clients[i].socket == clientSocket)
                             {
-                                client.isReady = true;
+                                clients[i].isReady = !clients[i].isReady;
                                 break;
                             }
                         }
                         break;
+                    case Command.NewStroke:
+                    case Command.Stroke:
+                        //intelligent form of object Data
+                        Data rec = new Data(byteData, true);
+
+                        byte[] msg = rec.DrawingToByte();
+
+                        foreach (ClientInfo client in clients)
+                        {
+                            if (client.socket != clientSocket)
+                            {
+                                //Send the message to all users
+                                client.socket.BeginSend(msg, 0, msg.Length, SocketFlags.None, new AsyncCallback(OnSend), client.socket);
+                            }
+                        }
+                        break;
+
 
                     case Command.List:
 
@@ -225,7 +243,7 @@ namespace Pictionary
                         break;
                 }
 
-                if (msgToSend.cmdCommand != Command.List)   //List messages are not broadcasted
+                if (msgToSend.cmdCommand != Command.List && msgToSend.cmdCommand != Command.NewStroke && msgToSend.cmdCommand != Command.Stroke)   //List messages are not broadcasted
                 {
                     message = msgToSend.ToByte();
 
@@ -276,6 +294,7 @@ namespace Pictionary
                     }
                 }
             }
+            catch (ObjectDisposedException) { }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message, "Server", MessageBoxButtons.OK, MessageBoxIcon.Error);

@@ -103,6 +103,7 @@
             this.drawingBoard.Size = new System.Drawing.Size(1039, 752);
             this.drawingBoard.TabIndex = 5;
             this.drawingBoard.TabStop = false;
+            this.drawingBoard.Paint += new System.Windows.Forms.PaintEventHandler(this.drawingBoard_Paint);
             this.drawingBoard.MouseDown += new System.Windows.Forms.MouseEventHandler(this.drawingBoard_MouseDown);
             this.drawingBoard.MouseMove += new System.Windows.Forms.MouseEventHandler(this.drawingBoard_MouseMove);
             this.drawingBoard.MouseUp += new System.Windows.Forms.MouseEventHandler(this.drawingBoard_MouseUp);
@@ -126,11 +127,11 @@
             this.Controls.Add(this.btnReady);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.drawingBoard);
-            this.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.MaximumSize = new System.Drawing.Size(1500, 800);
             this.MinimumSize = new System.Drawing.Size(1500, 800);
             this.Name = "Client";
             this.Text = "Pictionary";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Client_FormClosing);
             this.Load += new System.EventHandler(this.Client_Load);
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();

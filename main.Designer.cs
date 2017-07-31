@@ -147,6 +147,7 @@
             this.txtJoinName.Name = "txtJoinName";
             this.txtJoinName.Size = new System.Drawing.Size(160, 20);
             this.txtJoinName.TabIndex = 18;
+            this.txtJoinName.Text = "xdd";
             // 
             // btnJoin
             // 
@@ -186,6 +187,7 @@
             this.txtJoinPort.Name = "txtJoinPort";
             this.txtJoinPort.Size = new System.Drawing.Size(51, 20);
             this.txtJoinPort.TabIndex = 6;
+            this.txtJoinPort.Text = "123";
             this.txtJoinPort.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.IntOnly);
             // 
             // txtJoinIP
@@ -194,6 +196,7 @@
             this.txtJoinIP.Name = "txtJoinIP";
             this.txtJoinIP.Size = new System.Drawing.Size(160, 20);
             this.txtJoinIP.TabIndex = 5;
+            this.txtJoinIP.Text = "127.0.0.1";
             // 
             // grpHostGame
             // 
@@ -232,6 +235,7 @@
             this.txtHostName.Name = "txtHostName";
             this.txtHostName.Size = new System.Drawing.Size(160, 20);
             this.txtHostName.TabIndex = 16;
+            this.txtHostName.Text = "skrrrr";
             // 
             // numericUpDown1
             // 
@@ -313,6 +317,7 @@
             this.txtHostPort.Name = "txtHostPort";
             this.txtHostPort.Size = new System.Drawing.Size(209, 20);
             this.txtHostPort.TabIndex = 6;
+            this.txtHostPort.Text = "123";
             this.txtHostPort.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.IntOnly);
             // 
             // main
@@ -321,10 +326,11 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(932, 623);
             this.Controls.Add(this.groupBox1);
-            this.Controls.Add(this.grpJoinGame);
             this.Controls.Add(this.grpHostGame);
+            this.Controls.Add(this.grpJoinGame);
             this.Name = "main";
             this.Text = "Pictionary";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.main_FormClosed);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.grpJoinGame.ResumeLayout(false);
