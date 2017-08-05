@@ -35,7 +35,7 @@ namespace Pictionary
             SendMessage(null, Command.Login);
             InitializeComponent();
             allStrokes = new List<List<Point>>();
-            mouseDown = false;
+            mouseDown = isDrawing = false;
             g = drawingBoard.CreateGraphics();
         }
 
@@ -90,7 +90,7 @@ namespace Pictionary
                 //Accordingly process the message received
                 switch (msgReceived.cmdCommand)
                 {
-                    // If a new user has connected
+                    // If a , user has connected
                     case Command.Login:
                         playerList.Invoke((MethodInvoker)delegate {
                             playerList.AddPlayer(msgReceived.strName);
@@ -108,6 +108,27 @@ namespace Pictionary
                         });
                         chat.Invoke((MethodInvoker)delegate {
                             chat.Text += msgReceived.strName + " has left the room\r\n";
+                        });
+                        break;
+                    case Command.StartGame:
+                        btnReady.Invoke((MethodInvoker)delegate {
+                            btnReady.Visible = btnReady.Enabled = false;
+                        });
+                        lblWaiting.Invoke((MethodInvoker)delegate {
+                            lblWaiting.Visible = lblWaiting.Enabled = false;
+                        });
+                        break;
+                    case Command.StartDrawing:
+                        if (msgReceived.strName == userName)
+                        {
+                            isDrawing = true;
+                        }
+                        else
+                        {
+                            isDrawing = false;
+                        }
+                        chat.Invoke((MethodInvoker)delegate {
+                            chat.Text += msgReceived.strName + " is drawing\r\n";
                         });
                         break;
                     case Command.NewStroke:
@@ -201,58 +222,32 @@ namespace Pictionary
 
         private void drawingBoard_MouseUp(object sender, MouseEventArgs e)
         {
-            mouseDown = false;
+            if (isDrawing)
+            {
+                mouseDown = false;
+            }
         }
 
         private void drawingBoard_MouseDown(object sender, MouseEventArgs e)
         {
-            mouseDown = true;
-
-            // Mouse is down, start a new stroke
-            currentStroke = new List<Point>();
-
-            // Add current position to stroke
-            currentStroke.Add(e.Location);
-
-            // Add stroke to the list
-            allStrokes.Add(currentStroke);
-            try
+            if (isDrawing)
             {
-                //Fill the info for the message to be send
-                Data msgToSend = new Data();
+                mouseDown = true;
 
-                msgToSend.cmdCommand = Command.NewStroke;
-                msgToSend.strName = userName;
-                msgToSend.size = 0;
-                msgToSend.shape = 0;
-                msgToSend.p1 = e.Location;
-                msgToSend.color = Color.Black;
+                // Mouse is down, start a new stroke
+                currentStroke = new List<Point>();
 
-                byte[] byteData = msgToSend.DrawingToByte();
-
-                //Send it to the server
-                client.BeginSend(byteData, 0, byteData.Length, SocketFlags.None, new AsyncCallback(OnSend), null);
-            }
-            catch (Exception)
-            {
-                MessageBox.Show("Unable to send message to the server.", "Pictionary", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-
-        private void drawingBoard_MouseMove(object sender, MouseEventArgs e)
-        {
-            System.Drawing.SolidBrush myBrush = new System.Drawing.SolidBrush(System.Drawing.Color.Red);
-
-            if (mouseDown)
-            {
+                // Add current position to stroke
                 currentStroke.Add(e.Location);
-                drawingBoard.Invalidate();
+
+                // Add stroke to the list
+                allStrokes.Add(currentStroke);
                 try
                 {
                     //Fill the info for the message to be send
                     Data msgToSend = new Data();
 
-                    msgToSend.cmdCommand = Command.Stroke;
+                    msgToSend.cmdCommand = Command.NewStroke;
                     msgToSend.strName = userName;
                     msgToSend.size = 0;
                     msgToSend.shape = 0;
@@ -267,6 +262,41 @@ namespace Pictionary
                 catch (Exception)
                 {
                     MessageBox.Show("Unable to send message to the server.", "Pictionary", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+        }
+
+        private void drawingBoard_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (isDrawing)
+            {
+                System.Drawing.SolidBrush myBrush = new System.Drawing.SolidBrush(System.Drawing.Color.Red);
+
+                if (mouseDown)
+                {
+                    currentStroke.Add(e.Location);
+                    drawingBoard.Invalidate();
+                    try
+                    {
+                        //Fill the info for the message to be send
+                        Data msgToSend = new Data();
+
+                        msgToSend.cmdCommand = Command.Stroke;
+                        msgToSend.strName = userName;
+                        msgToSend.size = 0;
+                        msgToSend.shape = 0;
+                        msgToSend.p1 = e.Location;
+                        msgToSend.color = Color.Black;
+
+                        byte[] byteData = msgToSend.DrawingToByte();
+
+                        //Send it to the server
+                        client.BeginSend(byteData, 0, byteData.Length, SocketFlags.None, new AsyncCallback(OnSend), null);
+                    }
+                    catch (Exception)
+                    {
+                        MessageBox.Show("Unable to send message to the server.", "Pictionary", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
                 }
             }
         }

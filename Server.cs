@@ -5,8 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Net;
 using System.Net.Sockets;
-using System.Threading;
 using System.Windows.Forms;
+using System.Threading;
 
 namespace Pictionary
 {
@@ -31,6 +31,7 @@ namespace Pictionary
         Socket server;
         byte[] byteData = new byte[1024];
         State state;
+        string currentWord;
 
 
         public Server(int port)
@@ -64,6 +65,10 @@ namespace Pictionary
 
         public void StopServer()
         {
+            for (int i = clients.Count-1; i >= 0; i--)
+            {
+                clients[i].socket.Close();
+            }
             server.Close();
         }
 
@@ -144,8 +149,8 @@ namespace Pictionary
                 //Transform the array of bytes received from the user into an
                 //intelligent form of object Data
                 Data msgReceived = new Data(byteData, false);
-
                 //We will send this object in response the users request
+
                 Data msgToSend = new Data();
 
                 byte[] message;
@@ -176,7 +181,7 @@ namespace Pictionary
 
                         //When a user wants to log out of the server then we search for her 
                         //in the list of clients and close the corresponding connection
-                        for (int i = clients.Count-1; i > 0; i--)
+                        for (int i = clients.Count-1; i >= 0; i--)
                         {
                             if (clients[i].socket == clientSocket)
                             {
@@ -188,13 +193,26 @@ namespace Pictionary
                         break;
 
                     case Command.Message:
+                        bool correctWord = false;
 
-                        //Set the text of the message that we will broadcast to all users
-                        msgToSend.strMessage = msgReceived.strName + ": " + msgReceived.strMessage;
+                        // Check for correct word if we are playing
+                        if (state == State.Drawing)
+                        {
+                            if (msgReceived.strMessage == currentWord)
+                            {
+                                correctWord = true;
+                            }                       
+                        }
+                        // Set the broadcast message (if not correct guess)
+                        if (!correctWord)
+                        {
+                            //Set the text of the message that we will broadcast to all
+                            msgToSend.strMessage = msgReceived.strName + ": " + msgReceived.strMessage;
+                        }
                         break;
 
                     case Command.Ready:
-                        for (int i = clients.Count-1; i > 0; i--)
+                        for (int i = clients.Count-1; i >= 0; i--)
                         {
                             if (clients[i].socket == clientSocket)
                             {
@@ -214,13 +232,11 @@ namespace Pictionary
                         {
                             if (client.socket != clientSocket)
                             {
-                                //Send the message to all users
+                                //Broadcast the message to all users
                                 client.socket.BeginSend(msg, 0, msg.Length, SocketFlags.None, new AsyncCallback(OnSend), client.socket);
                             }
                         }
                         break;
-
-
                     case Command.List:
 
                         //Send the names of all users in the chat room to the new user
@@ -265,32 +281,41 @@ namespace Pictionary
                     clientSocket.BeginReceive(byteData, 0, byteData.Length, SocketFlags.None, new AsyncCallback(OnReceive), clientSocket);
                 }
 
-                // Check if all players are ready
+                // If we're waiting for players to get ready (lobby)
                 if (state == State.WaitingForPlayers)
                 {
                     bool startGame = true;
-                    foreach (ClientInfo client in clients)
+                    
+                    // If atleast two players are connected
+                    if (clients.Count > 1)
                     {
-                        if (!client.isReady)
+                        // Check if all connected players are ready
+                        foreach (ClientInfo client in clients)
                         {
-                            startGame = false;
-                            break;
+                            if (!client.isReady)
+                            {
+                                startGame = false;
+                                break;
+                            }
                         }
-                    }
-                    if (startGame) // New game
-                    {
-                        msgToSend.cmdCommand = Command.StartGame;
-                        msgToSend.strMessage = null;
-                        msgToSend.strName = null;
-                        message = msgToSend.ToByte();
+                        // Start new game
+                        if (startGame) 
+                        {
+                            msgToSend.cmdCommand = Command.StartGame;
+                            msgToSend.strMessage = null;
+                            msgToSend.strName = null;
+                            message = msgToSend.ToByte();
 
-                        foreach (ClientInfo clientInfo in clients)
-                        {
-                            //Send the message to all users
-                            clientInfo.socket.BeginSend(message, 0, message.Length, SocketFlags.None, new AsyncCallback(OnSend), clientInfo.socket);
+                            foreach (ClientInfo clientInfo in clients)
+                            {
+                                //Send the message to all users
+                                clientInfo.socket.BeginSend(message, 0, message.Length, SocketFlags.None, new AsyncCallback(OnSend), clientInfo.socket);
+                            }
+
+                            // Change state
+                            state = State.Drawing;
+                            NewGame(10, 10);
                         }
-                        state = State.Drawing;
-                        NewGame(10, 2);
                     }
                 }
             }
