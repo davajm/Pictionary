@@ -9,6 +9,7 @@ using System.Windows.Forms;
 using System.Threading;
 using System.Timers;
 using System.Diagnostics;
+using System.IO;
 
 namespace Pictionary
 {
@@ -30,13 +31,15 @@ namespace Pictionary
             Drawing
         }
 
-        List<ClientInfo> clients;   
+        List<ClientInfo> clients; 
         Socket server;
         byte[] byteData = new byte[1024];
         State state;
         string currentWord;
         int currentScore;
         bool broadcastMessage;
+        string[] words;
+        Random random;
 
         ManualResetEvent mre;
 
@@ -116,6 +119,13 @@ namespace Pictionary
         /// <param name="time"> Time per round in seconds </param>
         private void NewGame(int rounds, int time)
         {
+            // Read words from text file
+            if (words == null)
+            {
+                words = File.ReadAllLines("words.txt");
+                random = new Random();
+            }
+
             mre = new ManualResetEvent(false);
             for (int i = 0; i < rounds; i++)
             {
@@ -146,7 +156,9 @@ namespace Pictionary
 
                     // Temporary. 
                     // To do: Generate 3 random words.
-                    msgToSend.strMessage = "lol*xd*hehe";
+                    msgToSend.strMessage = words[random.Next(0, words.Length-1)];
+                    msgToSend.strMessage += "*" + words[random.Next(0, words.Length - 1)];
+                    msgToSend.strMessage += "*" + words[random.Next(0, words.Length - 1)];
                     message = msgToSend.ToByte();
 
                     // Tell player to choose word
@@ -169,10 +181,22 @@ namespace Pictionary
                     }
                     state = State.Drawing;
 
-                    // Sleep (round time)
-                    Thread.Sleep(TimeSpan.FromSeconds(60));
+                    // Wait for timer or all users to guess correctly
+                    System.Timers.Timer timer = new System.Timers.Timer();
+                    timer.Interval = time * 1000;
+                    timer.Elapsed += NewDrawer;
+                    timer.AutoReset = false;
+                    timer.Enabled = true;
+
+                    mre.Reset();
+                    mre.WaitOne();
+                    timer.Enabled = false;
                 }
             }
+        }
+        private void NewDrawer(object sender, ElapsedEventArgs e)
+        {
+            mre.Set();
         }
         private void OnReceive(IAsyncResult ar)
         {
@@ -248,6 +272,23 @@ namespace Pictionary
                                         msgToSend.cmdCommand = Command.CorrectGuess;
                                         currentScore -= 100 / (clients.Count - 1);
                                         broadcastMessage = true;
+
+
+                                        // Check if all players have guessed correctly
+                                        bool newDrawer = true;
+                                        foreach (ClientInfo c in clients)
+                                        {
+                                            if (!c.hasGuessed && !c.isDrawing)
+                                            {
+                                                newDrawer = false;
+                                                break;
+                                            }
+                                        }
+                                        // If all players have guessed correctly
+                                        if (newDrawer)
+                                        {
+                                            mre.Set();
+                                        }
                                         break;
                                     }
                                     else
