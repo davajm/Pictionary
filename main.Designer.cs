@@ -328,6 +328,7 @@
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.grpHostGame);
             this.Controls.Add(this.grpJoinGame);
+            this.MaximumSize = new System.Drawing.Size(948, 662);
             this.Name = "main";
             this.Text = "Pictionary";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.main_FormClosed);

@@ -17,7 +17,8 @@ namespace Pictionary
         StartGame,      // Indicates the start of the game
         StopGame,       // Stops game
         StartDrawing,   // Indicates the user that's currently drawing
-        StopDrawing,    // Round's over, stop drawing
+        ChooseWord,     // Round's over, stop drawing
+        CorrectGuess,   // Indicate correct guess of the word being drawn
         NewStroke,      // Initiate a new stroke
         Stroke,         // Continue on current stroke
         EraseStroke,    // Erase last stroke
@@ -58,7 +59,7 @@ namespace Pictionary
                 MessagePacket(data);
             }
         }
-
+        /* Convert from bytes to readable message packet */ 
         public void MessagePacket(byte[] data)
         {
             //The first four bytes are for the Command
@@ -83,33 +84,38 @@ namespace Pictionary
                 this.strMessage = null;
         }
 
+        /* Convert from bytes to readable drawing packet */
         private void DrawingPacket(byte[] data)
         {
+            // Command
             this.cmdCommand = (Command)BitConverter.ToInt32(data, 0);
 
+            // Drawing stuff
             this.size = BitConverter.ToInt32(data, 4);
-
             this.shape = BitConverter.ToInt32(data, 8);
-
             this.color = Color.FromArgb(data[12], data[16], data[20]);
-
             this.p1.X = BitConverter.ToInt32(data, 24);
             this.p1.Y = BitConverter.ToInt32(data, 28);
 
+            // Username length
             int nameLen = BitConverter.ToInt32(data, 32);
 
+            // Username
             if (nameLen > 0)
                 this.strName = Encoding.UTF8.GetString(data, 36, nameLen);
             else
                 this.strName = null;
         }
 
+        /* Convert drawing packet to an array of bytes */ 
         public byte[] DrawingToByte()
         {
             List<byte> result = new List<byte>();
 
-            //First four are for the Command
+            // Command
             result.AddRange(BitConverter.GetBytes((int)cmdCommand));
+
+            // Stuff for drawing
             result.AddRange(BitConverter.GetBytes(size));
             result.AddRange(BitConverter.GetBytes(shape));
             result.AddRange(BitConverter.GetBytes((int)color.R));
@@ -118,44 +124,43 @@ namespace Pictionary
             result.AddRange(BitConverter.GetBytes(p1.X));
             result.AddRange(BitConverter.GetBytes(p1.Y));
 
-            //Add the length of the name
+            // Length of username
             if (strName != null)
                 result.AddRange(BitConverter.GetBytes(strName.Length));
             else
                 result.AddRange(BitConverter.GetBytes(0));
-            //Add the name
+            // Username
             if (strName != null)
                 result.AddRange(Encoding.UTF8.GetBytes(strName));
 
             return result.ToArray();
         }
 
-
-        //Converts the Data structure into an array of bytes
+        /* Convert normal (message) packets to an array of bytes */ 
         public byte[] ToByte()
         {
             List<byte> result = new List<byte>();
 
-            //First four are for the Command
+            // Command
             result.AddRange(BitConverter.GetBytes((int)cmdCommand));
 
-            //Add the length of the name
+            // Username length
             if (strName != null)
                 result.AddRange(BitConverter.GetBytes(strName.Length));
             else
                 result.AddRange(BitConverter.GetBytes(0));
 
-            //Length of the message
+            // Message length
             if (strMessage != null)
                 result.AddRange(BitConverter.GetBytes(strMessage.Length));
             else
                 result.AddRange(BitConverter.GetBytes(0));
 
-            //Add the name
+            // Username
             if (strName != null)
                 result.AddRange(Encoding.UTF8.GetBytes(strName));
 
-            //And, lastly we add the message text to our array of bytes
+            // Message
             if (strMessage != null)
                 result.AddRange(Encoding.UTF8.GetBytes(strMessage));
 

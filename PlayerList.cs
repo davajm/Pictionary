@@ -52,6 +52,38 @@ namespace Pictionary
             }
         }
 
+        // Mark player as "Drawing"
+        public void SetDrawing(string name)
+        {
+            foreach (Player p in players)
+            {
+                if (p.GetName() == name)
+                {
+                    p.SetDrawing(true);
+                }
+                else
+                {
+                    p.SetDrawing(false);
+                }
+            }
+        }
+
+        // Mark player as "Choosing word"
+        public void SetChoosingWord(string name)
+        {
+            foreach (Player p in players)
+            {
+                if (p.GetName() == name)
+                {
+                    p.SetChoosingWord(true);
+                }
+                else
+                {
+                    p.SetChoosingWord(false);
+                }
+            }
+        }
+
         // Update score for player
         public void AddScore(string player, int score)
         {

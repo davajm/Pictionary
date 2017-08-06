@@ -36,9 +36,10 @@
             // word1
             // 
             this.word1.Font = new System.Drawing.Font("Tahoma", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.word1.Location = new System.Drawing.Point(31, 101);
+            this.word1.Location = new System.Drawing.Point(23, 82);
+            this.word1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.word1.Name = "word1";
-            this.word1.Size = new System.Drawing.Size(250, 60);
+            this.word1.Size = new System.Drawing.Size(188, 49);
             this.word1.TabIndex = 0;
             this.word1.UseVisualStyleBackColor = true;
             this.word1.Click += new System.EventHandler(this.Word_Click);
@@ -46,9 +47,10 @@
             // word2
             // 
             this.word2.Font = new System.Drawing.Font("Tahoma", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.word2.Location = new System.Drawing.Point(298, 101);
+            this.word2.Location = new System.Drawing.Point(224, 82);
+            this.word2.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.word2.Name = "word2";
-            this.word2.Size = new System.Drawing.Size(250, 60);
+            this.word2.Size = new System.Drawing.Size(188, 49);
             this.word2.TabIndex = 1;
             this.word2.UseVisualStyleBackColor = true;
             this.word2.Click += new System.EventHandler(this.Word_Click);
@@ -56,22 +58,25 @@
             // word3
             // 
             this.word3.Font = new System.Drawing.Font("Tahoma", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.word3.Location = new System.Drawing.Point(568, 101);
+            this.word3.Location = new System.Drawing.Point(426, 82);
+            this.word3.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.word3.Name = "word3";
-            this.word3.Size = new System.Drawing.Size(250, 60);
+            this.word3.Size = new System.Drawing.Size(188, 49);
             this.word3.TabIndex = 2;
             this.word3.UseVisualStyleBackColor = true;
             this.word3.Click += new System.EventHandler(this.Word_Click);
             // 
             // ChooseWord
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.Controls.Add(this.word3);
             this.Controls.Add(this.word2);
             this.Controls.Add(this.word1);
+            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.Name = "ChooseWord";
-            this.Size = new System.Drawing.Size(840, 271);
+            this.Size = new System.Drawing.Size(628, 218);
             this.ResumeLayout(false);
 
         }

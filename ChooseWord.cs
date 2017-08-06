@@ -12,6 +12,7 @@ namespace Pictionary
 {
     public partial class ChooseWord : UserControl
     {
+        public event EventHandler NewWordChosen;
         public ChooseWord()
         {
             InitializeComponent();
@@ -19,7 +20,7 @@ namespace Pictionary
 
         private void Word_Click(object sender, EventArgs e)
         {
-
+            NewWordChosen(sender, new EventArgs());
         }
 
         /// <summary>

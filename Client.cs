@@ -17,7 +17,6 @@ namespace Pictionary
         // Client
         Socket client;
         string userName;
-
         private byte[] byteData = new byte[1024];
 
         // Drawing stuff
@@ -76,6 +75,22 @@ namespace Pictionary
             }
         }
 
+        private void ShowChooseWordControl(string word1, string word2, string word3)
+        {
+            chooseWord.Invoke((MethodInvoker)delegate
+            {
+                chooseWord.SwitchWords(word1, word2, word3);
+                chooseWord.Enabled = chooseWord.Visible = true;
+            }); 
+        }
+        private void HideChooseWordControl()
+        {
+            chooseWord.Invoke((MethodInvoker)delegate
+            {
+                chooseWord.Enabled = chooseWord.Visible = false;
+            });
+        }
+
         private void OnReceive(IAsyncResult ar)
         {
             try
@@ -95,9 +110,6 @@ namespace Pictionary
                         playerList.Invoke((MethodInvoker)delegate {
                             playerList.AddPlayer(msgReceived.strName);
                         });
-                        chat.Invoke((MethodInvoker)delegate {
-                            chat.Text += msgReceived.strName + " has joined the room\r\n";
-                        });
                         break;
 
                     // If a user has disconnected
@@ -106,16 +118,27 @@ namespace Pictionary
                         {
                             playerList.RemovePlayer(msgReceived.strName);
                         });
-                        chat.Invoke((MethodInvoker)delegate {
-                            chat.Text += msgReceived.strName + " has left the room\r\n";
-                        });
                         break;
                     case Command.StartGame:
                         btnReady.Invoke((MethodInvoker)delegate {
                             btnReady.Visible = btnReady.Enabled = false;
                         });
-                        lblWaiting.Invoke((MethodInvoker)delegate {
-                            lblWaiting.Visible = lblWaiting.Enabled = false;
+                        HideLabel();
+                        break;
+                    case Command.ChooseWord:
+                        isDrawing = false;
+                        if (msgReceived.strName == userName)
+                        {
+                            string[] words = msgReceived.strMessage.Split('*');
+                            ShowChooseWordControl(words[0], words[1], words[2]);
+                            ChangeLabelText("Please choose a word");
+                        }
+                        else
+                        {
+                            ChangeLabelText(msgReceived.strName + " is choosing a word");
+                        }
+                        playerList.Invoke((MethodInvoker)delegate {
+                            playerList.SetChoosingWord(msgReceived.strName);
                         });
                         break;
                     case Command.StartDrawing:
@@ -125,10 +148,16 @@ namespace Pictionary
                         }
                         else
                         {
+                            ChangeLabelText(string.Concat(Enumerable.Repeat("_ ", Int32.Parse(msgReceived.strMessage))));
                             isDrawing = false;
                         }
-                        chat.Invoke((MethodInvoker)delegate {
-                            chat.Text += msgReceived.strName + " is drawing\r\n";
+                        playerList.Invoke((MethodInvoker)delegate {
+                            playerList.SetDrawing(msgReceived.strName);
+                        });
+                        break;
+                    case Command.CorrectGuess:
+                        playerList.Invoke((MethodInvoker)delegate {
+                            playerList.AddScore(msgReceived.strName, Int32.Parse(msgReceived.strMessage));
                         });
                         break;
                     case Command.NewStroke:
@@ -148,6 +177,9 @@ namespace Pictionary
                         });
                         break;
                     case Command.Message:
+                        chat.Invoke((MethodInvoker)delegate {
+                            chat.Text += msgReceived.strMessage + "\r\n";
+                        });
                         break;
                     case Command.Ready:
                         playerList.Invoke((MethodInvoker)delegate
@@ -168,12 +200,6 @@ namespace Pictionary
                         });
                         break;
                 }
-
-                if (msgReceived.strMessage != null && msgReceived.cmdCommand != Command.List)
-                    chat.Invoke((MethodInvoker)delegate {
-                        chat.Text += msgReceived.strMessage + "\r\n";
-                    });
-
                 byteData = new byte[1024];
 
                 client.BeginReceive(byteData, 0, byteData.Length, SocketFlags.None, new AsyncCallback(OnReceive), null);
@@ -187,6 +213,23 @@ namespace Pictionary
             {
                 MessageBox.Show(ex.Message, "Pictionary", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        }
+
+        // Hide the label text
+        private void HideLabel()
+        {
+            lblWaiting.Invoke((MethodInvoker)delegate {
+                lblWaiting.Visible = lblWaiting.Enabled = false;
+            });
+        }
+
+        // Change the label text and make it visible
+        private void ChangeLabelText(string text)
+        {
+            lblWaiting.Invoke((MethodInvoker)delegate {
+                lblWaiting.Text = text;
+                lblWaiting.Visible = lblWaiting.Enabled = true;
+            });
         }
 
         private void input_KeyDown(object sender, KeyEventArgs e)
@@ -332,6 +375,14 @@ namespace Pictionary
         {
             foreach (List<Point> stroke in allStrokes.Where(x => x.Count > 1))
                 e.Graphics.DrawLines(System.Drawing.Pens.Black, stroke.ToArray());
+        }
+
+        private void chooseWord_NewWordChosen(object sender, EventArgs e)
+        {
+            Button b = (Button)sender;        
+            HideChooseWordControl();
+            SendMessage(b.Text, Command.ChooseWord);
+            ChangeLabelText("You are drawing " + b.Text);
         }
     }
 }

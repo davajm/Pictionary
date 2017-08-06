@@ -57,15 +57,15 @@
             // lblState
             // 
             this.lblState.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.lblState.AutoSize = true;
             this.lblState.Enabled = false;
             this.lblState.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblState.ForeColor = System.Drawing.Color.Green;
-            this.lblState.Location = new System.Drawing.Point(135, 32);
+            this.lblState.Location = new System.Drawing.Point(77, 34);
             this.lblState.Name = "lblState";
-            this.lblState.Size = new System.Drawing.Size(45, 17);
+            this.lblState.Size = new System.Drawing.Size(108, 17);
             this.lblState.TabIndex = 2;
             this.lblState.Text = "Ready";
+            this.lblState.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.lblState.Visible = false;
             // 
             // Player

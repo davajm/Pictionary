@@ -34,6 +34,8 @@ namespace Pictionary
         {
             this.score += score;
             lblScore.Text = this.score.ToString();
+            lblState.Text = "+" + score;
+            lblState.Enabled = lblState.Visible = true;
         }
 
         public void ResetScore()
@@ -46,6 +48,12 @@ namespace Pictionary
         {
             lblState.Text = "Drawing";
             lblState.Enabled = lblState.Visible = isDrawing;
+        }
+
+        public void SetChoosingWord(bool isChoosing)
+        {
+            lblState.Text = "Choosing word";
+            lblState.Enabled = lblState.Visible = isChoosing;
         }
 
         public void Ready()

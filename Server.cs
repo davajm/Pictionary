@@ -7,6 +7,8 @@ using System.Net;
 using System.Net.Sockets;
 using System.Windows.Forms;
 using System.Threading;
+using System.Timers;
+using System.Diagnostics;
 
 namespace Pictionary
 {
@@ -16,9 +18,10 @@ namespace Pictionary
         {
             public Socket socket;   // Socket of the client
             public string strName;  // Username
-            public bool isReady;    // Ready for game sta
+            public bool isReady;    // Ready for game start
+            public bool isDrawing;  // If user is drawing
             public int score;       // User score
-            public bool isDrawing;  // Determines if the user is currently drawing
+            public bool hasGuessed; // If user has guessed correct this round
         }
         enum State
         {
@@ -27,12 +30,15 @@ namespace Pictionary
             Drawing
         }
 
-        List<ClientInfo> clients;
+        List<ClientInfo> clients;   
         Socket server;
         byte[] byteData = new byte[1024];
         State state;
         string currentWord;
+        int currentScore;
+        bool broadcastMessage;
 
+        ManualResetEvent mre;
 
         public Server(int port)
         {
@@ -110,35 +116,64 @@ namespace Pictionary
         /// <param name="time"> Time per round in seconds </param>
         private void NewGame(int rounds, int time)
         {
+            mre = new ManualResetEvent(false);
             for (int i = 0; i < rounds; i++)
             {
                 foreach (ClientInfo client in clients)
                 {
-                    client.isDrawing = true;
-
+                    state = State.ChoosingWord;
+                    currentWord = null;
+                    currentScore = 100;
                     Data msgToSend = new Data();
                     byte[] message;
 
-                    msgToSend.cmdCommand = Command.StartDrawing;
+                    msgToSend.cmdCommand = Command.ChooseWord;
                     msgToSend.strMessage = null;
                     msgToSend.strName = client.strName;
 
                     message = msgToSend.ToByte();
 
+                    // Broadcast that player is choosing word
                     foreach (ClientInfo clientInfo in clients)
                     {
+                        clientInfo.hasGuessed = false;
                         if (client != clientInfo)
                         {
-                            client.isDrawing = false;
+                            clientInfo.isDrawing = false;
+                            clientInfo.socket.BeginSend(message, 0, message.Length, SocketFlags.None, new AsyncCallback(OnSend), clientInfo.socket);
                         }
+                    }
+
+                    // Temporary. 
+                    // To do: Generate 3 random words.
+                    msgToSend.strMessage = "lol*xd*hehe";
+                    message = msgToSend.ToByte();
+
+                    // Tell player to choose word
+                    client.socket.BeginSend(message, 0, message.Length, SocketFlags.None, new AsyncCallback(OnSend), client.socket);
+                    msgToSend.strMessage = null;
+
+                    // Wait for player to choose word
+                    mre.Reset();
+                    mre.WaitOne();
+
+                    // Tell player to start drawing
+                    client.isDrawing = true;
+                    msgToSend.cmdCommand = Command.StartDrawing;
+                    msgToSend.strMessage = currentWord.Length.ToString();
+                    message = msgToSend.ToByte();
+                    foreach (ClientInfo clientInfo in clients)
+                    {
                         //Send the message to all users
                         clientInfo.socket.BeginSend(message, 0, message.Length, SocketFlags.None, new AsyncCallback(OnSend), clientInfo.socket);
                     }
-                    Thread.Sleep(time*1000);
+                    state = State.Drawing;
+
+                    // Sleep (round time)
+                    Thread.Sleep(TimeSpan.FromSeconds(60));
                 }
             }
         }
-
         private void OnReceive(IAsyncResult ar)
         {
             try
@@ -159,6 +194,7 @@ namespace Pictionary
                 //then when send to others the type of the message remains the same
                 msgToSend.cmdCommand = msgReceived.cmdCommand;
                 msgToSend.strName = msgReceived.strName;
+                broadcastMessage = true;
 
                 switch (msgReceived.cmdCommand)
                 {
@@ -172,7 +208,6 @@ namespace Pictionary
                         clientInfo.strName = msgReceived.strName;
                         clientInfo.score = 0;
                         clientInfo.isReady = false;
-                        clientInfo.isDrawing = false;
 
                         clients.Add(clientInfo);
                         break;
@@ -201,6 +236,25 @@ namespace Pictionary
                             if (msgReceived.strMessage == currentWord)
                             {
                                 correctWord = true;
+
+                                foreach(ClientInfo client in clients)
+                                {
+                                    if (client.strName == msgReceived.strName && !client.hasGuessed && !client.isDrawing) 
+                                    {
+                                        client.hasGuessed = true;
+                                        client.score += currentScore;
+                                        msgToSend.strName = msgReceived.strName;
+                                        msgToSend.strMessage = currentScore.ToString();
+                                        msgToSend.cmdCommand = Command.CorrectGuess;
+                                        currentScore -= 100 / (clients.Count - 1);
+                                        broadcastMessage = true;
+                                        break;
+                                    }
+                                    else
+                                    {
+                                        broadcastMessage = false;
+                                    }
+                                }
                             }                       
                         }
                         // Set the broadcast message (if not correct guess)
@@ -210,7 +264,11 @@ namespace Pictionary
                             msgToSend.strMessage = msgReceived.strName + ": " + msgReceived.strMessage;
                         }
                         break;
-
+                    case Command.ChooseWord:
+                        currentWord = msgReceived.strMessage;
+                        mre.Set();
+                        break;
+    
                     case Command.Ready:
                         for (int i = clients.Count-1; i >= 0; i--)
                         {
@@ -259,7 +317,8 @@ namespace Pictionary
                         break;
                 }
 
-                if (msgToSend.cmdCommand != Command.List && msgToSend.cmdCommand != Command.NewStroke && msgToSend.cmdCommand != Command.Stroke)   //List messages are not broadcasted
+                if (msgToSend.cmdCommand != Command.List && msgToSend.cmdCommand != Command.NewStroke && msgToSend.cmdCommand != Command.Stroke && 
+                    msgToSend.cmdCommand != Command.ChooseWord && broadcastMessage)   //Not all messages are broadcasted
                 {
                     message = msgToSend.ToByte();
 
@@ -314,7 +373,7 @@ namespace Pictionary
 
                             // Change state
                             state = State.Drawing;
-                            NewGame(10, 10);
+                            Task.Factory.StartNew(() => NewGame(10,10));
                         }
                     }
                 }
