@@ -46,7 +46,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox2.Controls.Add(this.chat);
             this.groupBox2.Controls.Add(this.input);
-            this.groupBox2.Location = new System.Drawing.Point(1261, 1);
+            this.groupBox2.Location = new System.Drawing.Point(1218, 2);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(221, 764);
             this.groupBox2.TabIndex = 1;
@@ -59,7 +59,9 @@
             this.chat.Location = new System.Drawing.Point(0, 4);
             this.chat.Multiline = true;
             this.chat.Name = "chat";
-            this.chat.Size = new System.Drawing.Size(219, 725);
+            this.chat.ReadOnly = true;
+            this.chat.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.chat.Size = new System.Drawing.Size(215, 725);
             this.chat.TabIndex = 1;
             // 
             // input
@@ -67,7 +69,7 @@
             this.input.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.input.Location = new System.Drawing.Point(0, 735);
             this.input.Name = "input";
-            this.input.Size = new System.Drawing.Size(219, 20);
+            this.input.Size = new System.Drawing.Size(215, 20);
             this.input.TabIndex = 0;
             this.input.KeyDown += new System.Windows.Forms.KeyEventHandler(this.input_KeyDown);
             // 
@@ -102,7 +104,7 @@
             this.drawingBoard.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.drawingBoard.Location = new System.Drawing.Point(218, 5);
             this.drawingBoard.Name = "drawingBoard";
-            this.drawingBoard.Size = new System.Drawing.Size(1039, 752);
+            this.drawingBoard.Size = new System.Drawing.Size(994, 752);
             this.drawingBoard.TabIndex = 5;
             this.drawingBoard.TabStop = false;
             this.drawingBoard.Paint += new System.Windows.Forms.PaintEventHandler(this.drawingBoard_Paint);

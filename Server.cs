@@ -156,9 +156,9 @@ namespace Pictionary
 
                     // Temporary. 
                     // To do: Generate 3 random words.
-                    msgToSend.strMessage = words[random.Next(0, words.Length-1)];
-                    msgToSend.strMessage += "*" + words[random.Next(0, words.Length - 1)];
-                    msgToSend.strMessage += "*" + words[random.Next(0, words.Length - 1)];
+                    msgToSend.strMessage = words[random.Next(0, words.Length-1)].ToUpper();
+                    msgToSend.strMessage += "*" + words[random.Next(0, words.Length - 1)].ToUpper();
+                    msgToSend.strMessage += "*" + words[random.Next(0, words.Length - 1)].ToUpper();
                     message = msgToSend.ToByte();
 
                     // Tell player to choose word
@@ -257,7 +257,7 @@ namespace Pictionary
                         // Check for correct word if we are playing
                         if (state == State.Drawing)
                         {
-                            if (msgReceived.strMessage == currentWord)
+                            if (msgReceived.strMessage.ToUpper() == currentWord.ToUpper())
                             {
                                 correctWord = true;
 
@@ -308,6 +308,9 @@ namespace Pictionary
                     case Command.ChooseWord:
                         currentWord = msgReceived.strMessage;
                         mre.Set();
+                        msgToSend.strMessage = null;
+                        msgToSend.strName = null;
+                        msgToSend.cmdCommand = Command.Clear;
                         break;
     
                     case Command.Ready:
@@ -358,8 +361,7 @@ namespace Pictionary
                         break;
                 }
 
-                if (msgToSend.cmdCommand != Command.List && msgToSend.cmdCommand != Command.NewStroke && msgToSend.cmdCommand != Command.Stroke && 
-                    msgToSend.cmdCommand != Command.ChooseWord && broadcastMessage)   //Not all messages are broadcasted
+                if (msgToSend.cmdCommand != Command.List && msgToSend.cmdCommand != Command.NewStroke && msgToSend.cmdCommand != Command.Stroke && broadcastMessage)   //Not all messages are broadcasted
                 {
                     message = msgToSend.ToByte();
 
@@ -414,7 +416,7 @@ namespace Pictionary
 
                             // Change state
                             state = State.Drawing;
-                            Task.Factory.StartNew(() => NewGame(10,10));
+                            Task.Factory.StartNew(() => NewGame(10, 90));
                         }
                     }
                 }

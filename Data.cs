@@ -73,13 +73,13 @@ namespace Pictionary
 
             //This check makes sure that strName has been passed in the array of bytes
             if (nameLen > 0)
-                this.strName = Encoding.UTF8.GetString(data, 12, nameLen);
+                this.strName = Encoding.GetEncoding(1252).GetString(data, 12, nameLen);
             else
                 this.strName = null;
 
             //This checks for a null message field
             if (msgLen > 0)
-                this.strMessage = Encoding.UTF8.GetString(data, 12 + nameLen, msgLen);
+                this.strMessage = Encoding.GetEncoding(1252).GetString(data, 12 + nameLen, msgLen);
             else
                 this.strMessage = null;
         }
@@ -102,7 +102,7 @@ namespace Pictionary
 
             // Username
             if (nameLen > 0)
-                this.strName = Encoding.UTF8.GetString(data, 36, nameLen);
+                this.strName = Encoding.GetEncoding(1252).GetString(data, 36, nameLen);
             else
                 this.strName = null;
         }
@@ -131,7 +131,7 @@ namespace Pictionary
                 result.AddRange(BitConverter.GetBytes(0));
             // Username
             if (strName != null)
-                result.AddRange(Encoding.UTF8.GetBytes(strName));
+                result.AddRange(Encoding.GetEncoding(1252).GetBytes(strName));
 
             return result.ToArray();
         }
@@ -158,11 +158,11 @@ namespace Pictionary
 
             // Username
             if (strName != null)
-                result.AddRange(Encoding.UTF8.GetBytes(strName));
+                result.AddRange(Encoding.GetEncoding(1252).GetBytes(strName));
 
             // Message
             if (strMessage != null)
-                result.AddRange(Encoding.UTF8.GetBytes(strMessage));
+                result.AddRange(Encoding.GetEncoding(1252).GetBytes(strMessage));
 
             return result.ToArray();
         }

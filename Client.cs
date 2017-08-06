@@ -178,7 +178,10 @@ namespace Pictionary
                         break;
                     case Command.Message:
                         chat.Invoke((MethodInvoker)delegate {
-                            chat.Text += msgReceived.strMessage + "\r\n";
+                            if (chat.Text.Length == 0)
+                                chat.AppendText(msgReceived.strMessage);
+                            else
+                                chat.AppendText("\r\n" + msgReceived.strMessage );
                         });
                         break;
                     case Command.Ready:
@@ -186,6 +189,13 @@ namespace Pictionary
                         {
                             playerList.Ready(msgReceived.strName);
                         });
+                        break;
+                    case Command.Clear:
+                        if (allStrokes != null)
+                            allStrokes.Clear();
+                        if (currentStroke != null)
+                            currentStroke.Clear();
+                        drawingBoard.Invalidate();
                         break;
 
                     case Command.List:
