@@ -33,22 +33,22 @@
             // 
             // flpPlayers
             // 
-            this.flpPlayers.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
             this.flpPlayers.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.flpPlayers.Location = new System.Drawing.Point(3, 3);
+            this.flpPlayers.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.flpPlayers.Location = new System.Drawing.Point(0, 0);
+            this.flpPlayers.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.flpPlayers.Name = "flpPlayers";
-            this.flpPlayers.Size = new System.Drawing.Size(210, 624);
+            this.flpPlayers.Size = new System.Drawing.Size(288, 775);
             this.flpPlayers.TabIndex = 0;
             // 
             // PlayerList
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.flpPlayers);
+            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Name = "PlayerList";
-            this.Size = new System.Drawing.Size(216, 630);
+            this.Size = new System.Drawing.Size(288, 775);
             this.ResumeLayout(false);
 
         }

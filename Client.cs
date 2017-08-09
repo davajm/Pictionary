@@ -26,6 +26,8 @@ namespace Pictionary
 
         bool mouseDown, isDrawing;
 
+        Timer timerCountDown;               // Timer for countdown down seconds when player is drawing
+
         public Client(string userName, Socket client)
         {
             this.userName = userName;
@@ -36,6 +38,9 @@ namespace Pictionary
             allStrokes = new List<List<Point>>();
             mouseDown = isDrawing = false;
             g = drawingBoard.CreateGraphics();
+            timerCountDown = new Timer();
+            timerCountDown.Interval = 1000;
+            timerCountDown.Tick += new EventHandler(LabelCountDownTick);
         }
 
         private void OnSend(IAsyncResult ar)
@@ -91,6 +96,36 @@ namespace Pictionary
             });
         }
 
+        private void StopCountDown()
+        {
+            countdown.Invoke((MethodInvoker)delegate
+            {
+                timerCountDown.Stop();
+                countdown.Enabled = countdown.Visible = false;
+            });
+        }
+
+        private void StartCountDown()
+        {
+            countdown.Invoke((MethodInvoker)delegate
+            {
+                timerCountDown.Start();
+                countdown.Enabled = countdown.Visible = true;
+            });
+        }
+
+        private void LabelCountDownTick(object sender, EventArgs e)
+        {
+            if (countdown.Text == "0")
+            {
+                StopCountDown();
+            }
+            else
+            {
+                countdown.Text = (Int32.Parse(countdown.Text)-1).ToString();
+            }
+        }
+
         private void OnReceive(IAsyncResult ar)
         {
             try
@@ -140,6 +175,7 @@ namespace Pictionary
                         playerList.Invoke((MethodInvoker)delegate {
                             playerList.SetChoosingWord(msgReceived.strName);
                         });
+                        StopCountDown();
                         break;
                     case Command.StartDrawing:
                         if (msgReceived.strName == userName)
@@ -153,6 +189,11 @@ namespace Pictionary
                         }
                         playerList.Invoke((MethodInvoker)delegate {
                             playerList.SetDrawing(msgReceived.strName);
+                        });
+                        countdown.Invoke((MethodInvoker)delegate
+                        {
+                            countdown.Text = "90";
+                            StartCountDown();
                         });
                         break;
                     case Command.CorrectGuess:
