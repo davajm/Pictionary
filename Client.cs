@@ -177,6 +177,15 @@ namespace Pictionary
                         });
                         StopCountDown();
                         break;
+                    case Command.RoundOver:
+                        // Show results for current round
+                        // Stop timer
+                        // Ask new user to choose word
+                        break;
+                    case Command.GameOver:
+                        // Show results
+                        // Wait for players to get ready for a new game
+                        break;
                     case Command.StartDrawing:
                         if (msgReceived.strName == userName)
                         {

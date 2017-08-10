@@ -13,8 +13,9 @@ namespace Pictionary
     public partial class Player : UserControl
     {
         private string name;
-        private int score;
+        private int totalScore, currentScore;
         private bool ready;
+        private bool isDrawing;
 
         public Player(string name)
         {
@@ -24,6 +25,10 @@ namespace Pictionary
             lblName.Text = name;
             lblScore.Text = "0";
         }
+        public int GetRoudScore()
+        {
+            return currentScore;
+        }
 
         public string GetName()
         {
@@ -32,27 +37,34 @@ namespace Pictionary
 
         public void AddScore(int score)
         {
-            this.score += score;
-            lblScore.Text = this.score.ToString();
-            lblState.Text = "+" + score;
+            currentScore = score;
+            lblScore.Text = currentScore.ToString();
+            lblState.Text = "+" + currentScore;
             lblState.Enabled = lblState.Visible = true;
         }
 
         public void ResetScore()
         {
-            score = 0;
-            lblScore.Text = score.ToString();
+            totalScore = 0;
+            currentScore = 0;
+            lblScore.Text = totalScore.ToString();
         }
 
         public void SetDrawing(bool isDrawing)
         {
             lblState.Text = "Drawing";
-            lblState.Enabled = lblState.Visible = isDrawing;
+            isDrawing = lblState.Enabled = lblState.Visible = isDrawing;
+        }
+        public bool IsDrawing()
+        {
+            return isDrawing;
         }
 
         public void SetChoosingWord(bool isChoosing)
         {
             lblState.Text = "Choosing word";
+            totalScore += currentScore;
+            currentScore = 0;
             lblState.Enabled = lblState.Visible = isChoosing;
         }
 

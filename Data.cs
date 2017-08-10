@@ -19,6 +19,8 @@ namespace Pictionary
         StartDrawing,   // Indicates the user that's currently drawing
         ChooseWord,     // Round's over, stop drawing
         CorrectGuess,   // Indicate correct guess of the word being drawn
+        RoundOver,      // Indicates that current round is over
+        GameOver,       // Indicates that the game is over
         NewStroke,      // Initiate a new stroke
         Stroke,         // Continue on current stroke
         EraseStroke,    // Erase last stroke
