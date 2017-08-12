@@ -102,7 +102,7 @@ namespace Pictionary
         public void OnSend(IAsyncResult ar)
         {
             try
-            {
+            {                
                 Socket client = (Socket)ar.AsyncState;
                 client.EndSend(ar);
             }
@@ -117,7 +117,7 @@ namespace Pictionary
         /// </summary>
         /// <param name="rounds"> Amount of rounds </param>
         /// <param name="time"> Time per round in seconds </param>
-        private void NewGame(int rounds, int time)
+        private void NewGame()
         {
             // Read words from text file
             if (words == null)
@@ -127,7 +127,7 @@ namespace Pictionary
             }
 
             mre = new ManualResetEvent(false);
-            for (int i = 0; i < rounds; i++)
+            for (int i = 0; i < 3; i++)
             {
                 foreach (ClientInfo client in clients)
                 {
@@ -183,7 +183,26 @@ namespace Pictionary
 
                     // Wait for timer or all users to guess correctly
                     System.Timers.Timer timer = new System.Timers.Timer();
-                    timer.Interval = time * 1000;
+                    timer.Interval = 90000;
+                    timer.Elapsed += NewDrawer;
+                    timer.AutoReset = false;
+                    timer.Enabled = true;
+
+                    mre.Reset();
+                    mre.WaitOne();
+                    timer.Enabled = false;
+
+                    // Tell player to start drawing
+                    msgToSend.cmdCommand = Command.RoundOver;
+                    msgToSend.strMessage = currentWord;
+                    message = msgToSend.ToByte();
+                    foreach (ClientInfo clientInfo in clients)
+                    {
+                        //Send the message to all users
+                        clientInfo.socket.BeginSend(message, 0, message.Length, SocketFlags.None, new AsyncCallback(OnSend), clientInfo.socket);
+                    }
+
+                    timer.Interval = 10000;
                     timer.Elapsed += NewDrawer;
                     timer.AutoReset = false;
                     timer.Enabled = true;
@@ -219,6 +238,8 @@ namespace Pictionary
                 msgToSend.cmdCommand = msgReceived.cmdCommand;
                 msgToSend.strName = msgReceived.strName;
                 broadcastMessage = true;
+
+                bool newDrawer = false;
 
                 switch (msgReceived.cmdCommand)
                 {
@@ -275,7 +296,7 @@ namespace Pictionary
 
 
                                         // Check if all players have guessed correctly
-                                        bool newDrawer = true;
+                                        newDrawer = true;
                                         foreach (ClientInfo c in clients)
                                         {
                                             if (!c.hasGuessed && !c.isDrawing)
@@ -283,11 +304,6 @@ namespace Pictionary
                                                 newDrawer = false;
                                                 break;
                                             }
-                                        }
-                                        // If all players have guessed correctly
-                                        if (newDrawer)
-                                        {
-                                            mre.Set();
                                         }
                                         break;
                                     }
@@ -416,9 +432,13 @@ namespace Pictionary
 
                             // Change state
                             state = State.Drawing;
-                            Task.Factory.StartNew(() => NewGame(10, 90));
+                            Task.Factory.StartNew(() => NewGame());
                         }
                     }
+                }
+                if (newDrawer)
+                {
+                    mre.Set();
                 }
             }
             catch (ObjectDisposedException) { }

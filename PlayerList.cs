@@ -40,6 +40,12 @@ namespace Pictionary
             }
         }
 
+        // Return the list of players
+        public List<Player> GetPlayers()
+        {
+            return players;
+        }
+
         // Set player to ready
         public void Ready(string name)
         {

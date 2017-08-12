@@ -25,7 +25,13 @@ namespace Pictionary
             lblName.Text = name;
             lblScore.Text = "0";
         }
-        public int GetRoudScore()
+
+        public int GetTotalScore()
+        {
+            return totalScore;
+        }
+
+        public int GetRoundScore()
         {
             return currentScore;
         }

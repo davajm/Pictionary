@@ -28,6 +28,8 @@ namespace Pictionary
 
         Timer timerCountDown;               // Timer for countdown down seconds when player is drawing
 
+        Results result;
+
         public Client(string userName, Socket client)
         {
             this.userName = userName;
@@ -161,6 +163,13 @@ namespace Pictionary
                         HideLabel();
                         break;
                     case Command.ChooseWord:
+                        if (result != null)
+                        {
+                            result.Invoke((MethodInvoker)delegate
+                            {
+                                drawingBoard.Controls.Remove(result);
+                            });
+                        }
                         isDrawing = false;
                         if (msgReceived.strName == userName)
                         {
@@ -177,11 +186,7 @@ namespace Pictionary
                         });
                         StopCountDown();
                         break;
-                    case Command.RoundOver:
-                        // Show results for current round
-                        // Stop timer
-                        // Ask new user to choose word
-                        break;
+
                     case Command.GameOver:
                         // Show results
                         // Wait for players to get ready for a new game
@@ -208,6 +213,15 @@ namespace Pictionary
                     case Command.CorrectGuess:
                         playerList.Invoke((MethodInvoker)delegate {
                             playerList.AddScore(msgReceived.strName, Int32.Parse(msgReceived.strMessage));
+                        });
+                        break;
+                    case Command.RoundOver:
+                        result = new Results(playerList.GetPlayers(), msgReceived.strMessage);
+                        drawingBoard.Invoke((MethodInvoker)delegate
+                        {
+                            result.Left = (drawingBoard.Width - result.Width) / 2;
+                            result.Top = (drawingBoard.Height - result.Height) / 2;
+                            drawingBoard.Controls.Add(result);
                         });
                         break;
                     case Command.NewStroke:

@@ -28,60 +28,65 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.label1 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            this.mainTitle = new System.Windows.Forms.Label();
+            this.subTitle = new System.Windows.Forms.Label();
+            this.tlpScoreBoard = new System.Windows.Forms.TableLayoutPanel();
             this.SuspendLayout();
             // 
-            // label1
+            // mainTitle
             // 
-            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(9, 11);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(695, 48);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "Round\'s over, the word was:";
-            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.mainTitle.Font = new System.Drawing.Font("Microsoft Sans Serif", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.mainTitle.Location = new System.Drawing.Point(7, 9);
+            this.mainTitle.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.mainTitle.Name = "mainTitle";
+            this.mainTitle.Size = new System.Drawing.Size(521, 39);
+            this.mainTitle.TabIndex = 0;
+            this.mainTitle.Text = "Round\'s over, the word was:";
+            this.mainTitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // label2
+            // subTitle
             // 
-            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(3, 51);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(701, 52);
-            this.label2.TabIndex = 1;
-            this.label2.Text = "WORD";
-            this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.subTitle.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.subTitle.Location = new System.Drawing.Point(2, 41);
+            this.subTitle.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.subTitle.Name = "subTitle";
+            this.subTitle.Size = new System.Drawing.Size(526, 42);
+            this.subTitle.TabIndex = 1;
+            this.subTitle.Text = "WORD";
+            this.subTitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // tableLayoutPanel1
+            // tlpScoreBoard
             // 
-            this.tableLayoutPanel1.ColumnCount = 2;
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(90, 114);
-            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 1;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 14.02116F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(530, 378);
-            this.tableLayoutPanel1.TabIndex = 2;
+            this.tlpScoreBoard.ColumnCount = 2;
+            this.tlpScoreBoard.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 75F));
+            this.tlpScoreBoard.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.tlpScoreBoard.Location = new System.Drawing.Point(60, 101);
+            this.tlpScoreBoard.Name = "tlpScoreBoard";
+            this.tlpScoreBoard.RowCount = 1;
+            this.tlpScoreBoard.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tlpScoreBoard.Size = new System.Drawing.Size(418, 291);
+            this.tlpScoreBoard.TabIndex = 2;
             // 
             // Results
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.tableLayoutPanel1);
-            this.Controls.Add(this.label2);
-            this.Controls.Add(this.label1);
+            this.BackColor = System.Drawing.SystemColors.Control;
+            this.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.Controls.Add(this.tlpScoreBoard);
+            this.Controls.Add(this.subTitle);
+            this.Controls.Add(this.mainTitle);
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "Results";
-            this.Size = new System.Drawing.Size(707, 540);
+            this.Size = new System.Drawing.Size(528, 437);
             this.ResumeLayout(false);
 
         }
 
         #endregion
 
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
+        private System.Windows.Forms.Label mainTitle;
+        private System.Windows.Forms.Label subTitle;
+        private System.Windows.Forms.TableLayoutPanel tlpScoreBoard;
     }
 }

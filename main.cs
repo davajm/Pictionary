@@ -167,5 +167,13 @@ namespace Pictionary
         {
             Application.Exit();
         }
+
+        private void Name_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == '*')
+            {
+                e.Handled = true;
+            }
+        }
     }
 }
