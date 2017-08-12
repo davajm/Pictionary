@@ -21,6 +21,7 @@ namespace Pictionary
         CorrectGuess,   // Indicate correct guess of the word being drawn
         RoundOver,      // Indicates that current round is over
         GameOver,       // Indicates that the game is over
+        GameOverFinal,  // Remove end screen, wait for players to get ready again
         NewStroke,      // Initiate a new stroke
         Stroke,         // Continue on current stroke
         EraseStroke,    // Erase last stroke

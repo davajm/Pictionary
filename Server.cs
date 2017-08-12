@@ -119,23 +119,24 @@ namespace Pictionary
         /// <param name="time"> Time per round in seconds </param>
         private void NewGame()
         {
+            int rounds = 1;
             // Read words from text file
             if (words == null)
             {
                 words = File.ReadAllLines("words.txt");
                 random = new Random();
             }
-
             mre = new ManualResetEvent(false);
-            for (int i = 0; i < 3; i++)
+            System.Timers.Timer timer = new System.Timers.Timer();
+            Data msgToSend = new Data();
+            byte[] message;
+            for (int i = 0; i < rounds; i++)
             {
                 foreach (ClientInfo client in clients)
                 {
                     state = State.ChoosingWord;
                     currentWord = null;
                     currentScore = 100;
-                    Data msgToSend = new Data();
-                    byte[] message;
 
                     msgToSend.cmdCommand = Command.ChooseWord;
                     msgToSend.strMessage = null;
@@ -182,9 +183,8 @@ namespace Pictionary
                     state = State.Drawing;
 
                     // Wait for timer or all users to guess correctly
-                    System.Timers.Timer timer = new System.Timers.Timer();
                     timer.Interval = 90000;
-                    timer.Elapsed += NewDrawer;
+                    timer.Elapsed += ResetTimer;
                     timer.AutoReset = false;
                     timer.Enabled = true;
 
@@ -192,28 +192,66 @@ namespace Pictionary
                     mre.WaitOne();
                     timer.Enabled = false;
 
-                    // Tell player to start drawing
-                    msgToSend.cmdCommand = Command.RoundOver;
-                    msgToSend.strMessage = currentWord;
-                    message = msgToSend.ToByte();
-                    foreach (ClientInfo clientInfo in clients)
+                    if (i == rounds-1 && clients.IndexOf(client) == clients.Count-1)  // If the final round
                     {
-                        //Send the message to all users
-                        clientInfo.socket.BeginSend(message, 0, message.Length, SocketFlags.None, new AsyncCallback(OnSend), clientInfo.socket);
+                        // Tell users the game is over and show end scren.
+                        msgToSend.cmdCommand = Command.GameOver;
+                        msgToSend.strMessage = null;
+                        msgToSend.strName = null;
+                        message = msgToSend.ToByte();
+                        foreach (ClientInfo clientInfo in clients)
+                        {
+                            //Send the message to all users
+                            clientInfo.socket.BeginSend(message, 0, message.Length, SocketFlags.None, new AsyncCallback(OnSend), clientInfo.socket);
+                        }
+                        timer.Interval = 10000;
+                        timer.Elapsed += ResetTimer;
+                        timer.AutoReset = false;
+                        timer.Enabled = true;
+
+                        mre.Reset();
+                        mre.WaitOne();
+                        timer.Enabled = false;
                     }
+                    else // If not final round
+                    {
+                        // Tell players the round is over
+                        msgToSend.cmdCommand = Command.RoundOver;
+                        msgToSend.strMessage = currentWord;
+                        message = msgToSend.ToByte();
+                        foreach (ClientInfo clientInfo in clients)
+                        {
+                            //Send the message to all users
+                            clientInfo.socket.BeginSend(message, 0, message.Length, SocketFlags.None, new AsyncCallback(OnSend), clientInfo.socket);
+                        }
 
-                    timer.Interval = 10000;
-                    timer.Elapsed += NewDrawer;
-                    timer.AutoReset = false;
-                    timer.Enabled = true;
+                        timer.Interval = 1000;
+                        timer.Elapsed += ResetTimer;
+                        timer.AutoReset = false;
+                        timer.Enabled = true;
 
-                    mre.Reset();
-                    mre.WaitOne();
-                    timer.Enabled = false;
+                        mre.Reset();
+                        mre.WaitOne();
+                        timer.Enabled = false;
+                    }
                 }
             }
+
+            // Tell users to ready up again
+            msgToSend.cmdCommand = Command.GameOverFinal;
+            msgToSend.strMessage = null;
+            msgToSend.strName = null;
+            message = msgToSend.ToByte();
+            foreach (ClientInfo clientInfo in clients)
+            {
+                //Send the message to all users
+                clientInfo.socket.BeginSend(message, 0, message.Length, SocketFlags.None, new AsyncCallback(OnSend), clientInfo.socket);
+            }
+
+            // Switch state to waiting for players.
+            state = State.WaitingForPlayers;
         }
-        private void NewDrawer(object sender, ElapsedEventArgs e)
+        private void ResetTimer(object sender, ElapsedEventArgs e)
         {
             mre.Set();
         }

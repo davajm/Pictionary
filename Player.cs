@@ -21,11 +21,11 @@ namespace Pictionary
         {
             ready = false;
             this.name = name;
+            this.isDrawing = false;
             InitializeComponent();
             lblName.Text = name;
             lblScore.Text = "0";
         }
-
         public int GetTotalScore()
         {
             return totalScore;
@@ -35,12 +35,23 @@ namespace Pictionary
         {
             return currentScore;
         }
+        public void NewGame()
+        {
+            totalScore = currentScore = 0;
+            lblState.Enabled = lblState.Visible = false;
+        }
 
         public string GetName()
         {
             return name;
         }
 
+        public void EndRound()
+        {
+            totalScore += currentScore;
+            currentScore = 0;
+            isDrawing = lblState.Enabled = lblState.Visible = false;
+        }
         public void AddScore(int score)
         {
             currentScore = score;
@@ -56,22 +67,20 @@ namespace Pictionary
             lblScore.Text = totalScore.ToString();
         }
 
-        public void SetDrawing(bool isDrawing)
+        public void SetDrawing()
         {
             lblState.Text = "Drawing";
-            isDrawing = lblState.Enabled = lblState.Visible = isDrawing;
+            this.isDrawing = lblState.Enabled = lblState.Visible = true;
         }
         public bool IsDrawing()
         {
             return isDrawing;
         }
 
-        public void SetChoosingWord(bool isChoosing)
+        public void SetChoosingWord()
         {
             lblState.Text = "Choosing word";
-            totalScore += currentScore;
-            currentScore = 0;
-            lblState.Enabled = lblState.Visible = isChoosing;
+            lblState.Enabled = lblState.Visible = true;
         }
 
         public void Ready()

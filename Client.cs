@@ -160,6 +160,9 @@ namespace Pictionary
                         btnReady.Invoke((MethodInvoker)delegate {
                             btnReady.Visible = btnReady.Enabled = false;
                         });
+                        playerList.Invoke((MethodInvoker)delegate {
+                            playerList.NewGame();
+                        }); 
                         HideLabel();
                         break;
                     case Command.ChooseWord:
@@ -185,11 +188,6 @@ namespace Pictionary
                             playerList.SetChoosingWord(msgReceived.strName);
                         });
                         StopCountDown();
-                        break;
-
-                    case Command.GameOver:
-                        // Show results
-                        // Wait for players to get ready for a new game
                         break;
                     case Command.StartDrawing:
                         if (msgReceived.strName == userName)
@@ -223,6 +221,29 @@ namespace Pictionary
                             result.Top = (drawingBoard.Height - result.Height) / 2;
                             drawingBoard.Controls.Add(result);
                         });
+                        playerList.Invoke((MethodInvoker)delegate {
+                            playerList.EndRound();
+                        });
+                        break;
+                    case Command.GameOver:
+                        playerList.Invoke((MethodInvoker)delegate {
+                            playerList.EndRound();
+                        });
+                        result.Invoke((MethodInvoker)delegate
+                        {
+                            drawingBoard.Controls.Remove(result);
+                        });
+                        result = new Results(playerList.GetPlayers());
+                        drawingBoard.Invoke((MethodInvoker)delegate
+                        {
+                            result.Left = (drawingBoard.Width - result.Width) / 2;
+                            result.Top = (drawingBoard.Height - result.Height) / 2;
+                            drawingBoard.Controls.Add(result);
+                        });
+                        break;
+                    case Command.GameOverFinal:
+                        // Show results
+                        // Wait for players to get ready for a new game
                         break;
                     case Command.NewStroke:
                         drawingBoard.Invoke((MethodInvoker)delegate

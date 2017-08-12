@@ -40,6 +40,14 @@ namespace Pictionary
             }
         }
 
+        public void NewGame()
+        {
+            foreach (Player p in players)
+            {
+                p.NewGame();
+            }
+        }
+
         // Return the list of players
         public List<Player> GetPlayers()
         {
@@ -65,11 +73,7 @@ namespace Pictionary
             {
                 if (p.GetName() == name)
                 {
-                    p.SetDrawing(true);
-                }
-                else
-                {
-                    p.SetDrawing(false);
+                    p.SetDrawing();
                 }
             }
         }
@@ -81,12 +85,16 @@ namespace Pictionary
             {
                 if (p.GetName() == name)
                 {
-                    p.SetChoosingWord(true);
+                    p.SetChoosingWord();
                 }
-                else
-                {
-                    p.SetChoosingWord(false);
-                }
+            }
+        }
+
+        public void EndRound()
+        {
+            foreach (Player p in players)
+            {
+                p.EndRound();
             }
         }
 
