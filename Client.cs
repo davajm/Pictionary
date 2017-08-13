@@ -214,6 +214,9 @@ namespace Pictionary
                         });
                         break;
                     case Command.RoundOver:
+                        HideLabel();
+                        isDrawing = false;
+                        StopCountDown();
                         result = new Results(playerList.GetPlayers(), msgReceived.strMessage);
                         drawingBoard.Invoke((MethodInvoker)delegate
                         {
@@ -226,6 +229,9 @@ namespace Pictionary
                         });
                         break;
                     case Command.GameOver:
+                        HideLabel();
+                        isDrawing = false;
+                        StopCountDown();
                         playerList.Invoke((MethodInvoker)delegate {
                             playerList.EndRound();
                         });
@@ -242,8 +248,17 @@ namespace Pictionary
                         });
                         break;
                     case Command.GameOverFinal:
-                        // Show results
-                        // Wait for players to get ready for a new game
+                        result.Invoke((MethodInvoker)delegate
+                        {
+                            drawingBoard.Controls.Remove(result);
+                        });
+                        ChangeLabelText("Waiting for players to get ready");
+                        btnReady.Invoke((MethodInvoker)delegate {
+                            btnReady.Visible = btnReady.Enabled = true;
+                        });
+                        playerList.Invoke((MethodInvoker)delegate {
+                            playerList.NewGame();
+                        });
                         break;
                     case Command.NewStroke:
                         drawingBoard.Invoke((MethodInvoker)delegate

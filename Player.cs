@@ -38,7 +38,8 @@ namespace Pictionary
         public void NewGame()
         {
             totalScore = currentScore = 0;
-            lblState.Enabled = lblState.Visible = false;
+            lblScore.Text = "0";
+            ready = lblState.Enabled = lblState.Visible = false;
         }
 
         public string GetName()

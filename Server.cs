@@ -43,11 +43,16 @@ namespace Pictionary
 
         ManualResetEvent mre;
 
+        Task t;
+
         public Server(int port)
         {
             clients = new List<ClientInfo>();
             state = State.WaitingForPlayers;
             StartServer(port);
+            random = new Random();
+            words = File.ReadAllLines("words.txt");
+            mre = new ManualResetEvent(false);
         }
         private void StartServer(int port)
         {
@@ -117,16 +122,10 @@ namespace Pictionary
         /// </summary>
         /// <param name="rounds"> Amount of rounds </param>
         /// <param name="time"> Time per round in seconds </param>
-        private void NewGame()
+        private async Task NewGame()
         {
             int rounds = 1;
-            // Read words from text file
-            if (words == null)
-            {
-                words = File.ReadAllLines("words.txt");
-                random = new Random();
-            }
-            mre = new ManualResetEvent(false);
+
             System.Timers.Timer timer = new System.Timers.Timer();
             Data msgToSend = new Data();
             byte[] message;
@@ -143,6 +142,7 @@ namespace Pictionary
                     msgToSend.strName = client.strName;
 
                     message = msgToSend.ToByte();
+                    await Task.Delay(1);
 
                     // Broadcast that player is choosing word
                     foreach (ClientInfo clientInfo in clients)
@@ -204,7 +204,7 @@ namespace Pictionary
                             //Send the message to all users
                             clientInfo.socket.BeginSend(message, 0, message.Length, SocketFlags.None, new AsyncCallback(OnSend), clientInfo.socket);
                         }
-                        timer.Interval = 10000;
+                        timer.Interval = 1000;
                         timer.Elapsed += ResetTimer;
                         timer.AutoReset = false;
                         timer.Enabled = true;
@@ -250,6 +250,11 @@ namespace Pictionary
 
             // Switch state to waiting for players.
             state = State.WaitingForPlayers;
+            foreach (ClientInfo client in clients)
+            {
+                client.isReady = client.isDrawing =  client.hasGuessed = false;
+                client.score = 0;
+            }
         }
         private void ResetTimer(object sender, ElapsedEventArgs e)
         {
@@ -470,7 +475,7 @@ namespace Pictionary
 
                             // Change state
                             state = State.Drawing;
-                            Task.Factory.StartNew(() => NewGame());
+                            Task.Run(NewGame);
                         }
                     }
                 }
