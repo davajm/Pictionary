@@ -43,8 +43,6 @@ namespace Pictionary
 
         ManualResetEvent mre;
 
-        Task t;
-
         public Server(int port)
         {
             clients = new List<ClientInfo>();

@@ -30,6 +30,8 @@ namespace Pictionary
 
         Results result;
 
+        Pen pen;
+
         public Client(string userName, Socket client)
         {
             this.userName = userName;
@@ -43,6 +45,7 @@ namespace Pictionary
             timerCountDown = new Timer();
             timerCountDown.Interval = 1000;
             timerCountDown.Tick += new EventHandler(LabelCountDownTick);
+            pen = new Pen(Color.Black);
         }
 
         private void OnSend(IAsyncResult ar)
@@ -192,6 +195,10 @@ namespace Pictionary
                     case Command.StartDrawing:
                         if (msgReceived.strName == userName)
                         {
+                            drawingPanel.Invoke((MethodInvoker)delegate
+                            {
+                                drawingPanel.Visible = drawingPanel.Enabled = true;
+                            });
                             isDrawing = true;
                         }
                         else
@@ -342,19 +349,6 @@ namespace Pictionary
             });
         }
 
-        private void input_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Enter)
-            {
-                if (input.TextLength > 0)
-                {
-                    SendMessage(input.Text, Command.Message);
-                    input.Clear();
-                }
-                e.Handled = true;
-                e.SuppressKeyPress = true;
-            }
-        }
 
         private void Client_Load(object sender, EventArgs e)
         {
@@ -423,8 +417,6 @@ namespace Pictionary
         {
             if (isDrawing)
             {
-                System.Drawing.SolidBrush myBrush = new System.Drawing.SolidBrush(System.Drawing.Color.Red);
-
                 if (mouseDown)
                 {
                     currentStroke.Add(e.Location);
@@ -484,7 +476,54 @@ namespace Pictionary
         private void drawingBoard_Paint(object sender, PaintEventArgs e)
         {
             foreach (List<Point> stroke in allStrokes.Where(x => x.Count > 1))
-                e.Graphics.DrawLines(System.Drawing.Pens.Black, stroke.ToArray());
+                e.Graphics.DrawLines(pen, stroke.ToArray());
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            ColorDialog cd = new ColorDialog();
+           
+            DialogResult result = cd.ShowDialog();
+            if (result == DialogResult.OK)
+            {
+                colorPicker.BackColor = cd.Color;
+                pen.Color = cd.Color;
+            }
+        }
+
+        private void btnPen_Click(object sender, EventArgs e)
+        {
+            btnPen.FlatAppearance.BorderColor = Color.Blue;
+            btnPen.FlatAppearance.BorderSize = 2;
+            btnFill.FlatAppearance.BorderColor = Color.Black;
+            btnFill.FlatAppearance.BorderSize = 1;
+            btnErase.FlatAppearance.BorderColor = Color.Black;
+            btnErase.FlatAppearance.BorderSize = 1;
+        }
+
+        private void btnFill_Click(object sender, EventArgs e)
+        {
+            btnPen.FlatAppearance.BorderColor = Color.Black;
+            btnPen.FlatAppearance.BorderSize = 1;
+            btnFill.FlatAppearance.BorderColor = Color.Blue;
+            btnFill.FlatAppearance.BorderSize = 2;
+            btnErase.FlatAppearance.BorderColor = Color.Black;
+            btnErase.FlatAppearance.BorderSize = 1;
+        }
+
+        private void btnErase_Click(object sender, EventArgs e)
+        {
+            btnPen.FlatAppearance.BorderColor = Color.Black;
+            btnPen.FlatAppearance.BorderSize = 1;
+            btnFill.FlatAppearance.BorderColor = Color.Black;
+            btnFill.FlatAppearance.BorderSize = 1;
+            btnErase.FlatAppearance.BorderColor = Color.Blue;
+            btnErase.FlatAppearance.BorderSize = 2;
+        }
+
+        private void btnSize_Click(object sender, EventArgs e)
+        {
+            cmsSize.Show(btnSize, new Point(-(cmsSize.Width-btnSize.Width)/2, -cmsSize.Height));
         }
 
         private void chooseWord_NewWordChosen(object sender, EventArgs e)
@@ -493,6 +532,45 @@ namespace Pictionary
             HideChooseWordControl();
             SendMessage(b.Text, Command.ChooseWord);
             ChangeLabelText("You are drawing " + b.Text);
+        }
+        private void input_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == (char) Keys.Enter)
+            {
+                if (input.TextLength > 0)
+                {
+                    SendMessage(input.Text, Command.Message);
+                    input.Clear();
+                }
+                e.Handled = true;
+            }
+        }
+        private void chat_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (!Char.IsControl(e.KeyChar))
+                input.AppendText(e.KeyChar.ToString());
+            else
+                input_KeyPress(sender, e);
+            input.Focus();
+            e.Handled = true;
+        }
+
+        private void Client_Enter(object sender, EventArgs e)
+        {
+            input.Focus();
+        }
+
+        private void SizeClick(object sender, EventArgs e)
+        {
+            foreach(ToolStripMenuItem item in cmsSize.Items)
+            {
+                if (item == (ToolStripMenuItem)sender)
+                    item.BackColor = SystemColors.GradientActiveCaption;
+                else
+                    item.BackColor = Color.Transparent;
+            }
+            // TO DO: 
+            // Change pixel size of pen
         }
     }
 }

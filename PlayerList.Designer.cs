@@ -36,19 +36,17 @@
             this.flpPlayers.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.flpPlayers.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flpPlayers.Location = new System.Drawing.Point(0, 0);
-            this.flpPlayers.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.flpPlayers.Name = "flpPlayers";
-            this.flpPlayers.Size = new System.Drawing.Size(288, 775);
+            this.flpPlayers.Size = new System.Drawing.Size(216, 630);
             this.flpPlayers.TabIndex = 0;
             // 
             // PlayerList
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.flpPlayers);
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Name = "PlayerList";
-            this.Size = new System.Drawing.Size(288, 775);
+            this.Size = new System.Drawing.Size(216, 630);
             this.ResumeLayout(false);
 
         }
