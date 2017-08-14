@@ -23,14 +23,16 @@ namespace Pictionary
         private Graphics g;
         List<List<Point>> allStrokes;  // All strokesk user has drawn
         List<Point> currentStroke;     // Current stroke user is drawing
+        List<int> size = new List<int>();
 
         bool mouseDown, isDrawing;
-
+        
         Timer timerCountDown;               // Timer for countdown down seconds when player is drawing
 
         Results result;
 
         Pen pen;
+        int penSize = 1;
 
         public Client(string userName, Socket client)
         {
@@ -273,6 +275,7 @@ namespace Pictionary
                             currentStroke = new List<Point>();
                             currentStroke.Add(msgReceived.p1);
                             allStrokes.Add(currentStroke);
+                            size.Add(msgReceived.size);
                             drawingBoard.Invalidate();
                         });
                         break;
@@ -380,7 +383,6 @@ namespace Pictionary
             if (isDrawing)
             {
                 mouseDown = true;
-
                 // Mouse is down, start a new stroke
                 currentStroke = new List<Point>();
 
@@ -389,6 +391,7 @@ namespace Pictionary
 
                 // Add stroke to the list
                 allStrokes.Add(currentStroke);
+                size.Add(penSize);
                 try
                 {
                     //Fill the info for the message to be send
@@ -396,7 +399,7 @@ namespace Pictionary
 
                     msgToSend.cmdCommand = Command.NewStroke;
                     msgToSend.strName = userName;
-                    msgToSend.size = 0;
+                    msgToSend.size = penSize;
                     msgToSend.shape = 0;
                     msgToSend.p1 = e.Location;
                     msgToSend.color = Color.Black;
@@ -475,8 +478,13 @@ namespace Pictionary
 
         private void drawingBoard_Paint(object sender, PaintEventArgs e)
         {
+            int i = 0;
             foreach (List<Point> stroke in allStrokes.Where(x => x.Count > 1))
+            {
+                pen.Width = size[i];    
                 e.Graphics.DrawLines(pen, stroke.ToArray());
+                i++;
+            }
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -562,12 +570,29 @@ namespace Pictionary
 
         private void SizeClick(object sender, EventArgs e)
         {
+            ToolStripMenuItem senderItem = (ToolStripMenuItem)sender;
             foreach(ToolStripMenuItem item in cmsSize.Items)
             {
-                if (item == (ToolStripMenuItem)sender)
+                if (item == senderItem)
                     item.BackColor = SystemColors.GradientActiveCaption;
                 else
                     item.BackColor = Color.Transparent;
+            }
+            int indexOfItem = cmsSize.Items.IndexOf(senderItem);
+            switch (indexOfItem)
+            {
+                case 0:
+                    penSize = 1;
+                    break;
+                case 1:
+                    penSize = 3;
+                    break;
+                case 2:
+                    penSize = 5;
+                    break;
+                case 3:
+                    penSize = 8;
+                    break;
             }
             // TO DO: 
             // Change pixel size of pen

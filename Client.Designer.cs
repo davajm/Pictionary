@@ -57,9 +57,10 @@
             // btnReady
             // 
             this.btnReady.Font = new System.Drawing.Font("Tahoma", 13F);
-            this.btnReady.Location = new System.Drawing.Point(223, 9);
+            this.btnReady.Location = new System.Drawing.Point(297, 11);
+            this.btnReady.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.btnReady.Name = "btnReady";
-            this.btnReady.Size = new System.Drawing.Size(75, 30);
+            this.btnReady.Size = new System.Drawing.Size(100, 37);
             this.btnReady.TabIndex = 2;
             this.btnReady.TabStop = false;
             this.btnReady.Text = "Ready";
@@ -71,9 +72,10 @@
             this.lblWaiting.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.lblWaiting.Font = new System.Drawing.Font("Tahoma", 18F);
-            this.lblWaiting.Location = new System.Drawing.Point(304, 13);
+            this.lblWaiting.Location = new System.Drawing.Point(405, 16);
+            this.lblWaiting.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblWaiting.Name = "lblWaiting";
-            this.lblWaiting.Size = new System.Drawing.Size(872, 29);
+            this.lblWaiting.Size = new System.Drawing.Size(1163, 36);
             this.lblWaiting.TabIndex = 3;
             this.lblWaiting.Text = "Waiting for players to get ready";
             this.lblWaiting.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -81,9 +83,10 @@
             // input
             // 
             this.input.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.input.Location = new System.Drawing.Point(1218, 732);
+            this.input.Location = new System.Drawing.Point(1624, 901);
+            this.input.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.input.Name = "input";
-            this.input.Size = new System.Drawing.Size(206, 20);
+            this.input.Size = new System.Drawing.Size(273, 22);
             this.input.TabIndex = 0;
             this.input.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.input_KeyPress);
             // 
@@ -91,10 +94,9 @@
             // 
             this.countdown.Enabled = false;
             this.countdown.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
-            this.countdown.Location = new System.Drawing.Point(224, 9);
-            this.countdown.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.countdown.Location = new System.Drawing.Point(299, 11);
             this.countdown.Name = "countdown";
-            this.countdown.Size = new System.Drawing.Size(75, 35);
+            this.countdown.Size = new System.Drawing.Size(100, 43);
             this.countdown.TabIndex = 7;
             this.countdown.Text = "90";
             this.countdown.Visible = false;
@@ -107,9 +109,10 @@
             this.drawingPanel.Controls.Add(this.btnPen);
             this.drawingPanel.Controls.Add(this.colorPicker);
             this.drawingPanel.Enabled = false;
-            this.drawingPanel.Location = new System.Drawing.Point(218, 693);
+            this.drawingPanel.Location = new System.Drawing.Point(291, 853);
+            this.drawingPanel.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.drawingPanel.Name = "drawingPanel";
-            this.drawingPanel.Size = new System.Drawing.Size(994, 59);
+            this.drawingPanel.Size = new System.Drawing.Size(1325, 73);
             this.drawingPanel.TabIndex = 8;
             this.drawingPanel.Visible = false;
             // 
@@ -121,9 +124,10 @@
             this.btnSize.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnSize.Image = global::Pictionary.Properties.Resources.point4;
             this.btnSize.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.btnSize.Location = new System.Drawing.Point(239, 4);
+            this.btnSize.Location = new System.Drawing.Point(319, 5);
+            this.btnSize.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.btnSize.Name = "btnSize";
-            this.btnSize.Size = new System.Drawing.Size(50, 50);
+            this.btnSize.Size = new System.Drawing.Size(67, 62);
             this.btnSize.TabIndex = 4;
             this.btnSize.TabStop = false;
             this.btnSize.Text = "Size";
@@ -136,9 +140,10 @@
             this.btnErase.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("btnErase.BackgroundImage")));
             this.btnErase.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.btnErase.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnErase.Location = new System.Drawing.Point(116, 3);
+            this.btnErase.Location = new System.Drawing.Point(155, 4);
+            this.btnErase.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.btnErase.Name = "btnErase";
-            this.btnErase.Size = new System.Drawing.Size(50, 50);
+            this.btnErase.Size = new System.Drawing.Size(67, 62);
             this.btnErase.TabIndex = 3;
             this.btnErase.TabStop = false;
             this.btnErase.UseVisualStyleBackColor = true;
@@ -149,9 +154,10 @@
             this.btnFill.BackgroundImage = global::Pictionary.Properties.Resources.fill;
             this.btnFill.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.btnFill.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnFill.Location = new System.Drawing.Point(60, 3);
+            this.btnFill.Location = new System.Drawing.Point(80, 4);
+            this.btnFill.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.btnFill.Name = "btnFill";
-            this.btnFill.Size = new System.Drawing.Size(50, 50);
+            this.btnFill.Size = new System.Drawing.Size(67, 62);
             this.btnFill.TabIndex = 2;
             this.btnFill.TabStop = false;
             this.btnFill.UseVisualStyleBackColor = true;
@@ -162,9 +168,10 @@
             this.btnPen.BackgroundImage = global::Pictionary.Properties.Resources.brush;
             this.btnPen.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.btnPen.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnPen.Location = new System.Drawing.Point(4, 3);
+            this.btnPen.Location = new System.Drawing.Point(5, 4);
+            this.btnPen.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.btnPen.Name = "btnPen";
-            this.btnPen.Size = new System.Drawing.Size(50, 50);
+            this.btnPen.Size = new System.Drawing.Size(67, 62);
             this.btnPen.TabIndex = 1;
             this.btnPen.TabStop = false;
             this.btnPen.UseVisualStyleBackColor = true;
@@ -174,9 +181,10 @@
             // 
             this.colorPicker.BackColor = System.Drawing.Color.Black;
             this.colorPicker.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.colorPicker.Location = new System.Drawing.Point(295, 4);
+            this.colorPicker.Location = new System.Drawing.Point(393, 5);
+            this.colorPicker.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.colorPicker.Name = "colorPicker";
-            this.colorPicker.Size = new System.Drawing.Size(50, 50);
+            this.colorPicker.Size = new System.Drawing.Size(67, 62);
             this.colorPicker.TabIndex = 0;
             this.colorPicker.TabStop = false;
             this.colorPicker.UseVisualStyleBackColor = false;
@@ -186,6 +194,7 @@
             // 
             this.cmsSize.AutoSize = false;
             this.cmsSize.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.cmsSize.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.cmsSize.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.point1,
             this.point2,
@@ -244,9 +253,10 @@
             // 
             // drawingBoard
             // 
-            this.drawingBoard.Location = new System.Drawing.Point(218, 2);
+            this.drawingBoard.Location = new System.Drawing.Point(291, 2);
+            this.drawingBoard.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.drawingBoard.Name = "drawingBoard";
-            this.drawingBoard.Size = new System.Drawing.Size(994, 689);
+            this.drawingBoard.Size = new System.Drawing.Size(1325, 848);
             this.drawingBoard.TabIndex = 5;
             this.drawingBoard.TabStop = false;
             this.drawingBoard.Paint += new System.Windows.Forms.PaintEventHandler(this.drawingBoard_Paint);
@@ -256,11 +266,12 @@
             // 
             // chat
             // 
-            this.chat.Location = new System.Drawing.Point(1218, 9);
+            this.chat.Location = new System.Drawing.Point(1624, 11);
+            this.chat.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.chat.Multiline = true;
             this.chat.Name = "chat";
             this.chat.ReadOnly = true;
-            this.chat.Size = new System.Drawing.Size(206, 717);
+            this.chat.Size = new System.Drawing.Size(273, 882);
             this.chat.TabIndex = 9;
             this.chat.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.chat_KeyPress);
             // 
@@ -269,10 +280,10 @@
             this.chooseWord.BackColor = System.Drawing.SystemColors.Control;
             this.chooseWord.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.chooseWord.Enabled = false;
-            this.chooseWord.Location = new System.Drawing.Point(408, 111);
-            this.chooseWord.Margin = new System.Windows.Forms.Padding(2);
+            this.chooseWord.Location = new System.Drawing.Point(544, 137);
+            this.chooseWord.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.chooseWord.Name = "chooseWord";
-            this.chooseWord.Size = new System.Drawing.Size(630, 220);
+            this.chooseWord.Size = new System.Drawing.Size(839, 270);
             this.chooseWord.TabIndex = 6;
             this.chooseWord.TabStop = false;
             this.chooseWord.Visible = false;
@@ -284,19 +295,19 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.playerList.BackColor = System.Drawing.SystemColors.Control;
-            this.playerList.Location = new System.Drawing.Point(6, 9);
-            this.playerList.Margin = new System.Windows.Forms.Padding(4);
+            this.playerList.Location = new System.Drawing.Point(8, 11);
+            this.playerList.Margin = new System.Windows.Forms.Padding(5);
             this.playerList.Name = "playerList";
-            this.playerList.Size = new System.Drawing.Size(211, 743);
+            this.playerList.Size = new System.Drawing.Size(281, 914);
             this.playerList.TabIndex = 4;
             this.playerList.TabStop = false;
             // 
             // Client
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
-            this.ClientSize = new System.Drawing.Size(1436, 759);
+            this.ClientSize = new System.Drawing.Size(1914, 924);
             this.Controls.Add(this.chat);
             this.Controls.Add(this.drawingPanel);
             this.Controls.Add(this.input);
@@ -306,8 +317,9 @@
             this.Controls.Add(this.btnReady);
             this.Controls.Add(this.drawingBoard);
             this.Controls.Add(this.countdown);
-            this.MaximumSize = new System.Drawing.Size(1500, 798);
-            this.MinimumSize = new System.Drawing.Size(1442, 798);
+            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.MaximumSize = new System.Drawing.Size(1994, 971);
+            this.MinimumSize = new System.Drawing.Size(1917, 971);
             this.Name = "Client";
             this.Text = "Pictionary";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Client_FormClosing);
