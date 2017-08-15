@@ -19,12 +19,6 @@ namespace Pictionary
         string userName;
         private byte[] byteData = new byte[1024];
 
-        // Drawing stuff
-        private Graphics g;
-        List<List<Point>> allStrokes;  // All strokesk user has drawn
-        List<Point> currentStroke;     // Current stroke user is drawing
-        List<int> size = new List<int>();
-
         bool mouseDown, isDrawing;
         
         Timer timerCountDown;               // Timer for countdown down seconds when player is drawing
@@ -41,9 +35,7 @@ namespace Pictionary
             byteData = new byte[1024];
             SendMessage(null, Command.Login);
             InitializeComponent();
-            allStrokes = new List<List<Point>>();
             mouseDown = isDrawing = false;
-            g = drawingBoard.CreateGraphics();
             timerCountDown = new Timer();
             timerCountDown.Interval = 1000;
             timerCountDown.Tick += new EventHandler(LabelCountDownTick);
@@ -171,13 +163,13 @@ namespace Pictionary
                         HideLabel();
                         break;
                     case Command.ChooseWord:
-                        if (result != null)
-                        {
-                            result.Invoke((MethodInvoker)delegate
-                            {
-                                drawingBoard.Controls.Remove(result);
-                            });
-                        }
+                        //if (result != null)
+                        //{
+                        //    result.Invoke((MethodInvoker)delegate
+                        //    {
+                        //        drawingBoard.Controls.Remove(result);
+                        //    });
+                        //}
                         isDrawing = false;
                         if (msgReceived.strName == userName)
                         {
@@ -197,10 +189,7 @@ namespace Pictionary
                     case Command.StartDrawing:
                         if (msgReceived.strName == userName)
                         {
-                            drawingPanel.Invoke((MethodInvoker)delegate
-                            {
-                                drawingPanel.Visible = drawingPanel.Enabled = true;
-                            });
+                            drawingBoard.StartDrawing();
                             isDrawing = true;
                         }
                         else
@@ -270,21 +259,10 @@ namespace Pictionary
                         });
                         break;
                     case Command.NewStroke:
-                        drawingBoard.Invoke((MethodInvoker)delegate
-                        {
-                            currentStroke = new List<Point>();
-                            currentStroke.Add(msgReceived.p1);
-                            allStrokes.Add(currentStroke);
-                            size.Add(msgReceived.size);
-                            drawingBoard.Invalidate();
-                        });
+                        drawingBoard.NewStroke(msgReceived.p1, msgReceived.size, msgReceived.color);
                         break;
                     case Command.Stroke:
-                        drawingBoard.Invoke((MethodInvoker)delegate
-                        {
-                            currentStroke.Add(msgReceived.p1);
-                            drawingBoard.Invalidate();
-                        });
+                        drawingBoard.AddPointToStroke(msgReceived.p1);
                         break;
                     case Command.Message:
                         chat.Invoke((MethodInvoker)delegate {
@@ -301,11 +279,7 @@ namespace Pictionary
                         });
                         break;
                     case Command.Clear:
-                        if (allStrokes != null)
-                            allStrokes.Clear();
-                        if (currentStroke != null)
-                            currentStroke.Clear();
-                        drawingBoard.Invalidate();
+                        drawingBoard.Clear();
                         break;
 
                     case Command.List:
@@ -383,15 +357,7 @@ namespace Pictionary
             if (isDrawing)
             {
                 mouseDown = true;
-                // Mouse is down, start a new stroke
-                currentStroke = new List<Point>();
-
-                // Add current position to stroke
-                currentStroke.Add(e.Location);
-
-                // Add stroke to the list
-                allStrokes.Add(currentStroke);
-                size.Add(penSize);
+                drawingBoard.NewStroke(e.Location);
                 try
                 {
                     //Fill the info for the message to be send
@@ -422,8 +388,7 @@ namespace Pictionary
             {
                 if (mouseDown)
                 {
-                    currentStroke.Add(e.Location);
-                    drawingBoard.Invalidate();
+                    //
                     try
                     {
                         //Fill the info for the message to be send
@@ -476,63 +441,6 @@ namespace Pictionary
             }
         }
 
-        private void drawingBoard_Paint(object sender, PaintEventArgs e)
-        {
-            int i = 0;
-            foreach (List<Point> stroke in allStrokes.Where(x => x.Count > 1))
-            {
-                pen.Width = size[i];    
-                e.Graphics.DrawLines(pen, stroke.ToArray());
-                i++;
-            }
-        }
-
-        private void button1_Click(object sender, EventArgs e)
-        {
-            ColorDialog cd = new ColorDialog();
-           
-            DialogResult result = cd.ShowDialog();
-            if (result == DialogResult.OK)
-            {
-                colorPicker.BackColor = cd.Color;
-                pen.Color = cd.Color;
-            }
-        }
-
-        private void btnPen_Click(object sender, EventArgs e)
-        {
-            btnPen.FlatAppearance.BorderColor = Color.Blue;
-            btnPen.FlatAppearance.BorderSize = 2;
-            btnFill.FlatAppearance.BorderColor = Color.Black;
-            btnFill.FlatAppearance.BorderSize = 1;
-            btnErase.FlatAppearance.BorderColor = Color.Black;
-            btnErase.FlatAppearance.BorderSize = 1;
-        }
-
-        private void btnFill_Click(object sender, EventArgs e)
-        {
-            btnPen.FlatAppearance.BorderColor = Color.Black;
-            btnPen.FlatAppearance.BorderSize = 1;
-            btnFill.FlatAppearance.BorderColor = Color.Blue;
-            btnFill.FlatAppearance.BorderSize = 2;
-            btnErase.FlatAppearance.BorderColor = Color.Black;
-            btnErase.FlatAppearance.BorderSize = 1;
-        }
-
-        private void btnErase_Click(object sender, EventArgs e)
-        {
-            btnPen.FlatAppearance.BorderColor = Color.Black;
-            btnPen.FlatAppearance.BorderSize = 1;
-            btnFill.FlatAppearance.BorderColor = Color.Black;
-            btnFill.FlatAppearance.BorderSize = 1;
-            btnErase.FlatAppearance.BorderColor = Color.Blue;
-            btnErase.FlatAppearance.BorderSize = 2;
-        }
-
-        private void btnSize_Click(object sender, EventArgs e)
-        {
-            cmsSize.Show(btnSize, new Point(-(cmsSize.Width-btnSize.Width)/2, -cmsSize.Height));
-        }
 
         private void chooseWord_NewWordChosen(object sender, EventArgs e)
         {
@@ -568,34 +476,9 @@ namespace Pictionary
             input.Focus();
         }
 
-        private void SizeClick(object sender, EventArgs e)
+        private void drawingBoard_Paint(object sender, PaintEventArgs e)
         {
-            ToolStripMenuItem senderItem = (ToolStripMenuItem)sender;
-            foreach(ToolStripMenuItem item in cmsSize.Items)
-            {
-                if (item == senderItem)
-                    item.BackColor = SystemColors.GradientActiveCaption;
-                else
-                    item.BackColor = Color.Transparent;
-            }
-            int indexOfItem = cmsSize.Items.IndexOf(senderItem);
-            switch (indexOfItem)
-            {
-                case 0:
-                    penSize = 1;
-                    break;
-                case 1:
-                    penSize = 3;
-                    break;
-                case 2:
-                    penSize = 5;
-                    break;
-                case 3:
-                    penSize = 8;
-                    break;
-            }
-            // TO DO: 
-            // Change pixel size of pen
+
         }
     }
 }

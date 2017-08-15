@@ -53,6 +53,12 @@
       <DependentUpon>ChooseWord.cs</DependentUpon>
     </Compile>
     <Compile Include="Data.cs" />
+    <Compile Include="DrawingBoard.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="DrawingBoard.Designer.cs">
+      <DependentUpon>DrawingBoard.cs</DependentUpon>
+    </Compile>
     <Compile Include="main.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -93,6 +99,9 @@
     <Compile Include="Server.cs" />
     <EmbeddedResource Include="ChooseWord.resx">
       <DependentUpon>ChooseWord.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DrawingBoard.resx">
+      <DependentUpon>DrawingBoard.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="main.resx">
       <DependentUpon>main.cs</DependentUpon>
