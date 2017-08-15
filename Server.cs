@@ -122,7 +122,7 @@ namespace Pictionary
         /// <param name="time"> Time per round in seconds </param>
         private async Task NewGame()
         {
-            int rounds = 1;
+            int rounds = 3;
 
             System.Timers.Timer timer = new System.Timers.Timer();
             Data msgToSend = new Data();
@@ -202,7 +202,7 @@ namespace Pictionary
                             //Send the message to all users
                             clientInfo.socket.BeginSend(message, 0, message.Length, SocketFlags.None, new AsyncCallback(OnSend), clientInfo.socket);
                         }
-                        timer.Interval = 1000;
+                        timer.Interval = 10000;
                         timer.Elapsed += ResetTimer;
                         timer.AutoReset = false;
                         timer.Enabled = true;
@@ -223,7 +223,7 @@ namespace Pictionary
                             clientInfo.socket.BeginSend(message, 0, message.Length, SocketFlags.None, new AsyncCallback(OnSend), clientInfo.socket);
                         }
 
-                        timer.Interval = 1000;
+                        timer.Interval = 10000;
                         timer.Elapsed += ResetTimer;
                         timer.AutoReset = false;
                         timer.Enabled = true;

@@ -25,8 +25,6 @@ namespace Pictionary
 
         Results result;
 
-        Pen pen;
-        int penSize = 1;
 
         public Client(string userName, Socket client)
         {
@@ -39,7 +37,6 @@ namespace Pictionary
             timerCountDown = new Timer();
             timerCountDown.Interval = 1000;
             timerCountDown.Tick += new EventHandler(LabelCountDownTick);
-            pen = new Pen(Color.Black);
         }
 
         private void OnSend(IAsyncResult ar)
@@ -163,13 +160,17 @@ namespace Pictionary
                         HideLabel();
                         break;
                     case Command.ChooseWord:
-                        //if (result != null)
-                        //{
-                        //    result.Invoke((MethodInvoker)delegate
-                        //    {
-                        //        drawingBoard.Controls.Remove(result);
-                        //    });
-                        //}
+                        drawingBoard.Invoke((MethodInvoker)delegate
+                        {
+                            drawingBoard.Clear();
+                        });
+                        if (result != null)
+                        {
+                            result.Invoke((MethodInvoker)delegate
+                            {
+                                drawingBoard.Controls.Remove(result);
+                            });
+                        }
                         isDrawing = false;
                         if (msgReceived.strName == userName)
                         {
@@ -189,7 +190,11 @@ namespace Pictionary
                     case Command.StartDrawing:
                         if (msgReceived.strName == userName)
                         {
-                            drawingBoard.StartDrawing();
+                            drawingBoard.Invoke((MethodInvoker)delegate
+                            {
+                                drawingBoard.StartDrawing();
+
+                            });
                             isDrawing = true;
                         }
                         else
@@ -259,10 +264,16 @@ namespace Pictionary
                         });
                         break;
                     case Command.NewStroke:
-                        drawingBoard.NewStroke(msgReceived.p1, msgReceived.size, msgReceived.color);
+                        drawingBoard.Invoke((MethodInvoker)delegate
+                        {
+                            drawingBoard.NewStroke(msgReceived.point, msgReceived.size, msgReceived.color);
+                        });
                         break;
                     case Command.Stroke:
-                        drawingBoard.AddPointToStroke(msgReceived.p1);
+                        drawingBoard.Invoke((MethodInvoker)delegate
+                        {
+                            drawingBoard.AddPointToStroke(msgReceived.point);
+                        });
                         break;
                     case Command.Message:
                         chat.Invoke((MethodInvoker)delegate {
@@ -279,7 +290,10 @@ namespace Pictionary
                         });
                         break;
                     case Command.Clear:
-                        drawingBoard.Clear();
+                        drawingBoard.Invoke((MethodInvoker)delegate
+                        {
+                            drawingBoard.Clear();
+                        });
                         break;
 
                     case Command.List:
@@ -357,7 +371,10 @@ namespace Pictionary
             if (isDrawing)
             {
                 mouseDown = true;
-                drawingBoard.NewStroke(e.Location);
+                drawingBoard.Invoke((MethodInvoker)delegate
+                {
+                    drawingBoard.NewStroke(e.Location);
+                });
                 try
                 {
                     //Fill the info for the message to be send
@@ -365,10 +382,10 @@ namespace Pictionary
 
                     msgToSend.cmdCommand = Command.NewStroke;
                     msgToSend.strName = userName;
-                    msgToSend.size = penSize;
+                    msgToSend.size = drawingBoard.GetPenSize();
                     msgToSend.shape = 0;
-                    msgToSend.p1 = e.Location;
-                    msgToSend.color = Color.Black;
+                    msgToSend.point = e.Location;
+                    msgToSend.color = drawingBoard.GetPenColor();
 
                     byte[] byteData = msgToSend.DrawingToByte();
 
@@ -388,7 +405,10 @@ namespace Pictionary
             {
                 if (mouseDown)
                 {
-                    //
+                    drawingBoard.Invoke((MethodInvoker)delegate
+                    {
+                        drawingBoard.AddPointToStroke(e.Location);
+                    });
                     try
                     {
                         //Fill the info for the message to be send
@@ -398,7 +418,7 @@ namespace Pictionary
                         msgToSend.strName = userName;
                         msgToSend.size = 0;
                         msgToSend.shape = 0;
-                        msgToSend.p1 = e.Location;
+                        msgToSend.point = e.Location;
                         msgToSend.color = Color.Black;
 
                         byte[] byteData = msgToSend.DrawingToByte();
@@ -474,11 +494,6 @@ namespace Pictionary
         private void Client_Enter(object sender, EventArgs e)
         {
             input.Focus();
-        }
-
-        private void drawingBoard_Paint(object sender, PaintEventArgs e)
-        {
-
         }
     }
 }

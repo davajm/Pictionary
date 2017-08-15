@@ -50,13 +50,13 @@ namespace Pictionary
         public void EndRound()
         {
             totalScore += currentScore;
+            lblScore.Text = totalScore.ToString();
             currentScore = 0;
             isDrawing = lblState.Enabled = lblState.Visible = false;
         }
         public void AddScore(int score)
         {
             currentScore = score;
-            lblScore.Text = currentScore.ToString();
             lblState.Text = "+" + currentScore;
             lblState.Enabled = lblState.Visible = true;
         }

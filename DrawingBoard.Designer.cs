@@ -30,7 +30,6 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DrawingBoard));
-            this.board = new System.Windows.Forms.PictureBox();
             this.drawingPanel = new System.Windows.Forms.Panel();
             this.btnSize = new System.Windows.Forms.Button();
             this.btnErase = new System.Windows.Forms.Button();
@@ -42,21 +41,9 @@
             this.point2 = new System.Windows.Forms.ToolStripMenuItem();
             this.point3 = new System.Windows.Forms.ToolStripMenuItem();
             this.point4 = new System.Windows.Forms.ToolStripMenuItem();
-            ((System.ComponentModel.ISupportInitialize)(this.board)).BeginInit();
             this.drawingPanel.SuspendLayout();
             this.cmsSize.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // board
-            // 
-            this.board.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.board.Location = new System.Drawing.Point(0, 0);
-            this.board.Name = "board";
-            this.board.Size = new System.Drawing.Size(485, 266);
-            this.board.TabIndex = 0;
-            this.board.TabStop = false;
             // 
             // drawingPanel
             // 
@@ -68,81 +55,85 @@
             this.drawingPanel.Controls.Add(this.btnPen);
             this.drawingPanel.Controls.Add(this.colorPicker);
             this.drawingPanel.Enabled = false;
-            this.drawingPanel.Location = new System.Drawing.Point(0, 268);
-            this.drawingPanel.Margin = new System.Windows.Forms.Padding(4);
+            this.drawingPanel.Location = new System.Drawing.Point(0, 218);
             this.drawingPanel.Name = "drawingPanel";
-            this.drawingPanel.Size = new System.Drawing.Size(485, 77);
+            this.drawingPanel.Size = new System.Drawing.Size(364, 63);
             this.drawingPanel.TabIndex = 9;
             this.drawingPanel.Visible = false;
             // 
             // btnSize
             // 
+            this.btnSize.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnSize.BackColor = System.Drawing.Color.Transparent;
             this.btnSize.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.btnSize.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnSize.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnSize.Image = global::Pictionary.Properties.Resources.point4;
             this.btnSize.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.btnSize.Location = new System.Drawing.Point(319, 5);
-            this.btnSize.Margin = new System.Windows.Forms.Padding(4);
+            this.btnSize.Location = new System.Drawing.Point(255, 4);
             this.btnSize.Name = "btnSize";
-            this.btnSize.Size = new System.Drawing.Size(67, 62);
+            this.btnSize.Size = new System.Drawing.Size(50, 50);
             this.btnSize.TabIndex = 4;
             this.btnSize.TabStop = false;
             this.btnSize.Text = "Size";
             this.btnSize.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
             this.btnSize.UseVisualStyleBackColor = false;
+            this.btnSize.Click += new System.EventHandler(this.btnSize_Click);
             // 
             // btnErase
             // 
+            this.btnErase.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.btnErase.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("btnErase.BackgroundImage")));
             this.btnErase.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.btnErase.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnErase.Location = new System.Drawing.Point(155, 4);
-            this.btnErase.Margin = new System.Windows.Forms.Padding(4);
+            this.btnErase.Location = new System.Drawing.Point(116, 3);
             this.btnErase.Name = "btnErase";
-            this.btnErase.Size = new System.Drawing.Size(67, 62);
+            this.btnErase.Size = new System.Drawing.Size(50, 50);
             this.btnErase.TabIndex = 3;
             this.btnErase.TabStop = false;
             this.btnErase.UseVisualStyleBackColor = true;
+            this.btnErase.Click += new System.EventHandler(this.btnErase_Click);
             // 
             // btnFill
             // 
+            this.btnFill.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.btnFill.BackgroundImage = global::Pictionary.Properties.Resources.fill;
             this.btnFill.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.btnFill.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnFill.Location = new System.Drawing.Point(80, 4);
-            this.btnFill.Margin = new System.Windows.Forms.Padding(4);
+            this.btnFill.Location = new System.Drawing.Point(60, 3);
             this.btnFill.Name = "btnFill";
-            this.btnFill.Size = new System.Drawing.Size(67, 62);
+            this.btnFill.Size = new System.Drawing.Size(50, 50);
             this.btnFill.TabIndex = 2;
             this.btnFill.TabStop = false;
             this.btnFill.UseVisualStyleBackColor = true;
+            this.btnFill.Click += new System.EventHandler(this.btnFill_Click);
             // 
             // btnPen
             // 
+            this.btnPen.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.btnPen.BackgroundImage = global::Pictionary.Properties.Resources.brush;
             this.btnPen.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.btnPen.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnPen.Location = new System.Drawing.Point(5, 4);
-            this.btnPen.Margin = new System.Windows.Forms.Padding(4);
+            this.btnPen.Location = new System.Drawing.Point(4, 3);
             this.btnPen.Name = "btnPen";
-            this.btnPen.Size = new System.Drawing.Size(67, 62);
+            this.btnPen.Size = new System.Drawing.Size(50, 50);
             this.btnPen.TabIndex = 1;
             this.btnPen.TabStop = false;
             this.btnPen.UseVisualStyleBackColor = true;
+            this.btnPen.Click += new System.EventHandler(this.btnPen_Click);
             // 
             // colorPicker
             // 
+            this.colorPicker.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.colorPicker.BackColor = System.Drawing.Color.Black;
             this.colorPicker.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.colorPicker.Location = new System.Drawing.Point(393, 5);
-            this.colorPicker.Margin = new System.Windows.Forms.Padding(4);
+            this.colorPicker.Location = new System.Drawing.Point(311, 4);
             this.colorPicker.Name = "colorPicker";
-            this.colorPicker.Size = new System.Drawing.Size(67, 62);
+            this.colorPicker.Size = new System.Drawing.Size(50, 50);
             this.colorPicker.TabIndex = 0;
             this.colorPicker.TabStop = false;
             this.colorPicker.UseVisualStyleBackColor = false;
+            this.colorPicker.Click += new System.EventHandler(this.colorPicker_Click);
             // 
             // cmsSize
             // 
@@ -168,6 +159,7 @@
             this.point1.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.point1.Name = "point1";
             this.point1.Size = new System.Drawing.Size(100, 20);
+            this.point1.Click += new System.EventHandler(this.ChangeSize);
             // 
             // point2
             // 
@@ -179,6 +171,7 @@
             this.point2.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.point2.Name = "point2";
             this.point2.Size = new System.Drawing.Size(100, 20);
+            this.point2.Click += new System.EventHandler(this.ChangeSize);
             // 
             // point3
             // 
@@ -190,6 +183,7 @@
             this.point3.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.point3.Name = "point3";
             this.point3.Size = new System.Drawing.Size(100, 20);
+            this.point3.Click += new System.EventHandler(this.ChangeSize);
             // 
             // point4
             // 
@@ -200,16 +194,17 @@
             this.point4.CheckOnClick = true;
             this.point4.Name = "point4";
             this.point4.Size = new System.Drawing.Size(100, 22);
+            this.point4.Click += new System.EventHandler(this.ChangeSize);
             // 
             // DrawingBoard
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.drawingPanel);
-            this.Controls.Add(this.board);
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "DrawingBoard";
-            this.Size = new System.Drawing.Size(485, 345);
-            ((System.ComponentModel.ISupportInitialize)(this.board)).EndInit();
+            this.Size = new System.Drawing.Size(364, 280);
+            this.Paint += new System.Windows.Forms.PaintEventHandler(this.Draw);
             this.drawingPanel.ResumeLayout(false);
             this.cmsSize.ResumeLayout(false);
             this.ResumeLayout(false);
@@ -217,8 +212,6 @@
         }
 
         #endregion
-
-        private System.Windows.Forms.PictureBox board;
         private System.Windows.Forms.Panel drawingPanel;
         private System.Windows.Forms.Button btnSize;
         private System.Windows.Forms.Button btnErase;

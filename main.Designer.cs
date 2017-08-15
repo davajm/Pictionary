@@ -181,7 +181,7 @@
             this.txtJoinPort.Name = "txtJoinPort";
             this.txtJoinPort.Size = new System.Drawing.Size(51, 20);
             this.txtJoinPort.TabIndex = 6;
-            this.txtJoinPort.Text = "123";
+            this.txtJoinPort.Text = "25565";
             this.txtJoinPort.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.IntOnly);
             // 
             // txtJoinIP
@@ -191,7 +191,7 @@
             this.txtJoinIP.Name = "txtJoinIP";
             this.txtJoinIP.Size = new System.Drawing.Size(160, 20);
             this.txtJoinIP.TabIndex = 5;
-            this.txtJoinIP.Text = "127.0.0.1";
+            this.txtJoinIP.Text = "94.254.64.5";
             // 
             // grpHostGame
             // 
@@ -256,7 +256,7 @@
             this.txtHostPort.Name = "txtHostPort";
             this.txtHostPort.Size = new System.Drawing.Size(209, 20);
             this.txtHostPort.TabIndex = 5;
-            this.txtHostPort.Text = "123";
+            this.txtHostPort.Text = "25565";
             this.txtHostPort.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.IntOnly);
             // 
             // main

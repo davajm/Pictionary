@@ -40,7 +40,7 @@ namespace Pictionary
 
         /* Drawing packet */
         public Color color;                // Color for drawing
-        public Point p1;                   // Point (position) for drawing
+        public Point point;                   // Point (position) for drawing
         public int size;                   // Size of brush/pen
         public int shape;                  // Shape of brush/pen
 
@@ -97,8 +97,8 @@ namespace Pictionary
             this.size = BitConverter.ToInt32(data, 4);
             this.shape = BitConverter.ToInt32(data, 8);
             this.color = Color.FromArgb(data[12], data[16], data[20]);
-            this.p1.X = BitConverter.ToInt32(data, 24);
-            this.p1.Y = BitConverter.ToInt32(data, 28);
+            this.point.X = BitConverter.ToInt32(data, 24);
+            this.point.Y = BitConverter.ToInt32(data, 28);
 
             // Username length
             int nameLen = BitConverter.ToInt32(data, 32);
@@ -124,8 +124,8 @@ namespace Pictionary
             result.AddRange(BitConverter.GetBytes((int)color.R));
             result.AddRange(BitConverter.GetBytes((int)color.G));
             result.AddRange(BitConverter.GetBytes((int)color.B));
-            result.AddRange(BitConverter.GetBytes(p1.X));
-            result.AddRange(BitConverter.GetBytes(p1.Y));
+            result.AddRange(BitConverter.GetBytes(point.X));
+            result.AddRange(BitConverter.GetBytes(point.Y));
 
             // Length of username
             if (strName != null)

@@ -41,10 +41,9 @@
             // btnReady
             // 
             this.btnReady.Font = new System.Drawing.Font("Tahoma", 13F);
-            this.btnReady.Location = new System.Drawing.Point(297, 11);
-            this.btnReady.Margin = new System.Windows.Forms.Padding(4);
+            this.btnReady.Location = new System.Drawing.Point(223, 9);
             this.btnReady.Name = "btnReady";
-            this.btnReady.Size = new System.Drawing.Size(100, 37);
+            this.btnReady.Size = new System.Drawing.Size(75, 30);
             this.btnReady.TabIndex = 2;
             this.btnReady.TabStop = false;
             this.btnReady.Text = "Ready";
@@ -56,10 +55,9 @@
             this.lblWaiting.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.lblWaiting.Font = new System.Drawing.Font("Tahoma", 18F);
-            this.lblWaiting.Location = new System.Drawing.Point(405, 16);
-            this.lblWaiting.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblWaiting.Location = new System.Drawing.Point(304, 13);
             this.lblWaiting.Name = "lblWaiting";
-            this.lblWaiting.Size = new System.Drawing.Size(1163, 36);
+            this.lblWaiting.Size = new System.Drawing.Size(872, 29);
             this.lblWaiting.TabIndex = 3;
             this.lblWaiting.Text = "Waiting for players to get ready";
             this.lblWaiting.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -67,10 +65,9 @@
             // input
             // 
             this.input.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.input.Location = new System.Drawing.Point(1624, 901);
-            this.input.Margin = new System.Windows.Forms.Padding(4);
+            this.input.Location = new System.Drawing.Point(1218, 732);
             this.input.Name = "input";
-            this.input.Size = new System.Drawing.Size(273, 22);
+            this.input.Size = new System.Drawing.Size(206, 20);
             this.input.TabIndex = 0;
             this.input.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.input_KeyPress);
             // 
@@ -78,21 +75,21 @@
             // 
             this.countdown.Enabled = false;
             this.countdown.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
-            this.countdown.Location = new System.Drawing.Point(299, 11);
+            this.countdown.Location = new System.Drawing.Point(224, 9);
+            this.countdown.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.countdown.Name = "countdown";
-            this.countdown.Size = new System.Drawing.Size(100, 43);
+            this.countdown.Size = new System.Drawing.Size(75, 35);
             this.countdown.TabIndex = 7;
             this.countdown.Text = "90";
             this.countdown.Visible = false;
             // 
             // chat
             // 
-            this.chat.Location = new System.Drawing.Point(1624, 11);
-            this.chat.Margin = new System.Windows.Forms.Padding(4);
+            this.chat.Location = new System.Drawing.Point(1218, 9);
             this.chat.Multiline = true;
             this.chat.Name = "chat";
             this.chat.ReadOnly = true;
-            this.chat.Size = new System.Drawing.Size(273, 882);
+            this.chat.Size = new System.Drawing.Size(206, 717);
             this.chat.TabIndex = 9;
             this.chat.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.chat_KeyPress);
             // 
@@ -101,10 +98,10 @@
             this.chooseWord.BackColor = System.Drawing.SystemColors.Control;
             this.chooseWord.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.chooseWord.Enabled = false;
-            this.chooseWord.Location = new System.Drawing.Point(544, 137);
-            this.chooseWord.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.chooseWord.Location = new System.Drawing.Point(408, 111);
+            this.chooseWord.Margin = new System.Windows.Forms.Padding(2);
             this.chooseWord.Name = "chooseWord";
-            this.chooseWord.Size = new System.Drawing.Size(839, 270);
+            this.chooseWord.Size = new System.Drawing.Size(630, 220);
             this.chooseWord.TabIndex = 6;
             this.chooseWord.TabStop = false;
             this.chooseWord.Visible = false;
@@ -116,26 +113,30 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.playerList.BackColor = System.Drawing.SystemColors.Control;
-            this.playerList.Location = new System.Drawing.Point(8, 11);
-            this.playerList.Margin = new System.Windows.Forms.Padding(5);
+            this.playerList.Location = new System.Drawing.Point(6, 9);
+            this.playerList.Margin = new System.Windows.Forms.Padding(4);
             this.playerList.Name = "playerList";
-            this.playerList.Size = new System.Drawing.Size(281, 914);
+            this.playerList.Size = new System.Drawing.Size(211, 743);
             this.playerList.TabIndex = 4;
             this.playerList.TabStop = false;
             // 
             // drawingBoard
             // 
-            this.drawingBoard.Location = new System.Drawing.Point(291, 11);
+            this.drawingBoard.Location = new System.Drawing.Point(218, 9);
+            this.drawingBoard.Margin = new System.Windows.Forms.Padding(2);
             this.drawingBoard.Name = "drawingBoard";
-            this.drawingBoard.Size = new System.Drawing.Size(1325, 839);
+            this.drawingBoard.Size = new System.Drawing.Size(994, 743);
             this.drawingBoard.TabIndex = 10;
+            this.drawingBoard.MouseDown += new System.Windows.Forms.MouseEventHandler(this.drawingBoard_MouseDown);
+            this.drawingBoard.MouseMove += new System.Windows.Forms.MouseEventHandler(this.drawingBoard_MouseMove);
+            this.drawingBoard.MouseUp += new System.Windows.Forms.MouseEventHandler(this.drawingBoard_MouseUp);
             // 
             // Client
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
-            this.ClientSize = new System.Drawing.Size(1914, 924);
+            this.ClientSize = new System.Drawing.Size(1436, 757);
             this.Controls.Add(this.chat);
             this.Controls.Add(this.input);
             this.Controls.Add(this.chooseWord);
@@ -144,9 +145,8 @@
             this.Controls.Add(this.btnReady);
             this.Controls.Add(this.countdown);
             this.Controls.Add(this.drawingBoard);
-            this.Margin = new System.Windows.Forms.Padding(4);
-            this.MaximumSize = new System.Drawing.Size(1994, 971);
-            this.MinimumSize = new System.Drawing.Size(1917, 971);
+            this.MaximumSize = new System.Drawing.Size(1500, 796);
+            this.MinimumSize = new System.Drawing.Size(1442, 796);
             this.Name = "Client";
             this.Text = "Pictionary";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Client_FormClosing);
