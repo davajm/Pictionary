@@ -54,6 +54,7 @@
             // 
             this.lblWaiting.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblWaiting.BackColor = System.Drawing.Color.Transparent;
             this.lblWaiting.Font = new System.Drawing.Font("Tahoma", 18F);
             this.lblWaiting.Location = new System.Drawing.Point(304, 13);
             this.lblWaiting.Name = "lblWaiting";
@@ -85,6 +86,8 @@
             // 
             // chat
             // 
+            this.chat.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.chat.Location = new System.Drawing.Point(1218, 9);
             this.chat.Multiline = true;
             this.chat.Name = "chat";
@@ -95,6 +98,9 @@
             // 
             // chooseWord
             // 
+            this.chooseWord.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.chooseWord.BackColor = System.Drawing.SystemColors.Control;
             this.chooseWord.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.chooseWord.Enabled = false;
@@ -109,9 +115,8 @@
             // 
             // playerList
             // 
-            this.playerList.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.playerList.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
             this.playerList.BackColor = System.Drawing.SystemColors.Control;
             this.playerList.Location = new System.Drawing.Point(6, 9);
             this.playerList.Margin = new System.Windows.Forms.Padding(4);
@@ -122,11 +127,15 @@
             // 
             // drawingBoard
             // 
-            this.drawingBoard.Location = new System.Drawing.Point(218, 9);
+            this.drawingBoard.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.drawingBoard.Location = new System.Drawing.Point(218, 44);
             this.drawingBoard.Margin = new System.Windows.Forms.Padding(2);
             this.drawingBoard.Name = "drawingBoard";
-            this.drawingBoard.Size = new System.Drawing.Size(994, 743);
+            this.drawingBoard.Size = new System.Drawing.Size(994, 708);
             this.drawingBoard.TabIndex = 10;
+            this.drawingBoard.ButtonClearClick += new System.EventHandler(this.drawingBoard_ButtonClearClick);
             this.drawingBoard.MouseDown += new System.Windows.Forms.MouseEventHandler(this.drawingBoard_MouseDown);
             this.drawingBoard.MouseMove += new System.Windows.Forms.MouseEventHandler(this.drawingBoard_MouseMove);
             this.drawingBoard.MouseUp += new System.Windows.Forms.MouseEventHandler(this.drawingBoard_MouseUp);
@@ -145,8 +154,6 @@
             this.Controls.Add(this.btnReady);
             this.Controls.Add(this.countdown);
             this.Controls.Add(this.drawingBoard);
-            this.MaximumSize = new System.Drawing.Size(1500, 796);
-            this.MinimumSize = new System.Drawing.Size(1442, 796);
             this.Name = "Client";
             this.Text = "Pictionary";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Client_FormClosing);

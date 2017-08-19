@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Drawing.Drawing2D;
 
 namespace Pictionary
 {
@@ -28,13 +29,15 @@ namespace Pictionary
 
         Pen pen;
 
+        public event EventHandler ButtonClearClick;
+
         public DrawingBoard()
         {
             DoubleBuffered = true;
             InitializeComponent();
             allStrokes = new List<Stroke>();
             pen = new Pen(Color.Black);
-            size = 1;
+            size = 3;
             color = Color.Black;
         }
         public void StartDrawing()
@@ -42,6 +45,11 @@ namespace Pictionary
             drawingPanel.Enabled = drawingPanel.Visible = true;
             color = Color.Black;
             colorPicker.BackColor = color;
+        }
+
+        public void StopDrawing()
+        {
+            drawingPanel.Enabled = drawingPanel.Visible = false;
         }
 
         public void NewStroke(Point point, int size, Color color)
@@ -75,6 +83,7 @@ namespace Pictionary
                 currentStroke.points.Clear();
             if (allStrokes != null)
                 allStrokes.Clear();
+            Invalidate();
         }
 
         private void colorPicker_Click(object sender, EventArgs e)
@@ -102,12 +111,15 @@ namespace Pictionary
 
         private void btnFill_Click(object sender, EventArgs e)
         {
-            btnPen.FlatAppearance.BorderColor = Color.Black;
-            btnPen.FlatAppearance.BorderSize = 1;
-            btnFill.FlatAppearance.BorderColor = Color.Blue;
-            btnFill.FlatAppearance.BorderSize = 2;
-            btnErase.FlatAppearance.BorderColor = Color.Black;
-            btnErase.FlatAppearance.BorderSize = 1;
+            MessageBox.Show("Fill not yet implemented :(", "Error");
+            //btnPen.FlatAppearance.BorderColor = Color.Black;
+            //btnPen.FlatAppearance.BorderSize = 1;
+            //btnFill.FlatAppearance.BorderColor = Color.Blue;
+            //btnFill.FlatAppearance.BorderSize = 2;
+            //btnErase.FlatAppearance.BorderColor = Color.Black;
+            //btnErase.FlatAppearance.BorderSize = 1;
+            //erase = false;
+            //fill = true;
         }
 
         private void btnErase_Click(object sender, EventArgs e)
@@ -128,11 +140,26 @@ namespace Pictionary
 
         private void Draw(object sender, PaintEventArgs e)
         {
-            foreach (Stroke stroke in allStrokes.Where(x => x.points.Count > 1))
+            e.Graphics.SmoothingMode = SmoothingMode.HighQuality;
+            foreach (Stroke stroke in allStrokes)
             {
-                pen.Width = stroke.size;
+                pen.DashStyle = DashStyle.Solid;
+                pen.StartCap = LineCap.Round;
+                pen.EndCap = LineCap.Round;
                 pen.Color = stroke.color;
-                e.Graphics.DrawLines(pen, stroke.points.ToArray());
+                pen.Width = stroke.size;
+
+                int count = stroke.points.Count;
+                if (count == 1)
+                {
+                    e.Graphics.FillEllipse(new SolidBrush(stroke.color), stroke.points[0].X-(stroke.size/2), 
+                                           stroke.points[0].Y-(stroke.size/2), stroke.size, stroke.size);
+                }
+                for (int i = 1; i < count; i++)
+                {
+                    e.Graphics.DrawLine(pen, stroke.points[i - 1], stroke.points[i]);
+                }
+
             }
         }
 
@@ -162,17 +189,25 @@ namespace Pictionary
             switch (indexOfItem)
             {
                 case 0:
-                    size = 1;
-                    break;
-                case 1:
                     size = 3;
                     break;
-                case 2:
+                case 1:
                     size = 5;
                     break;
-                case 3:
-                    size = 8;
+                case 2:
+                    size = 9;
                     break;
+                case 3:
+                    size = 15;
+                    break;
+            }
+        }
+
+        private void btnClear_Click(object sender, EventArgs e)
+        {
+            if (ButtonClearClick != null)
+            {
+                ButtonClearClick(this, e);
             }
         }
     }

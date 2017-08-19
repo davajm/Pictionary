@@ -31,6 +31,7 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DrawingBoard));
             this.drawingPanel = new System.Windows.Forms.Panel();
+            this.btnClear = new System.Windows.Forms.Button();
             this.btnSize = new System.Windows.Forms.Button();
             this.btnErase = new System.Windows.Forms.Button();
             this.btnFill = new System.Windows.Forms.Button();
@@ -47,19 +48,33 @@
             // 
             // drawingPanel
             // 
-            this.drawingPanel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.drawingPanel.Controls.Add(this.btnClear);
             this.drawingPanel.Controls.Add(this.btnSize);
             this.drawingPanel.Controls.Add(this.btnErase);
             this.drawingPanel.Controls.Add(this.btnFill);
             this.drawingPanel.Controls.Add(this.btnPen);
             this.drawingPanel.Controls.Add(this.colorPicker);
+            this.drawingPanel.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.drawingPanel.Enabled = false;
-            this.drawingPanel.Location = new System.Drawing.Point(0, 218);
+            this.drawingPanel.Location = new System.Drawing.Point(0, 217);
             this.drawingPanel.Name = "drawingPanel";
             this.drawingPanel.Size = new System.Drawing.Size(364, 63);
             this.drawingPanel.TabIndex = 9;
             this.drawingPanel.Visible = false;
+            // 
+            // btnClear
+            // 
+            this.btnClear.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.btnClear.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("btnClear.BackgroundImage")));
+            this.btnClear.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.btnClear.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnClear.Location = new System.Drawing.Point(172, 9);
+            this.btnClear.Name = "btnClear";
+            this.btnClear.Size = new System.Drawing.Size(50, 50);
+            this.btnClear.TabIndex = 5;
+            this.btnClear.TabStop = false;
+            this.btnClear.UseVisualStyleBackColor = true;
+            this.btnClear.Click += new System.EventHandler(this.btnClear_Click);
             // 
             // btnSize
             // 
@@ -70,7 +85,7 @@
             this.btnSize.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnSize.Image = global::Pictionary.Properties.Resources.point4;
             this.btnSize.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.btnSize.Location = new System.Drawing.Point(255, 4);
+            this.btnSize.Location = new System.Drawing.Point(256, 9);
             this.btnSize.Name = "btnSize";
             this.btnSize.Size = new System.Drawing.Size(50, 50);
             this.btnSize.TabIndex = 4;
@@ -83,10 +98,10 @@
             // btnErase
             // 
             this.btnErase.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnErase.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("btnErase.BackgroundImage")));
+            this.btnErase.BackgroundImage = global::Pictionary.Properties.Resources.eraser;
             this.btnErase.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.btnErase.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnErase.Location = new System.Drawing.Point(116, 3);
+            this.btnErase.Location = new System.Drawing.Point(116, 8);
             this.btnErase.Name = "btnErase";
             this.btnErase.Size = new System.Drawing.Size(50, 50);
             this.btnErase.TabIndex = 3;
@@ -100,7 +115,7 @@
             this.btnFill.BackgroundImage = global::Pictionary.Properties.Resources.fill;
             this.btnFill.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.btnFill.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnFill.Location = new System.Drawing.Point(60, 3);
+            this.btnFill.Location = new System.Drawing.Point(60, 8);
             this.btnFill.Name = "btnFill";
             this.btnFill.Size = new System.Drawing.Size(50, 50);
             this.btnFill.TabIndex = 2;
@@ -114,7 +129,7 @@
             this.btnPen.BackgroundImage = global::Pictionary.Properties.Resources.brush;
             this.btnPen.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.btnPen.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnPen.Location = new System.Drawing.Point(4, 3);
+            this.btnPen.Location = new System.Drawing.Point(4, 8);
             this.btnPen.Name = "btnPen";
             this.btnPen.Size = new System.Drawing.Size(50, 50);
             this.btnPen.TabIndex = 1;
@@ -127,7 +142,7 @@
             this.colorPicker.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.colorPicker.BackColor = System.Drawing.Color.Black;
             this.colorPicker.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.colorPicker.Location = new System.Drawing.Point(311, 4);
+            this.colorPicker.Location = new System.Drawing.Point(312, 9);
             this.colorPicker.Name = "colorPicker";
             this.colorPicker.Size = new System.Drawing.Size(50, 50);
             this.colorPicker.TabIndex = 0;
@@ -223,5 +238,6 @@
         private System.Windows.Forms.ToolStripMenuItem point2;
         private System.Windows.Forms.ToolStripMenuItem point3;
         private System.Windows.Forms.ToolStripMenuItem point4;
+        private System.Windows.Forms.Button btnClear;
     }
 }

@@ -37,6 +37,8 @@ namespace Pictionary
             timerCountDown = new Timer();
             timerCountDown.Interval = 1000;
             timerCountDown.Tick += new EventHandler(LabelCountDownTick);
+            isDrawing = true;
+            drawingBoard.StartDrawing();
         }
 
         private void OnSend(IAsyncResult ar)
@@ -66,6 +68,32 @@ namespace Pictionary
                 msgToSend.cmdCommand = command;
 
                 byte[] byteData = msgToSend.ToByte();
+
+                //Send it to the server
+                client.BeginSend(byteData, 0, byteData.Length, SocketFlags.None, new AsyncCallback(OnSend), null);
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Unable to send message to the server.", "Pictionary", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void SendMessageDrawing(string message, Command command, Point point, int size, int shape, Color color)
+        {
+            try
+            {
+                //Fill the info for the message to be send
+                Data msgToSend = new Data();
+
+                msgToSend.strName = userName;
+                msgToSend.strMessage = message;
+                msgToSend.cmdCommand = command;
+                msgToSend.point = point;
+                msgToSend.color = color;
+                msgToSend.size = size;
+                msgToSend.shape = shape;
+
+                byte[] byteData = msgToSend.DrawingToByte();
 
                 //Send it to the server
                 client.BeginSend(byteData, 0, byteData.Length, SocketFlags.None, new AsyncCallback(OnSend), null);
@@ -163,6 +191,8 @@ namespace Pictionary
                         drawingBoard.Invoke((MethodInvoker)delegate
                         {
                             drawingBoard.Clear();
+                            drawingBoard.StopDrawing();
+                            isDrawing = false;
                         });
                         if (result != null)
                         {
@@ -171,7 +201,6 @@ namespace Pictionary
                                 drawingBoard.Controls.Remove(result);
                             });
                         }
-                        isDrawing = false;
                         if (msgReceived.strName == userName)
                         {
                             string[] words = msgReceived.strMessage.Split('*');
@@ -375,27 +404,7 @@ namespace Pictionary
                 {
                     drawingBoard.NewStroke(e.Location);
                 });
-                try
-                {
-                    //Fill the info for the message to be send
-                    Data msgToSend = new Data();
-
-                    msgToSend.cmdCommand = Command.NewStroke;
-                    msgToSend.strName = userName;
-                    msgToSend.size = drawingBoard.GetPenSize();
-                    msgToSend.shape = 0;
-                    msgToSend.point = e.Location;
-                    msgToSend.color = drawingBoard.GetPenColor();
-
-                    byte[] byteData = msgToSend.DrawingToByte();
-
-                    //Send it to the server
-                    client.BeginSend(byteData, 0, byteData.Length, SocketFlags.None, new AsyncCallback(OnSend), null);
-                }
-                catch (Exception)
-                {
-                    MessageBox.Show("Unable to send message to the server.", "Pictionary", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
+                SendMessageDrawing(null, Command.NewStroke, e.Location, drawingBoard.GetPenSize(), 0, drawingBoard.GetPenColor());                
             }
         }
 
@@ -409,28 +418,8 @@ namespace Pictionary
                     {
                         drawingBoard.AddPointToStroke(e.Location);
                     });
-                    try
-                    {
-                        //Fill the info for the message to be send
-                        Data msgToSend = new Data();
-
-                        msgToSend.cmdCommand = Command.Stroke;
-                        msgToSend.strName = userName;
-                        msgToSend.size = 0;
-                        msgToSend.shape = 0;
-                        msgToSend.point = e.Location;
-                        msgToSend.color = Color.Black;
-
-                        byte[] byteData = msgToSend.DrawingToByte();
-
-                        //Send it to the server
-                        client.BeginSend(byteData, 0, byteData.Length, SocketFlags.None, new AsyncCallback(OnSend), null);
-                    }
-                    catch (Exception)
-                    {
-                        MessageBox.Show("Unable to send message to the server.", "Pictionary", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }
-                }
+                    SendMessageDrawing(null, Command.Stroke, e.Location, drawingBoard.GetPenSize(), 0, drawingBoard.GetPenColor());
+                } 
             }
         }
 
@@ -489,6 +478,11 @@ namespace Pictionary
                 input_KeyPress(sender, e);
             input.Focus();
             e.Handled = true;
+        }
+
+        private void drawingBoard_ButtonClearClick(object sender, EventArgs e)
+        {
+            SendMessage(null, Command.Clear);
         }
 
         private void Client_Enter(object sender, EventArgs e)
