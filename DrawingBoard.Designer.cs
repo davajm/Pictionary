@@ -60,6 +60,8 @@
             this.drawingPanel.Size = new System.Drawing.Size(364, 63);
             this.drawingPanel.TabIndex = 9;
             this.drawingPanel.Visible = false;
+            this.drawingPanel.MouseEnter += new System.EventHandler(this.ShowCursor);
+            this.drawingPanel.MouseLeave += new System.EventHandler(this.HideCursor);
             // 
             // btnClear
             // 
@@ -74,6 +76,7 @@
             this.btnClear.TabStop = false;
             this.btnClear.UseVisualStyleBackColor = true;
             this.btnClear.Click += new System.EventHandler(this.btnClear_Click);
+            this.btnClear.MouseEnter += new System.EventHandler(this.ShowCursor);
             // 
             // btnSize
             // 
@@ -93,6 +96,7 @@
             this.btnSize.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
             this.btnSize.UseVisualStyleBackColor = false;
             this.btnSize.Click += new System.EventHandler(this.btnSize_Click);
+            this.btnSize.MouseEnter += new System.EventHandler(this.ShowCursor);
             // 
             // btnErase
             // 
@@ -107,6 +111,7 @@
             this.btnErase.TabStop = false;
             this.btnErase.UseVisualStyleBackColor = true;
             this.btnErase.Click += new System.EventHandler(this.btnErase_Click);
+            this.btnErase.MouseEnter += new System.EventHandler(this.ShowCursor);
             // 
             // btnFill
             // 
@@ -121,6 +126,7 @@
             this.btnFill.TabStop = false;
             this.btnFill.UseVisualStyleBackColor = true;
             this.btnFill.Click += new System.EventHandler(this.btnFill_Click);
+            this.btnFill.MouseEnter += new System.EventHandler(this.ShowCursor);
             // 
             // btnPen
             // 
@@ -135,6 +141,7 @@
             this.btnPen.TabStop = false;
             this.btnPen.UseVisualStyleBackColor = true;
             this.btnPen.Click += new System.EventHandler(this.btnPen_Click);
+            this.btnPen.MouseEnter += new System.EventHandler(this.ShowCursor);
             // 
             // colorPicker
             // 
@@ -148,6 +155,7 @@
             this.colorPicker.TabStop = false;
             this.colorPicker.UseVisualStyleBackColor = false;
             this.colorPicker.Click += new System.EventHandler(this.colorPicker_Click);
+            this.colorPicker.MouseEnter += new System.EventHandler(this.ShowCursor);
             // 
             // cmsSize
             // 
@@ -219,6 +227,8 @@
             this.Name = "DrawingBoard";
             this.Size = new System.Drawing.Size(364, 280);
             this.Paint += new System.Windows.Forms.PaintEventHandler(this.Draw);
+            this.MouseEnter += new System.EventHandler(this.HideCursor);
+            this.MouseLeave += new System.EventHandler(this.ShowCursor);
             this.drawingPanel.ResumeLayout(false);
             this.cmsSize.ResumeLayout(false);
             this.ResumeLayout(false);

@@ -15,6 +15,7 @@ namespace Pictionary
     {
         /* Bitmap */
         Bitmap bmp;
+        Bitmap cursor;
 
         /* Pen stuff */
         Pen pen;
@@ -23,6 +24,7 @@ namespace Pictionary
         bool erase;
 
         Point currPoint;
+        bool isDrawing;
 
         public event EventHandler ButtonClearClick;
 
@@ -30,16 +32,18 @@ namespace Pictionary
         {
             DoubleBuffered = true;
             bmp = new Bitmap(1920, 1080);
+            cursor = new Bitmap(61, 61);
             InitializeComponent();
             pen = new Pen(Color.Black);
             size = 3;
             color = Color.Black;
             btnPen_Click(this, new EventArgs());
+            isDrawing = false;
         }
         // When user starts drawing
         public void StartDrawing()
         {
-            drawingPanel.Enabled = drawingPanel.Visible = true;
+            drawingPanel.Enabled = drawingPanel.Visible = isDrawing = true;
             color = Color.Black;
             colorPicker.BackColor = color;
         }
@@ -47,7 +51,7 @@ namespace Pictionary
         // When user is finished
         public void StopDrawing()
         {
-            drawingPanel.Enabled = drawingPanel.Visible = false;
+            drawingPanel.Enabled = drawingPanel.Visible = isDrawing = false;
         }
 
         // Create a new stroke
@@ -62,8 +66,6 @@ namespace Pictionary
         // Create a new stroke
         public void NewStroke(Point point)
         {
-            if (erase)
-                color = this.BackColor;
             Graphics.FromImage(bmp).FillEllipse(new SolidBrush(color), point.X - (size/2), point.Y - (size/2), size, size);
             currPoint = point;
             Invalidate();
@@ -97,9 +99,11 @@ namespace Pictionary
             DialogResult result = cd.ShowDialog();
             if (result == DialogResult.OK)
             {
+                btnPen_Click(this, new EventArgs());
                 colorPicker.BackColor = cd.Color;
                 color = cd.Color;
             }
+            ChangeCursor();
         }
 
         private void btnPen_Click(object sender, EventArgs e)
@@ -111,6 +115,8 @@ namespace Pictionary
             btnErase.FlatAppearance.BorderColor = Color.Black;
             btnErase.FlatAppearance.BorderSize = 1;
             erase = false;
+            color = colorPicker.BackColor;
+            ChangeCursor();
         }
 
         private void btnFill_Click(object sender, EventArgs e)
@@ -124,6 +130,7 @@ namespace Pictionary
             //btnErase.FlatAppearance.BorderSize = 1;
             //erase = false;
             //fill = true;
+            //ChangeCursor();
         }
 
         private void btnErase_Click(object sender, EventArgs e)
@@ -135,6 +142,8 @@ namespace Pictionary
             btnErase.FlatAppearance.BorderColor = Color.Blue;
             btnErase.FlatAppearance.BorderSize = 2;
             erase = true;
+            color = BackColor;
+            ChangeCursor();
         }
 
         private void btnSize_Click(object sender, EventArgs e)
@@ -158,8 +167,6 @@ namespace Pictionary
         // Get pen color
         public Color GetPenColor()
         {
-            if (erase)
-                return this.BackColor;
             return color;
         }
 
@@ -190,6 +197,19 @@ namespace Pictionary
                     size = 15;
                     break;
             }
+            ChangeCursor();
+        }
+
+        private void ChangeCursor()
+        {
+            using (Graphics graphics = Graphics.FromImage(cursor))
+            {
+                graphics.Clear(Color.Transparent);
+                if (erase)
+                    graphics.DrawEllipse(new Pen(Color.Black), cursor.Width / 2 - size / 2, cursor.Height / 2 - size / 2, size, size);
+                else
+                    graphics.FillEllipse(new SolidBrush(color), cursor.Width / 2 - size / 2, cursor.Height / 2 - size / 2, size, size);
+            }
         }
 
         // Custom event for button clear click.
@@ -200,5 +220,21 @@ namespace Pictionary
                 ButtonClearClick(this, e);
             }
         }
+
+        private void HideCursor(object sender, EventArgs e)
+        {
+            if (isDrawing)
+            {
+                if (cursor == null)
+                    ChangeCursor();
+                Cursor = new Cursor(cursor.GetHicon());
+            }
+        }
+        private void ShowCursor(object sender, EventArgs e)
+        {
+            if (isDrawing)
+                Cursor = Cursors.Default;
+        }
+
     }
 }
