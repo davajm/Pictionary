@@ -37,8 +37,8 @@ namespace Pictionary
             timerCountDown = new Timer();
             timerCountDown.Interval = 1000;
             timerCountDown.Tick += new EventHandler(LabelCountDownTick);
-            isDrawing = true;
-            drawingBoard.StartDrawing();
+            //isDrawing = true;
+            //drawingBoard.StartDrawing();
         }
 
         private void OnSend(IAsyncResult ar)

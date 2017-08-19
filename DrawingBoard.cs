@@ -13,33 +13,30 @@ namespace Pictionary
 {
     public partial class DrawingBoard : UserControl
     {
-        struct Stroke
-        {
-            public List<Point> points;
-            public int size;    
-            public Color color;
-        }
+        /* Bitmap */
+        Bitmap bmp;
 
-        Stroke currentStroke;
-        List<Stroke> allStrokes;
-
+        /* Pen stuff */
+        Pen pen;
         int size;
         Color color;
         bool erase;
 
-        Pen pen;
+        Point currPoint;
 
         public event EventHandler ButtonClearClick;
 
         public DrawingBoard()
         {
             DoubleBuffered = true;
+            bmp = new Bitmap(1920, 1080);
             InitializeComponent();
-            allStrokes = new List<Stroke>();
             pen = new Pen(Color.Black);
             size = 3;
             color = Color.Black;
+            btnPen_Click(this, new EventArgs());
         }
+        // When user starts drawing
         public void StartDrawing()
         {
             drawingPanel.Enabled = drawingPanel.Visible = true;
@@ -47,11 +44,13 @@ namespace Pictionary
             colorPicker.BackColor = color;
         }
 
+        // When user is finished
         public void StopDrawing()
         {
             drawingPanel.Enabled = drawingPanel.Visible = false;
         }
 
+        // Create a new stroke
         public void NewStroke(Point point, int size, Color color)
         {
             this.size = size;
@@ -59,33 +58,38 @@ namespace Pictionary
             colorPicker.BackColor = color;
             NewStroke(point);
         }
+
+        // Create a new stroke
         public void NewStroke(Point point)
         {
-            currentStroke = new Stroke();
-            currentStroke.points = new List<Point>();
-            currentStroke.points.Add(point);
-            currentStroke.size = size;
             if (erase)
-                currentStroke.color = this.BackColor;
-            else
-                currentStroke.color = color;
-            allStrokes.Add(currentStroke);
-            Invalidate();
-        }
-        public void AddPointToStroke(Point point)
-        {
-            currentStroke.points.Add(point);
-            Invalidate();
-        }
-        public void Clear()
-        {
-            if (currentStroke.points != null)
-                currentStroke.points.Clear();
-            if (allStrokes != null)
-                allStrokes.Clear();
+                color = this.BackColor;
+            Graphics.FromImage(bmp).FillEllipse(new SolidBrush(color), point.X - (size/2), point.Y - (size/2), size, size);
+            currPoint = point;
             Invalidate();
         }
 
+        // Add a point to current stroke
+        public void AddPointToStroke(Point point)
+        {
+            pen.DashStyle = DashStyle.Solid;
+            pen.StartCap = LineCap.Round;
+            pen.EndCap = LineCap.Round;
+            pen.Color = color;
+            pen.Width = size;
+            Graphics.FromImage(bmp).DrawLine(pen, currPoint, point);
+            currPoint = point;
+            Invalidate();
+        }
+
+        // Clear board
+        public void Clear()
+        {
+            bmp = new Bitmap(1000, 800);
+            Invalidate();
+        }
+
+        // Color picker to change color of pen
         private void colorPicker_Click(object sender, EventArgs e)
         {
             ColorDialog cd = new ColorDialog();
@@ -138,36 +142,20 @@ namespace Pictionary
             cmsSize.Show(btnSize, new Point(-(cmsSize.Width - btnSize.Width) / 2, -cmsSize.Height));
         }
 
+        // Draw function
         private void Draw(object sender, PaintEventArgs e)
         {
             e.Graphics.SmoothingMode = SmoothingMode.HighQuality;
-            foreach (Stroke stroke in allStrokes)
-            {
-                pen.DashStyle = DashStyle.Solid;
-                pen.StartCap = LineCap.Round;
-                pen.EndCap = LineCap.Round;
-                pen.Color = stroke.color;
-                pen.Width = stroke.size;
-
-                int count = stroke.points.Count;
-                if (count == 1)
-                {
-                    e.Graphics.FillEllipse(new SolidBrush(stroke.color), stroke.points[0].X-(stroke.size/2), 
-                                           stroke.points[0].Y-(stroke.size/2), stroke.size, stroke.size);
-                }
-                for (int i = 1; i < count; i++)
-                {
-                    e.Graphics.DrawLine(pen, stroke.points[i - 1], stroke.points[i]);
-                }
-
-            }
+            e.Graphics.DrawImage(bmp, 0, 0);
         }
 
+        // Get pen size
         public int GetPenSize()
         {
             return size;
         }
 
+        // Get pen color
         public Color GetPenColor()
         {
             if (erase)
@@ -175,6 +163,7 @@ namespace Pictionary
             return color;
         }
 
+        // Change size of pen
         private void ChangeSize(object sender, EventArgs e)
         {
             ToolStripMenuItem senderItem = (ToolStripMenuItem)sender;
@@ -203,6 +192,7 @@ namespace Pictionary
             }
         }
 
+        // Custom event for button clear click.
         private void btnClear_Click(object sender, EventArgs e)
         {
             if (ButtonClearClick != null)

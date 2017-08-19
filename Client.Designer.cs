@@ -154,6 +154,8 @@
             this.Controls.Add(this.btnReady);
             this.Controls.Add(this.countdown);
             this.Controls.Add(this.drawingBoard);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.MaximizeBox = false;
             this.Name = "Client";
             this.Text = "Pictionary";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Client_FormClosing);
