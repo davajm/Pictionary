@@ -35,7 +35,9 @@
             // 
             // mainTitle
             // 
+            this.mainTitle.BackColor = System.Drawing.Color.Transparent;
             this.mainTitle.Font = new System.Drawing.Font("Microsoft Sans Serif", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.mainTitle.ForeColor = System.Drawing.SystemColors.Control;
             this.mainTitle.Location = new System.Drawing.Point(7, 9);
             this.mainTitle.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.mainTitle.Name = "mainTitle";
@@ -46,7 +48,9 @@
             // 
             // subTitle
             // 
+            this.subTitle.BackColor = System.Drawing.Color.Transparent;
             this.subTitle.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.subTitle.ForeColor = System.Drawing.Color.Red;
             this.subTitle.Location = new System.Drawing.Point(2, 41);
             this.subTitle.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.subTitle.Name = "subTitle";
@@ -71,7 +75,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.SystemColors.Control;
+            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(41)))), ((int)(((byte)(53)))), ((int)(((byte)(65)))));
             this.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.Controls.Add(this.tlpScoreBoard);
             this.Controls.Add(this.subTitle);

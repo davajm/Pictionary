@@ -325,9 +325,11 @@
             // 
             // btnHost
             // 
-            this.btnHost.BackColor = System.Drawing.SystemColors.ActiveCaption;
+            this.btnHost.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(41)))), ((int)(((byte)(53)))), ((int)(((byte)(65)))));
+            this.btnHost.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(229)))), ((int)(((byte)(126)))), ((int)(((byte)(49)))));
             this.btnHost.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnHost.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnHost.ForeColor = System.Drawing.SystemColors.Control;
             this.btnHost.Location = new System.Drawing.Point(403, 392);
             this.btnHost.Name = "btnHost";
             this.btnHost.Size = new System.Drawing.Size(85, 33);
@@ -393,9 +395,11 @@
             // 
             // button2
             // 
-            this.button2.BackColor = System.Drawing.SystemColors.ActiveCaption;
+            this.button2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(41)))), ((int)(((byte)(53)))), ((int)(((byte)(65)))));
+            this.button2.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(229)))), ((int)(((byte)(126)))), ((int)(((byte)(49)))));
             this.button2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button2.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button2.ForeColor = System.Drawing.SystemColors.Control;
             this.button2.Location = new System.Drawing.Point(403, 362);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(85, 33);
@@ -467,8 +471,8 @@
             this.ClientSize = new System.Drawing.Size(737, 516);
             this.Controls.Add(this.header);
             this.Controls.Add(this.menu);
-            this.Controls.Add(this.panelJoinGame);
             this.Controls.Add(this.panelHostGame);
+            this.Controls.Add(this.panelJoinGame);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.MaximumSize = new System.Drawing.Size(948, 662);
             this.Name = "main";

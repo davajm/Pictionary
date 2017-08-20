@@ -44,6 +44,7 @@ namespace Pictionary
         public void StartDrawing()
         {
             drawingPanel.Enabled = drawingPanel.Visible = isDrawing = true;
+            placeholder.Enabled = placeholder.Visible = false;
             color = Color.Black;
             colorPicker.BackColor = color;
         }
@@ -51,6 +52,7 @@ namespace Pictionary
         // When user is finished
         public void StopDrawing()
         {
+            placeholder.Enabled = placeholder.Visible = true;
             drawingPanel.Enabled = drawingPanel.Visible = isDrawing = false;
         }
 

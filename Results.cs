@@ -40,6 +40,9 @@ namespace Pictionary
                     Label lblName = new Label();
                     Label lblScore = new Label();
                     lblName.Text = player.GetName();
+                    lblName.ForeColor = SystemColors.Control;
+                    lblName.Font = new Font(mainTitle.Font.FontFamily, 14);
+                    lblScore.Font = new Font(mainTitle.Font.FontFamily, 14);
                     int score = player.GetRoundScore();
                     if (score > 0)
                     {

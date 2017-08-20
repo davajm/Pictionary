@@ -176,9 +176,11 @@
             // 
             // btnReady
             // 
-            this.btnReady.BackColor = System.Drawing.SystemColors.ActiveCaption;
+            this.btnReady.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(41)))), ((int)(((byte)(53)))), ((int)(((byte)(65)))));
+            this.btnReady.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(229)))), ((int)(((byte)(126)))), ((int)(((byte)(49)))));
             this.btnReady.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnReady.Font = new System.Drawing.Font("Tahoma", 13F);
+            this.btnReady.ForeColor = System.Drawing.SystemColors.Control;
             this.btnReady.Location = new System.Drawing.Point(206, 62);
             this.btnReady.Name = "btnReady";
             this.btnReady.Size = new System.Drawing.Size(92, 34);

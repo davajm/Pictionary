@@ -35,9 +35,13 @@
             // 
             // word1
             // 
-            this.word1.BackColor = System.Drawing.Color.White;
+            this.word1.BackColor = System.Drawing.Color.Transparent;
+            this.word1.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(229)))), ((int)(((byte)(126)))), ((int)(((byte)(49)))));
+            this.word1.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(60)))), ((int)(((byte)(80)))));
+            this.word1.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(70)))), ((int)(((byte)(90)))));
             this.word1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.word1.Font = new System.Drawing.Font("Tahoma", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.word1.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.word1.ForeColor = System.Drawing.SystemColors.Control;
             this.word1.Location = new System.Drawing.Point(23, 82);
             this.word1.Margin = new System.Windows.Forms.Padding(2);
             this.word1.Name = "word1";
@@ -48,9 +52,13 @@
             // 
             // word2
             // 
-            this.word2.BackColor = System.Drawing.Color.White;
+            this.word2.BackColor = System.Drawing.Color.Transparent;
+            this.word2.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(229)))), ((int)(((byte)(126)))), ((int)(((byte)(49)))));
+            this.word2.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(60)))), ((int)(((byte)(80)))));
+            this.word2.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(70)))), ((int)(((byte)(90)))));
             this.word2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.word2.Font = new System.Drawing.Font("Tahoma", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.word2.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.word2.ForeColor = System.Drawing.SystemColors.Control;
             this.word2.Location = new System.Drawing.Point(224, 82);
             this.word2.Margin = new System.Windows.Forms.Padding(2);
             this.word2.Name = "word2";
@@ -61,9 +69,13 @@
             // 
             // word3
             // 
-            this.word3.BackColor = System.Drawing.Color.White;
+            this.word3.BackColor = System.Drawing.Color.Transparent;
+            this.word3.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(229)))), ((int)(((byte)(126)))), ((int)(((byte)(49)))));
+            this.word3.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(60)))), ((int)(((byte)(80)))));
+            this.word3.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(70)))), ((int)(((byte)(90)))));
             this.word3.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.word3.Font = new System.Drawing.Font("Tahoma", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.word3.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.word3.ForeColor = System.Drawing.SystemColors.Control;
             this.word3.Location = new System.Drawing.Point(426, 82);
             this.word3.Margin = new System.Windows.Forms.Padding(2);
             this.word3.Name = "word3";
