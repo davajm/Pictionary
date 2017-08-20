@@ -249,6 +249,14 @@ namespace Pictionary
                             StartCountDown();
                         });
                         break;
+                    case Command.WordHint:
+                        lblWaiting.Invoke((MethodInvoker)delegate
+                        {
+                            char[] text = lblWaiting.Text.ToCharArray();
+                            text[Int32.Parse(msgReceived.strMessage[1].ToString())*2] = msgReceived.strMessage[0];
+                            ChangeLabelText(new string(text));
+                        });
+                        break;
                     case Command.CorrectGuess:
                         playerList.Invoke((MethodInvoker)delegate {
                             playerList.AddScore(msgReceived.strName, Int32.Parse(msgReceived.strMessage));
@@ -259,6 +267,7 @@ namespace Pictionary
                         isDrawing = false;
                         StopCountDown();
                         result = new Results(playerList.GetPlayers(), msgReceived.strMessage);
+                        result.KeyPress += chat_KeyPress;
                         drawingBoard.Invoke((MethodInvoker)delegate
                         {
                             result.Left = (drawingBoard.Width - result.Width) / 2;
@@ -281,6 +290,7 @@ namespace Pictionary
                             drawingBoard.Controls.Remove(result);
                         });
                         result = new Results(playerList.GetPlayers());
+                        result.KeyPress += chat_KeyPress;
                         drawingBoard.Invoke((MethodInvoker)delegate
                         {
                             result.Left = (drawingBoard.Width - result.Width) / 2;

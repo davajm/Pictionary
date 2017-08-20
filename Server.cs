@@ -36,10 +36,14 @@ namespace Pictionary
         byte[] byteData = new byte[1024];
         State state;
         string currentWord;
+        int[] hintIndexes;
         int currentScore;
         bool broadcastMessage;
         string[] words;
         Random random;
+        System.Timers.Timer hintTimer;
+        int givenHints;
+
 
         ManualResetEvent mre;
 
@@ -125,6 +129,7 @@ namespace Pictionary
             int rounds = 3;
 
             System.Timers.Timer timer = new System.Timers.Timer();
+            hintTimer = new System.Timers.Timer();
             Data msgToSend = new Data();
             byte[] message;
             for (int i = 0; i < rounds; i++)
@@ -183,11 +188,26 @@ namespace Pictionary
                     timer.Interval = 90000;
                     timer.Elapsed += ResetTimer;
                     timer.AutoReset = false;
-                    timer.Enabled = true;
+                    timer.Enabled =  true;
+
+                    // Hint mechanics
+                    if (currentWord.Length > 2) // Only provide hints if the word has 2 or more characters
+                    {
+                        // Hints are given based on the length of the word.
+                        // 90 seconds (round time) divided by the length of the word minus 1.
+                        // A word of length 4 would give a character hint every 30 seconds.
+                        hintTimer.Interval = 90000 / (currentWord.Length - 1);
+                        hintTimer.Elapsed += GiveHint;
+                        hintTimer.AutoReset = true;
+                        hintTimer.Enabled = true;
+                    }
+
 
                     mre.Reset();
                     mre.WaitOne();
+                    state = State.ChoosingWord;
                     timer.Enabled = false;
+                    hintTimer.Enabled = false;
 
                     // Tell players the round is over
                     msgToSend.cmdCommand = Command.RoundOver;
@@ -208,7 +228,6 @@ namespace Pictionary
                     mre.WaitOne();
                     timer.Enabled = false;
                 }
-
             }
 
             // Tell users the game is over and show end scren.
@@ -247,6 +266,34 @@ namespace Pictionary
             {
                 client.isReady = client.isDrawing =  client.hasGuessed = false;
                 client.score = 0;
+            }
+        }
+        private void GiveHint(object sender, ElapsedEventArgs e)
+        {
+            Data msgToSend = new Data();
+            byte[] message;
+
+            // Generate an unique index
+            int randomIndex = random.Next(0, currentWord.Length);
+            while (hintIndexes[randomIndex] == 1)
+            {
+                randomIndex = random.Next(0, currentWord.Length);
+            }
+            hintIndexes[randomIndex] = 1;
+
+            // Send hint
+            msgToSend.cmdCommand = Command.WordHint;
+            msgToSend.strMessage = currentWord[randomIndex] + randomIndex.ToString();
+            message = msgToSend.ToByte();
+            foreach (ClientInfo clientInfo in clients)
+            {
+                // Send message to users that are guessing
+                if (!clientInfo.isDrawing)
+                    clientInfo.socket.BeginSend(message, 0, message.Length, SocketFlags.None, new AsyncCallback(OnSend), clientInfo.socket);
+            }
+            if (givenHints == currentWord.Length-2)
+            {
+                hintTimer.Enabled = false;
             }
         }
         private void ResetTimer(object sender, ElapsedEventArgs e)
@@ -359,6 +406,12 @@ namespace Pictionary
                         break;
                     case Command.ChooseWord:
                         currentWord = msgReceived.strMessage;
+                        givenHints = 0;
+                        hintIndexes = new int[currentWord.Length];
+                        for (int i = 0; i<currentWord.Length; i++)
+                        {
+                            hintIndexes[i] = 0;
+                        }
                         mre.Set();
                         msgToSend.strMessage = null;
                         msgToSend.strName = null;
@@ -472,7 +525,7 @@ namespace Pictionary
                         }
                     }
                 }
-                if (newDrawer)
+                if (newDrawer && state == State.Drawing)
                 {
                     mre.Set();
                 }

@@ -18,6 +18,7 @@ namespace Pictionary
         StopGame,       // Stops game
         StartDrawing,   // Indicates the user that's currently drawing
         ChooseWord,     // Round's over, stop drawing
+        WordHint,       // Send character hint when a player is drawing
         CorrectGuess,   // Indicate correct guess of the word being drawn
         RoundOver,      // Indicates that current round is over
         GameOver,       // Indicates that the game is over
