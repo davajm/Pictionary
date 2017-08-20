@@ -189,50 +189,46 @@ namespace Pictionary
                     mre.WaitOne();
                     timer.Enabled = false;
 
-                    if (i == rounds-1 && clients.IndexOf(client) == clients.Count-1)  // If the final round
+                    // Tell players the round is over
+                    msgToSend.cmdCommand = Command.RoundOver;
+                    msgToSend.strMessage = currentWord;
+                    message = msgToSend.ToByte();
+                    foreach (ClientInfo clientInfo in clients)
                     {
-                        // Tell users the game is over and show end scren.
-                        msgToSend.cmdCommand = Command.GameOver;
-                        msgToSend.strMessage = null;
-                        msgToSend.strName = null;
-                        message = msgToSend.ToByte();
-                        foreach (ClientInfo clientInfo in clients)
-                        {
-                            //Send the message to all users
-                            clientInfo.socket.BeginSend(message, 0, message.Length, SocketFlags.None, new AsyncCallback(OnSend), clientInfo.socket);
-                        }
-                        timer.Interval = 10000;
-                        timer.Elapsed += ResetTimer;
-                        timer.AutoReset = false;
-                        timer.Enabled = true;
-
-                        mre.Reset();
-                        mre.WaitOne();
-                        timer.Enabled = false;
+                        //Send the message to all users
+                        clientInfo.socket.BeginSend(message, 0, message.Length, SocketFlags.None, new AsyncCallback(OnSend), clientInfo.socket);
                     }
-                    else // If not final round
-                    {
-                        // Tell players the round is over
-                        msgToSend.cmdCommand = Command.RoundOver;
-                        msgToSend.strMessage = currentWord;
-                        message = msgToSend.ToByte();
-                        foreach (ClientInfo clientInfo in clients)
-                        {
-                            //Send the message to all users
-                            clientInfo.socket.BeginSend(message, 0, message.Length, SocketFlags.None, new AsyncCallback(OnSend), clientInfo.socket);
-                        }
 
-                        timer.Interval = 10000;
-                        timer.Elapsed += ResetTimer;
-                        timer.AutoReset = false;
-                        timer.Enabled = true;
+                    timer.Interval = 10000;
+                    timer.Elapsed += ResetTimer;
+                    timer.AutoReset = false;
+                    timer.Enabled = true;
 
-                        mre.Reset();
-                        mre.WaitOne();
-                        timer.Enabled = false;
-                    }
+                    mre.Reset();
+                    mre.WaitOne();
+                    timer.Enabled = false;
                 }
+
             }
+
+            // Tell users the game is over and show end scren.
+            msgToSend.cmdCommand = Command.GameOver;
+            msgToSend.strMessage = null;
+            msgToSend.strName = null;
+            message = msgToSend.ToByte();
+            foreach (ClientInfo clientInfo in clients)
+            {
+                //Send the message to all users
+                clientInfo.socket.BeginSend(message, 0, message.Length, SocketFlags.None, new AsyncCallback(OnSend), clientInfo.socket);
+            }
+            timer.Interval = 10000;
+            timer.Elapsed += ResetTimer;
+            timer.AutoReset = false;
+            timer.Enabled = true;
+
+            mre.Reset();
+            mre.WaitOne();
+            timer.Enabled = false;
 
             // Tell users to ready up again
             msgToSend.cmdCommand = Command.GameOverFinal;

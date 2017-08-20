@@ -33,6 +33,7 @@ namespace Pictionary
             mainTitle.Text = "Round is over, the word was:";
             subTitle.Text = word.ToUpper();
             subTitle.ForeColor = Color.Red;
+            tlpScoreBoard.RowStyles[0].SizeType = SizeType.AutoSize;
             foreach (Player player in players)
             {
                 if (!player.IsDrawing())
@@ -43,16 +44,18 @@ namespace Pictionary
                     lblName.ForeColor = SystemColors.Control;
                     lblName.Font = new Font(mainTitle.Font.FontFamily, 14);
                     lblScore.Font = new Font(mainTitle.Font.FontFamily, 14);
+                    lblScore.ForeColor = SystemColors.Control;
                     int score = player.GetRoundScore();
                     if (score > 0)
                     {
-                        lblScore.ForeColor = Color.Green;
+                        lblScore.ForeColor = Color.LimeGreen;
                         lblScore.Text = "+";
                     }
                     lblScore.Text += score.ToString();
-                    tlpScoreBoard.RowCount++;
                     tlpScoreBoard.Controls.Add(lblName, 0, tlpScoreBoard.RowCount - 1);
                     tlpScoreBoard.Controls.Add(lblScore, 1, tlpScoreBoard.RowCount - 1);
+                    tlpScoreBoard.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+                    tlpScoreBoard.RowCount++;
                 }
             }
         }
@@ -83,26 +86,30 @@ namespace Pictionary
                 {
                     subTitle.Text += winner + " ";
                 }
-                subTitle.ForeColor = Color.Green;
+                subTitle.ForeColor = Color.LimeGreen;
 
             }
             else // If one winner
             {
                 mainTitle.Text = "Game is over, the winner is:";
                 subTitle.Text = winners[0].ToUpper();
-                subTitle.ForeColor = Color.Green;
+                subTitle.ForeColor = Color.LimeGreen;
             }
-
+            tlpScoreBoard.RowStyles[0].SizeType = SizeType.AutoSize;
             foreach (Player player in players)
             {
                 Label lblName = new Label();
                 Label lblScore = new Label();
+                lblName.Font = new Font(mainTitle.Font.FontFamily, 14);
+                lblScore.Font = new Font(mainTitle.Font.FontFamily, 14);
                 lblName.Text = player.GetName();
-                lblScore.ForeColor = Color.Green;
+                lblScore.ForeColor = Color.LimeGreen;
+                lblName.ForeColor = SystemColors.Control;
                 lblScore.Text = player.GetTotalScore().ToString();
-                tlpScoreBoard.RowCount++;
                 tlpScoreBoard.Controls.Add(lblName, 0, tlpScoreBoard.RowCount - 1);
                 tlpScoreBoard.Controls.Add(lblScore, 1, tlpScoreBoard.RowCount - 1);
+                tlpScoreBoard.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+                tlpScoreBoard.RowCount++;
             }
 
         }

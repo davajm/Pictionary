@@ -36,15 +36,15 @@
             this.icon = new System.Windows.Forms.Panel();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.label6 = new System.Windows.Forms.Label();
+            this.playerList = new Pictionary.PlayerList();
             this.right = new System.Windows.Forms.Panel();
-            this.btnMinimize = new System.Windows.Forms.Button();
-            this.btnClose = new System.Windows.Forms.Button();
             this.btnReady = new System.Windows.Forms.Button();
             this.lblWaiting = new System.Windows.Forms.Label();
             this.header = new System.Windows.Forms.Panel();
-            this.playerList = new Pictionary.PlayerList();
             this.chooseWord = new Pictionary.ChooseWord();
             this.drawingBoard = new Pictionary.DrawingBoard();
+            this.btnClose = new System.Windows.Forms.Button();
+            this.btnMinimize = new System.Windows.Forms.Button();
             this.menu.SuspendLayout();
             this.icon.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -133,6 +133,17 @@
             this.label6.Text = "Pictionary";
             this.label6.MouseDown += new System.Windows.Forms.MouseEventHandler(this.DragWindow);
             // 
+            // playerList
+            // 
+            this.playerList.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.playerList.Location = new System.Drawing.Point(0, 55);
+            this.playerList.Margin = new System.Windows.Forms.Padding(4);
+            this.playerList.Name = "playerList";
+            this.playerList.Size = new System.Drawing.Size(200, 702);
+            this.playerList.TabIndex = 4;
+            this.playerList.TabStop = false;
+            this.playerList.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.chat_KeyPress);
+            // 
             // right
             // 
             this.right.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -143,36 +154,6 @@
             this.right.Name = "right";
             this.right.Size = new System.Drawing.Size(200, 702);
             this.right.TabIndex = 13;
-            // 
-            // btnMinimize
-            // 
-            this.btnMinimize.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnMinimize.BackColor = System.Drawing.Color.Transparent;
-            this.btnMinimize.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("btnMinimize.BackgroundImage")));
-            this.btnMinimize.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.btnMinimize.FlatAppearance.BorderSize = 0;
-            this.btnMinimize.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnMinimize.Location = new System.Drawing.Point(1374, 5);
-            this.btnMinimize.Name = "btnMinimize";
-            this.btnMinimize.Size = new System.Drawing.Size(25, 25);
-            this.btnMinimize.TabIndex = 14;
-            this.btnMinimize.UseVisualStyleBackColor = false;
-            this.btnMinimize.Click += new System.EventHandler(this.btnMinimize_Click);
-            // 
-            // btnClose
-            // 
-            this.btnClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnClose.BackColor = System.Drawing.Color.Transparent;
-            this.btnClose.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("btnClose.BackgroundImage")));
-            this.btnClose.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.btnClose.FlatAppearance.BorderSize = 0;
-            this.btnClose.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnClose.Location = new System.Drawing.Point(1406, 5);
-            this.btnClose.Name = "btnClose";
-            this.btnClose.Size = new System.Drawing.Size(25, 25);
-            this.btnClose.TabIndex = 15;
-            this.btnClose.UseVisualStyleBackColor = false;
-            this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
             // 
             // btnReady
             // 
@@ -194,12 +175,12 @@
             // lblWaiting
             // 
             this.lblWaiting.BackColor = System.Drawing.Color.Transparent;
-            this.lblWaiting.Dock = System.Windows.Forms.DockStyle.Right;
+            this.lblWaiting.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lblWaiting.Font = new System.Drawing.Font("Segoe UI", 18F);
-            this.lblWaiting.Location = new System.Drawing.Point(74, 0);
+            this.lblWaiting.Location = new System.Drawing.Point(69, 0);
             this.lblWaiting.Name = "lblWaiting";
             this.lblWaiting.Padding = new System.Windows.Forms.Padding(0, 0, 200, 0);
-            this.lblWaiting.Size = new System.Drawing.Size(1162, 52);
+            this.lblWaiting.Size = new System.Drawing.Size(1167, 52);
             this.lblWaiting.TabIndex = 16;
             this.lblWaiting.Text = "Waiting for players to get ready";
             this.lblWaiting.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -208,6 +189,8 @@
             // header
             // 
             this.header.BackColor = System.Drawing.Color.LightGray;
+            this.header.Controls.Add(this.btnClose);
+            this.header.Controls.Add(this.btnMinimize);
             this.header.Controls.Add(this.lblWaiting);
             this.header.Controls.Add(this.countdown);
             this.header.Dock = System.Windows.Forms.DockStyle.Top;
@@ -215,18 +198,7 @@
             this.header.Name = "header";
             this.header.Size = new System.Drawing.Size(1236, 52);
             this.header.TabIndex = 17;
-            this.header.MouseDown += new System.Windows.Forms.MouseEventHandler(this.drawingBoard_MouseDown);
-            // 
-            // playerList
-            // 
-            this.playerList.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.playerList.Location = new System.Drawing.Point(0, 55);
-            this.playerList.Margin = new System.Windows.Forms.Padding(4);
-            this.playerList.Name = "playerList";
-            this.playerList.Size = new System.Drawing.Size(200, 702);
-            this.playerList.TabIndex = 4;
-            this.playerList.TabStop = false;
-            this.playerList.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.chat_KeyPress);
+            this.header.MouseDown += new System.Windows.Forms.MouseEventHandler(this.DragWindow);
             // 
             // chooseWord
             // 
@@ -262,6 +234,36 @@
             this.drawingBoard.MouseMove += new System.Windows.Forms.MouseEventHandler(this.drawingBoard_MouseMove);
             this.drawingBoard.MouseUp += new System.Windows.Forms.MouseEventHandler(this.drawingBoard_MouseUp);
             // 
+            // btnClose
+            // 
+            this.btnClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnClose.BackColor = System.Drawing.Color.Transparent;
+            this.btnClose.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("btnClose.BackgroundImage")));
+            this.btnClose.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.btnClose.FlatAppearance.BorderSize = 0;
+            this.btnClose.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnClose.Location = new System.Drawing.Point(1206, 5);
+            this.btnClose.Name = "btnClose";
+            this.btnClose.Size = new System.Drawing.Size(25, 25);
+            this.btnClose.TabIndex = 15;
+            this.btnClose.UseVisualStyleBackColor = false;
+            this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
+            // 
+            // btnMinimize
+            // 
+            this.btnMinimize.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnMinimize.BackColor = System.Drawing.Color.Transparent;
+            this.btnMinimize.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("btnMinimize.BackgroundImage")));
+            this.btnMinimize.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.btnMinimize.FlatAppearance.BorderSize = 0;
+            this.btnMinimize.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnMinimize.Location = new System.Drawing.Point(1175, 5);
+            this.btnMinimize.Name = "btnMinimize";
+            this.btnMinimize.Size = new System.Drawing.Size(25, 25);
+            this.btnMinimize.TabIndex = 14;
+            this.btnMinimize.UseVisualStyleBackColor = false;
+            this.btnMinimize.Click += new System.EventHandler(this.btnMinimize_Click);
+            // 
             // Client
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -269,8 +271,6 @@
             this.BackColor = System.Drawing.SystemColors.Control;
             this.ClientSize = new System.Drawing.Size(1436, 757);
             this.Controls.Add(this.header);
-            this.Controls.Add(this.btnMinimize);
-            this.Controls.Add(this.btnClose);
             this.Controls.Add(this.right);
             this.Controls.Add(this.menu);
             this.Controls.Add(this.chooseWord);
@@ -307,10 +307,10 @@
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Panel right;
-        private System.Windows.Forms.Button btnMinimize;
-        private System.Windows.Forms.Button btnClose;
         private System.Windows.Forms.Button btnReady;
         private System.Windows.Forms.Label lblWaiting;
         private System.Windows.Forms.Panel header;
+        private System.Windows.Forms.Button btnClose;
+        private System.Windows.Forms.Button btnMinimize;
     }
 }

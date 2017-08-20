@@ -61,6 +61,11 @@
             // 
             // tlpScoreBoard
             // 
+            this.tlpScoreBoard.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.tlpScoreBoard.AutoSize = true;
+            this.tlpScoreBoard.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.tlpScoreBoard.ColumnCount = 2;
             this.tlpScoreBoard.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 75F));
             this.tlpScoreBoard.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
@@ -68,7 +73,7 @@
             this.tlpScoreBoard.Name = "tlpScoreBoard";
             this.tlpScoreBoard.RowCount = 1;
             this.tlpScoreBoard.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tlpScoreBoard.Size = new System.Drawing.Size(418, 291);
+            this.tlpScoreBoard.Size = new System.Drawing.Size(416, 291);
             this.tlpScoreBoard.TabIndex = 2;
             // 
             // Results
@@ -84,6 +89,7 @@
             this.Name = "Results";
             this.Size = new System.Drawing.Size(528, 437);
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
