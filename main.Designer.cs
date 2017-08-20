@@ -35,9 +35,11 @@
             this.btnJoinGame = new System.Windows.Forms.Button();
             this.btnHostGame = new System.Windows.Forms.Button();
             this.icon = new System.Windows.Forms.Panel();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.label6 = new System.Windows.Forms.Label();
             this.header = new System.Windows.Forms.Panel();
             this.btnMinimize = new System.Windows.Forms.Button();
+            this.btnClose = new System.Windows.Forms.Button();
             this.headerText = new System.Windows.Forms.Label();
             this.panelHostGame = new System.Windows.Forms.Panel();
             this.label7 = new System.Windows.Forms.Label();
@@ -57,16 +59,14 @@
             this.txtJoinName = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
-            this.btnClose = new System.Windows.Forms.Button();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.menu.SuspendLayout();
             this.icon.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.header.SuspendLayout();
             this.panelHostGame.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
             this.panelJoinGame.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // menu
@@ -163,6 +163,17 @@
             this.icon.TabIndex = 0;
             this.icon.MouseDown += new System.Windows.Forms.MouseEventHandler(this.DragWindow);
             // 
+            // pictureBox1
+            // 
+            this.pictureBox1.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("pictureBox1.BackgroundImage")));
+            this.pictureBox1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.pictureBox1.Location = new System.Drawing.Point(5, 2);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(50, 50);
+            this.pictureBox1.TabIndex = 2;
+            this.pictureBox1.TabStop = false;
+            this.pictureBox1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.DragWindow);
+            // 
             // label6
             // 
             this.label6.AutoSize = true;
@@ -203,6 +214,23 @@
             this.btnMinimize.MouseEnter += new System.EventHandler(this.btnMinimize_MouseEnter);
             this.btnMinimize.MouseLeave += new System.EventHandler(this.btnMinimize_MouseLeave);
             // 
+            // btnClose
+            // 
+            this.btnClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnClose.BackColor = System.Drawing.Color.Transparent;
+            this.btnClose.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("btnClose.BackgroundImage")));
+            this.btnClose.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.btnClose.FlatAppearance.BorderSize = 0;
+            this.btnClose.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnClose.Location = new System.Drawing.Point(507, 3);
+            this.btnClose.Name = "btnClose";
+            this.btnClose.Size = new System.Drawing.Size(25, 25);
+            this.btnClose.TabIndex = 9;
+            this.btnClose.UseVisualStyleBackColor = false;
+            this.btnClose.Click += new System.EventHandler(this.btnQuit_Click);
+            this.btnClose.MouseEnter += new System.EventHandler(this.btnClose_MouseEnter);
+            this.btnClose.MouseLeave += new System.EventHandler(this.btnClose_MouseLeave);
+            // 
             // headerText
             // 
             this.headerText.BackColor = System.Drawing.Color.Transparent;
@@ -239,16 +267,16 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label7.Location = new System.Drawing.Point(346, 347);
+            this.label7.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label7.Location = new System.Drawing.Point(346, 325);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(189, 20);
+            this.label7.Size = new System.Drawing.Size(187, 21);
             this.label7.TabIndex = 40;
             this.label7.Text = "Time per round (seconds)";
             // 
             // numericUpDown2
             // 
-            this.numericUpDown2.Location = new System.Drawing.Point(350, 370);
+            this.numericUpDown2.Location = new System.Drawing.Point(350, 348);
             this.numericUpDown2.Maximum = new decimal(new int[] {
             300,
             0,
@@ -270,7 +298,7 @@
             // 
             // numericUpDown1
             // 
-            this.numericUpDown1.Location = new System.Drawing.Point(350, 292);
+            this.numericUpDown1.Location = new System.Drawing.Point(350, 280);
             this.numericUpDown1.Minimum = new decimal(new int[] {
             1,
             0,
@@ -288,10 +316,10 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label5.Location = new System.Drawing.Point(346, 269);
+            this.label5.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label5.Location = new System.Drawing.Point(346, 257);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(97, 20);
+            this.label5.Size = new System.Drawing.Size(95, 21);
             this.label5.TabIndex = 37;
             this.label5.Text = "Total rounds";
             // 
@@ -299,7 +327,8 @@
             // 
             this.btnHost.BackColor = System.Drawing.SystemColors.ActiveCaption;
             this.btnHost.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnHost.Location = new System.Drawing.Point(403, 419);
+            this.btnHost.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnHost.Location = new System.Drawing.Point(403, 392);
             this.btnHost.Name = "btnHost";
             this.btnHost.Size = new System.Drawing.Size(85, 33);
             this.btnHost.TabIndex = 36;
@@ -310,10 +339,10 @@
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label8.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label8.Location = new System.Drawing.Point(346, 125);
             this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(51, 20);
+            this.label8.Size = new System.Drawing.Size(52, 21);
             this.label8.TabIndex = 35;
             this.label8.Text = "Name";
             // 
@@ -329,16 +358,16 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(346, 199);
+            this.label1.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Location = new System.Drawing.Point(345, 190);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(96, 20);
+            this.label1.Size = new System.Drawing.Size(97, 21);
             this.label1.TabIndex = 34;
             this.label1.Text = "Port number";
             // 
             // txtHostPort
             // 
-            this.txtHostPort.Location = new System.Drawing.Point(350, 222);
+            this.txtHostPort.Location = new System.Drawing.Point(349, 213);
             this.txtHostPort.MaxLength = 5;
             this.txtHostPort.Name = "txtHostPort";
             this.txtHostPort.Size = new System.Drawing.Size(200, 20);
@@ -366,6 +395,7 @@
             // 
             this.button2.BackColor = System.Drawing.SystemColors.ActiveCaption;
             this.button2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button2.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.button2.Location = new System.Drawing.Point(403, 362);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(85, 33);
@@ -377,10 +407,10 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label4.Font = new System.Drawing.Font("Segoe UI", 12F);
             this.label4.Location = new System.Drawing.Point(346, 142);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(51, 20);
+            this.label4.Size = new System.Drawing.Size(52, 21);
             this.label4.TabIndex = 64;
             this.label4.Text = "Name";
             // 
@@ -413,50 +443,22 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.Font = new System.Drawing.Font("Segoe UI", 12F);
             this.label2.Location = new System.Drawing.Point(346, 213);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(85, 20);
+            this.label2.Size = new System.Drawing.Size(81, 21);
             this.label2.TabIndex = 62;
             this.label2.Text = "IP address";
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label3.Font = new System.Drawing.Font("Segoe UI", 12F);
             this.label3.Location = new System.Drawing.Point(346, 285);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(38, 20);
+            this.label3.Size = new System.Drawing.Size(38, 21);
             this.label3.TabIndex = 63;
             this.label3.Text = "Port";
-            // 
-            // btnClose
-            // 
-            this.btnClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnClose.BackColor = System.Drawing.Color.Transparent;
-            this.btnClose.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("btnClose.BackgroundImage")));
-            this.btnClose.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.btnClose.FlatAppearance.BorderSize = 0;
-            this.btnClose.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnClose.Location = new System.Drawing.Point(507, 3);
-            this.btnClose.Name = "btnClose";
-            this.btnClose.Size = new System.Drawing.Size(25, 25);
-            this.btnClose.TabIndex = 9;
-            this.btnClose.UseVisualStyleBackColor = false;
-            this.btnClose.Click += new System.EventHandler(this.btnQuit_Click);
-            this.btnClose.MouseEnter += new System.EventHandler(this.btnClose_MouseEnter);
-            this.btnClose.MouseLeave += new System.EventHandler(this.btnClose_MouseLeave);
-            // 
-            // pictureBox1
-            // 
-            this.pictureBox1.BackgroundImage = global::Pictionary.Properties.Resources.brush;
-            this.pictureBox1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.pictureBox1.Location = new System.Drawing.Point(5, 2);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(50, 50);
-            this.pictureBox1.TabIndex = 2;
-            this.pictureBox1.TabStop = false;
-            this.pictureBox1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.DragWindow);
             // 
             // main
             // 
@@ -465,8 +467,8 @@
             this.ClientSize = new System.Drawing.Size(737, 516);
             this.Controls.Add(this.header);
             this.Controls.Add(this.menu);
-            this.Controls.Add(this.panelHostGame);
             this.Controls.Add(this.panelJoinGame);
+            this.Controls.Add(this.panelHostGame);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.MaximumSize = new System.Drawing.Size(948, 662);
             this.Name = "main";
@@ -475,6 +477,7 @@
             this.menu.ResumeLayout(false);
             this.icon.ResumeLayout(false);
             this.icon.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.header.ResumeLayout(false);
             this.panelHostGame.ResumeLayout(false);
             this.panelHostGame.PerformLayout();
@@ -482,7 +485,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
             this.panelJoinGame.ResumeLayout(false);
             this.panelJoinGame.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
 
         }

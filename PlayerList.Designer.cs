@@ -33,6 +33,7 @@
             // 
             // flpPlayers
             // 
+            this.flpPlayers.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(41)))), ((int)(((byte)(53)))), ((int)(((byte)(65)))));
             this.flpPlayers.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.flpPlayers.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flpPlayers.Location = new System.Drawing.Point(0, 0);

@@ -37,6 +37,7 @@
             // 
             this.lblName.AutoSize = true;
             this.lblName.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Bold);
+            this.lblName.ForeColor = System.Drawing.SystemColors.Control;
             this.lblName.Location = new System.Drawing.Point(3, 7);
             this.lblName.Name = "lblName";
             this.lblName.Size = new System.Drawing.Size(64, 25);
@@ -48,6 +49,7 @@
             this.lblScore.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.lblScore.AutoSize = true;
             this.lblScore.Font = new System.Drawing.Font("Segoe UI", 10F);
+            this.lblScore.ForeColor = System.Drawing.SystemColors.ControlLight;
             this.lblScore.Location = new System.Drawing.Point(6, 32);
             this.lblScore.Name = "lblScore";
             this.lblScore.Size = new System.Drawing.Size(46, 19);
@@ -59,7 +61,7 @@
             this.lblState.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.lblState.Enabled = false;
             this.lblState.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblState.ForeColor = System.Drawing.Color.Green;
+            this.lblState.ForeColor = System.Drawing.Color.Lime;
             this.lblState.Location = new System.Drawing.Point(77, 34);
             this.lblState.Name = "lblState";
             this.lblState.Size = new System.Drawing.Size(108, 17);
@@ -72,6 +74,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.Color.Transparent;
             this.Controls.Add(this.lblState);
             this.Controls.Add(this.lblScore);
             this.Controls.Add(this.lblName);
