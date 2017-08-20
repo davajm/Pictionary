@@ -18,39 +18,20 @@ namespace Pictionary
         Socket client;
         Server server;
         string username;
-    
+
+        public const int WM_NCLBUTTONDOWN = 0xA1;
+        public const int HT_CAPTION = 0x2;
+
+        [System.Runtime.InteropServices.DllImportAttribute("user32.dll")]
+        public static extern int SendMessage(IntPtr hWnd, int Msg, int wParam, int lParam);
+        [System.Runtime.InteropServices.DllImportAttribute("user32.dll")]
+        public static extern bool ReleaseCapture();
+
         public main()
         {
             ep = new ErrorProvider();
             ep.BlinkStyle = ErrorBlinkStyle.NeverBlink;
             InitializeComponent();
-        }
-
-        private void btnHostGame_Click(object sender, EventArgs e)
-        {
-            grpJoinGame.Enabled = grpJoinGame.Visible = false;
-            grpHostGame.Enabled = grpHostGame.Visible = true;
-        }
-
-        private void btnJoinGame_Click(object sender, EventArgs e)
-        {
-            grpHostGame.Enabled = grpHostGame.Visible = false;
-            grpJoinGame.Enabled = grpJoinGame.Visible = true;
-        }
-
-        private void btnQuit_Click(object sender, EventArgs e)
-        {
-            DialogResult dr = MessageBox.Show("Are you sure you want to quit?", "Exit program", MessageBoxButtons.YesNo);
-            if (dr == DialogResult.Yes)
-            {
-                Application.Exit();
-            }
-        }
-
-        private void btnSettings_Click(object sender, EventArgs e)
-        {
-            grpHostGame.Enabled = grpHostGame.Visible = false;
-            grpJoinGame.Enabled = grpJoinGame.Visible = false;
         }
 
         private void btnHost_Click(object sender, EventArgs e)
@@ -87,7 +68,7 @@ namespace Pictionary
                 ep.SetError(txtJoinName, "Please provide a name");
                 errors++;
             }
-            if(txtJoinIP.TextLength <= 0)
+            if (txtJoinIP.TextLength <= 0)
             {
                 ep.SetError(txtJoinIP, "Please provide an IP address");
                 errors++;
@@ -96,7 +77,7 @@ namespace Pictionary
             {
                 ep.SetError(txtJoinPort, "Please provide a port number");
                 errors++;
-            }   
+            }
             if (errors > 0)
             {
                 return;
@@ -146,7 +127,8 @@ namespace Pictionary
             try
             {
                 client.EndConnect(ar);
-                this.Invoke((MethodInvoker)delegate {
+                this.Invoke((MethodInvoker)delegate
+                {
                     Client c = new Client(username, client);
                     this.Hide();
                     c.ShowDialog();
@@ -174,6 +156,77 @@ namespace Pictionary
             {
                 e.Handled = true;
             }
+        }
+
+        private void btnJoinGame_Click(object sender, EventArgs e)
+        {
+            headerText.Text = "Join game";
+            panelJoinGame.Visible = panelJoinGame.Enabled = true;
+            panelHostGame.Visible = panelHostGame.Enabled = false;
+            btnJoinGame.BackColor = Color.FromArgb(56, 73, 91);
+            btnQuit.BackColor = btnHostGame.BackColor = btnSettings.BackColor = Color.FromArgb(41, 53, 65);
+        }
+
+        private void btnHostGame_Click(object sender, EventArgs e)
+        {
+            headerText.Text = "Host game";
+            panelHostGame.Visible = panelHostGame.Enabled = true;
+            panelJoinGame.Visible = panelJoinGame.Enabled = false;
+            btnHostGame.BackColor = Color.FromArgb(56, 73, 91);
+            btnQuit.BackColor = btnSettings.BackColor = btnJoinGame.BackColor = Color.FromArgb(41, 53, 65);
+        }
+
+
+        private void btnSettings_Click(object sender, EventArgs e)
+        {
+            headerText.Text = "Settings";
+            panelHostGame.Visible = panelHostGame.Enabled = false;
+            panelJoinGame.Visible = panelJoinGame.Enabled = false;
+            btnSettings.BackColor = Color.FromArgb(56, 73, 91);
+            btnQuit.BackColor = btnHostGame.BackColor = btnJoinGame.BackColor = Color.FromArgb(41, 53, 65);
+        }
+
+        private void btnQuit_Click(object sender, EventArgs e)
+        {
+            DialogResult dr = MessageBox.Show("Are you sure you want to quit?", "Exit program", MessageBoxButtons.YesNo);
+            if (dr == DialogResult.Yes)
+            {
+                Application.Exit();
+            }
+        }
+
+        private void btnMinimize_Click(object sender, EventArgs e)
+        {
+            this.WindowState = FormWindowState.Minimized;
+        }
+
+        private void DragWindow(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                ReleaseCapture();
+                SendMessage(Handle, WM_NCLBUTTONDOWN, HT_CAPTION, 0);
+            }
+        }
+
+        private void btnMinimize_MouseEnter(object sender, EventArgs e)
+        {
+            btnMinimize.BackgroundImage = Properties.Resources.minimizeclick;
+        }
+
+        private void btnMinimize_MouseLeave(object sender, EventArgs e)
+        {
+            btnMinimize.BackgroundImage = Properties.Resources.minimize;
+        }
+
+        private void btnClose_MouseLeave(object sender, EventArgs e)
+        {
+            btnClose.BackgroundImage = Properties.Resources.close;
+        }
+
+        private void btnClose_MouseEnter(object sender, EventArgs e)
+        {
+            btnClose.BackgroundImage = Properties.Resources.closeclick;
         }
     }
 }

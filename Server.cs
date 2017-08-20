@@ -153,8 +153,7 @@ namespace Pictionary
                         }
                     }
 
-                    // Temporary. 
-                    // To do: Generate 3 random words.
+                    // Generate 3 random words
                     msgToSend.strMessage = words[random.Next(0, words.Length-1)].ToUpper();
                     msgToSend.strMessage += "*" + words[random.Next(0, words.Length - 1)].ToUpper();
                     msgToSend.strMessage += "*" + words[random.Next(0, words.Length - 1)].ToUpper();
