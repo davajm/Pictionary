@@ -513,6 +513,26 @@ namespace Pictionary
             this.Close();
         }
 
+        private void btnMinimize_MouseEnter(object sender, EventArgs e)
+        {
+            btnMinimize.BackgroundImage = Properties.Resources.minimizeclick;
+        }
+
+        private void btnClose_MouseEnter(object sender, EventArgs e)
+        {
+            btnClose.BackgroundImage = Properties.Resources.closeclick;
+        }
+
+        private void btnClose_MouseLeave(object sender, EventArgs e)
+        {
+            btnClose.BackgroundImage = Properties.Resources.close;
+        }
+
+        private void btnMinimize_MouseLeave(object sender, EventArgs e)
+        {
+            btnMinimize.BackgroundImage = Properties.Resources.minimize;
+        }
+
         private void Client_Enter(object sender, EventArgs e)
         {
             input.Focus();
