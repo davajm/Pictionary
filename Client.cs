@@ -33,7 +33,8 @@ namespace Pictionary
         [System.Runtime.InteropServices.DllImportAttribute("user32.dll")]
         public static extern bool ReleaseCapture();
 
-
+        bool timeLowered;
+        bool serverClosing;
 
         public Client(string userName, Socket client)
         {
@@ -46,10 +47,10 @@ namespace Pictionary
             timerCountDown = new Timer();
             timerCountDown.Interval = 1000;
             timerCountDown.Tick += new EventHandler(LabelCountDownTick);
+            serverClosing = false;
             //isDrawing = true;
             //drawingBoard.StartDrawing();
         }
-
         private void OnSend(IAsyncResult ar)
         {
             try
@@ -197,6 +198,7 @@ namespace Pictionary
                         HideLabel();
                         break;
                     case Command.ChooseWord:
+                        timeLowered = false;
                         drawingBoard.Invoke((MethodInvoker)delegate
                         {
                             drawingBoard.Clear();
@@ -259,6 +261,12 @@ namespace Pictionary
                         break;
                     case Command.CorrectGuess:
                         playerList.Invoke((MethodInvoker)delegate {
+                            if (!timeLowered)
+                            {
+                                countdown.Text = "30";
+                                timeLowered = true;
+                            }
+
                             playerList.AddScore(msgReceived.strName, Int32.Parse(msgReceived.strMessage));
                         });
                         break;
@@ -361,12 +369,22 @@ namespace Pictionary
                 client.BeginReceive(byteData, 0, byteData.Length, SocketFlags.None, new AsyncCallback(OnReceive), null);
 
             }
-            catch (ObjectDisposedException)
+            catch (ObjectDisposedException) { }
+            catch (SocketException ex)
             {
-
+                if (ex.ErrorCode == 10054)
+                {
+                    this.Invoke((MethodInvoker)delegate
+                    {
+                        serverClosing = true;
+                        MessageBox.Show("Server was shut down. Your game will now close.", "Server shutdown");
+                        this.Close();
+                    });
+                }
             }
             catch (Exception ex)
             {
+
                 MessageBox.Show(ex.Message, "Pictionary", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
@@ -444,28 +462,31 @@ namespace Pictionary
 
         private void Client_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (MessageBox.Show("Are you sure you want to exit?", "Pictionary", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.No)
+            if (!serverClosing)
             {
-                e.Cancel = true;
-                return;
-            }
-            try
-            {
-                //Send a message to logout of the server
-                Data msgToSend = new Data();
-                msgToSend.cmdCommand = Command.Logout;
-                msgToSend.strName = userName;
-                msgToSend.strMessage = null;
+                if (MessageBox.Show("Are you sure you want to exit?", "Pictionary", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.No)
+                {
+                    e.Cancel = true;
+                    return;
+                }
+                try
+                {
+                    //Send a message to logout of the server
+                    Data msgToSend = new Data();
+                    msgToSend.cmdCommand = Command.Logout;
+                    msgToSend.strName = userName;
+                    msgToSend.strMessage = null;
 
-                byte[] b = msgToSend.ToByte();
-                client.Send(b, 0, b.Length, SocketFlags.None);
-                client.Close();
-            }
-            catch (ObjectDisposedException)
-            {}
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, "Pictionary", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    byte[] b = msgToSend.ToByte();
+                    client.Send(b, 0, b.Length, SocketFlags.None);
+                    client.Close();
+                }
+                catch (ObjectDisposedException)
+                { }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "Pictionary", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
         }
 

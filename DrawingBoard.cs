@@ -8,6 +8,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Drawing.Drawing2D;
+using System.Drawing.Imaging;
+using System.Runtime.InteropServices;
 
 namespace Pictionary
 {
@@ -21,7 +23,7 @@ namespace Pictionary
         Pen pen;
         int size;
         Color color;
-        bool erase;
+        bool erase, fill;
 
         Point currPoint;
         bool isDrawing;
@@ -39,6 +41,7 @@ namespace Pictionary
             color = Color.Black;
             btnPen_Click(this, new EventArgs());
             isDrawing = false;
+            fill = erase = false;
         }
         // When user starts drawing
         public void StartDrawing()
@@ -59,6 +62,15 @@ namespace Pictionary
         // Create a new stroke
         public void NewStroke(Point point, int size, Color color)
         {
+            if (size == 0)
+            {
+                fill = true;
+                erase = false;
+            }
+            else
+            {
+                fill = false;
+            }
             this.size = size;
             this.color = color;
             colorPicker.BackColor = color;
@@ -68,22 +80,32 @@ namespace Pictionary
         // Create a new stroke
         public void NewStroke(Point point)
         {
-            Graphics.FromImage(bmp).FillEllipse(new SolidBrush(color), point.X - (size/2), point.Y - (size/2), size, size);
-            currPoint = point;
+            if (fill)
+            {
+                FloodFill(point.X, point.Y, color);
+            }
+            else
+            {
+                Graphics.FromImage(bmp).FillEllipse(new SolidBrush(color), point.X - (size / 2), point.Y - (size / 2), size, size);
+                currPoint = point;
+            }
             Invalidate();
         }
 
         // Add a point to current stroke
         public void AddPointToStroke(Point point)
         {
-            pen.DashStyle = DashStyle.Solid;
-            pen.StartCap = LineCap.Round;
-            pen.EndCap = LineCap.Round;
-            pen.Color = color;
-            pen.Width = size;
-            Graphics.FromImage(bmp).DrawLine(pen, currPoint, point);
-            currPoint = point;
-            Invalidate();
+            if (!fill)
+            {
+                pen.DashStyle = DashStyle.Solid;
+                pen.StartCap = LineCap.Round;
+                pen.EndCap = LineCap.Round;
+                pen.Color = color;
+                pen.Width = size;
+                Graphics.FromImage(bmp).DrawLine(pen, currPoint, point);
+                currPoint = point;
+                Invalidate();
+            }
         }
 
         // Clear board
@@ -101,7 +123,8 @@ namespace Pictionary
             DialogResult result = cd.ShowDialog();
             if (result == DialogResult.OK)
             {
-                btnPen_Click(this, new EventArgs());
+                if (erase)
+                    btnPen_Click(this, new EventArgs());
                 colorPicker.BackColor = cd.Color;
                 color = cd.Color;
             }
@@ -116,23 +139,23 @@ namespace Pictionary
             btnFill.FlatAppearance.BorderSize = 1;
             btnErase.FlatAppearance.BorderColor = Color.Black;
             btnErase.FlatAppearance.BorderSize = 1;
-            erase = false;
+            erase = fill = false;
             color = colorPicker.BackColor;
             ChangeCursor();
         }
 
         private void btnFill_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("Fill not yet implemented :(", "Error");
-            //btnPen.FlatAppearance.BorderColor = Color.Black;
-            //btnPen.FlatAppearance.BorderSize = 1;
-            //btnFill.FlatAppearance.BorderColor = Color.Blue;
-            //btnFill.FlatAppearance.BorderSize = 2;
-            //btnErase.FlatAppearance.BorderColor = Color.Black;
-            //btnErase.FlatAppearance.BorderSize = 1;
-            //erase = false;
-            //fill = true;
-            //ChangeCursor();
+            btnPen.FlatAppearance.BorderColor = Color.Black;
+            btnPen.FlatAppearance.BorderSize = 1;
+            btnFill.FlatAppearance.BorderColor = Color.Blue;
+            btnFill.FlatAppearance.BorderSize = 2;
+            btnErase.FlatAppearance.BorderColor = Color.Black;
+            btnErase.FlatAppearance.BorderSize = 1;
+            erase = false;
+            fill = true;
+            color = colorPicker.BackColor;
+            ChangeCursor();
         }
 
         private void btnErase_Click(object sender, EventArgs e)
@@ -144,6 +167,7 @@ namespace Pictionary
             btnErase.FlatAppearance.BorderColor = Color.Blue;
             btnErase.FlatAppearance.BorderSize = 2;
             erase = true;
+            fill = false;
             color = BackColor;
             ChangeCursor();
         }
@@ -163,7 +187,10 @@ namespace Pictionary
         // Get pen size
         public int GetPenSize()
         {
-            return size;
+            if (fill)
+                return 0;
+            else
+                return size;
         }
 
         // Get pen color
@@ -204,14 +231,24 @@ namespace Pictionary
 
         private void ChangeCursor()
         {
-            using (Graphics graphics = Graphics.FromImage(cursor))
+            Bitmap c = new Bitmap(60, 60);
+            using (Graphics graphics = Graphics.FromImage(c))
             {
-                graphics.Clear(Color.Transparent);
                 if (erase)
-                    graphics.DrawEllipse(new Pen(Color.Black), cursor.Width / 2 - size / 2, cursor.Height / 2 - size / 2, size, size);
+                {
+                    graphics.DrawEllipse(new Pen(Color.Black), c.Width / 2 - size / 2, cursor.Height / 2 - size / 2, size, size);
+                    graphics.FillEllipse(new SolidBrush(color), c.Width / 2 - size / 2, cursor.Height / 2 - size / 2, size, size);
+                }
+                else if (fill)
+                {
+                    c = new Bitmap(Properties.Resources.paintCursor.ToBitmap());
+                }
                 else
-                    graphics.FillEllipse(new SolidBrush(color), cursor.Width / 2 - size / 2, cursor.Height / 2 - size / 2, size, size);
+                {
+                    graphics.FillEllipse(new SolidBrush(color), c.Width / 2 - size / 2, cursor.Height / 2 - size / 2, size, size);
+                }
             }
+            Cursor = new Cursor(c.GetHicon());
         }
 
         // Custom event for button clear click.
@@ -226,17 +263,55 @@ namespace Pictionary
         private void HideCursor(object sender, EventArgs e)
         {
             if (isDrawing)
-            {
-                if (cursor == null)
-                    ChangeCursor();
-                Cursor = new Cursor(cursor.GetHicon());
-            }
+                ChangeCursor();
         }
         private void ShowCursor(object sender, EventArgs e)
         {
             if (isDrawing)
                 Cursor = Cursors.Default;
         }
+        void FloodFill(int x, int y, Color color)
+        {
+            BitmapData data = bmp.LockBits(
+                new Rectangle(0, 0, bmp.Width, bmp.Height),
+                ImageLockMode.ReadWrite, PixelFormat.Format32bppArgb);
+            int[] bits = new int[data.Stride / 4 * data.Height];
+            Marshal.Copy(data.Scan0, bits, 0, bits.Length);
 
+            LinkedList<Point> check = new LinkedList<Point>();
+            int floodTo = color.ToArgb();
+            int floodFrom = bits[x + y * data.Stride / 4];
+            bits[x + y * data.Stride / 4] = floodTo;
+
+            if (floodFrom != floodTo)
+            {
+                check.AddLast(new Point(x, y));
+                while (check.Count > 0)
+                {
+                    Point cur = check.First.Value;
+                    check.RemoveFirst();
+
+                    foreach (Point off in new Point[] {
+                new Point(0, -1), new Point(0, 1),
+                new Point(-1, 0), new Point(1, 0)})
+                    {
+                        Point next = new Point(cur.X + off.X, cur.Y + off.Y);
+                        if (next.X >= 0 && next.Y >= 0 &&
+                            next.X < data.Width &&
+                            next.Y < data.Height)
+                        {
+                            if (bits[next.X + next.Y * data.Stride / 4] == floodFrom)
+                            {
+                                check.AddLast(next);
+                                bits[next.X + next.Y * data.Stride / 4] = floodTo;
+                            }
+                        }
+                    }
+                }
+            }
+
+            Marshal.Copy(bits, 0, data.Scan0, bits.Length);
+            bmp.UnlockBits(data);
+        }
     }
 }

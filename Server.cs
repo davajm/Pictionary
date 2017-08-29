@@ -43,6 +43,9 @@ namespace Pictionary
         Random random;
         System.Timers.Timer hintTimer;
         int givenHints;
+        System.Timers.Timer timer;
+        bool timeLowered;
+        Stopwatch sw;
 
 
         ManualResetEvent mre;
@@ -128,7 +131,7 @@ namespace Pictionary
         {
             int rounds = 3;
 
-            System.Timers.Timer timer = new System.Timers.Timer();
+            timer = new System.Timers.Timer();
             hintTimer = new System.Timers.Timer();
             Data msgToSend = new Data();
             byte[] message;
@@ -183,12 +186,15 @@ namespace Pictionary
                         clientInfo.socket.BeginSend(message, 0, message.Length, SocketFlags.None, new AsyncCallback(OnSend), clientInfo.socket);
                     }
                     state = State.Drawing;
+                    timeLowered = false;
 
                     // Wait for timer or all users to guess correctly
                     timer.Interval = 90000;
                     timer.Elapsed += ResetTimer;
                     timer.AutoReset = false;
                     timer.Enabled =  true;
+                    sw = new Stopwatch();
+                    sw.Start();
 
                     // Hint mechanics
                     if (currentWord.Length > 2) // Only provide hints if the word has 2 or more characters
@@ -365,7 +371,19 @@ namespace Pictionary
                             {
                                 correctWord = true;
 
-                                foreach(ClientInfo client in clients)
+                                if (!timeLowered)
+                                {
+                                    sw.Stop();
+                                    if (sw.ElapsedMilliseconds < 60000)
+                                    {
+                                        timer.Stop();
+                                        timer.Interval = 30000;
+                                        timer.Start();
+                                    }
+                                    timeLowered = true;
+                                }
+
+                                foreach (ClientInfo client in clients)
                                 {
                                     if (client.strName == msgReceived.strName && !client.hasGuessed && !client.isDrawing) 
                                     {
