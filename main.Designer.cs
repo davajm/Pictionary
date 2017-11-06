@@ -286,7 +286,6 @@
             this.txtHostName.Name = "txtHostName";
             this.txtHostName.Size = new System.Drawing.Size(200, 20);
             this.txtHostName.TabIndex = 32;
-            this.txtHostName.Text = "skrrrr";
             // 
             // label1
             // 
@@ -356,7 +355,6 @@
             this.txtJoinIP.Name = "txtJoinIP";
             this.txtJoinIP.Size = new System.Drawing.Size(200, 20);
             this.txtJoinIP.TabIndex = 60;
-            this.txtJoinIP.Text = "94.254.64.5";
             // 
             // txtJoinPort
             // 
@@ -373,7 +371,6 @@
             this.txtJoinName.Name = "txtJoinName";
             this.txtJoinName.Size = new System.Drawing.Size(200, 20);
             this.txtJoinName.TabIndex = 59;
-            this.txtJoinName.Text = "xdd";
             // 
             // label2
             // 

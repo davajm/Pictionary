@@ -207,8 +207,6 @@ namespace Pictionary
                         hintTimer.AutoReset = true;
                         hintTimer.Enabled = true;
                     }
-
-
                     mre.Reset();
                     mre.WaitOne();
                     state = State.ChoosingWord;

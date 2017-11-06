@@ -236,7 +236,7 @@ namespace Pictionary
             {
                 if (erase)
                 {
-                    graphics.DrawEllipse(new Pen(Color.Black), c.Width / 2 - size / 2, cursor.Height / 2 - size / 2, size, size);
+                    graphics.DrawEllipse(new Pen(Color.Black), c.Width / 2 - size / 2 - 1, cursor.Height / 2 - size / 2 - 1, size + 2, size + 2);
                     graphics.FillEllipse(new SolidBrush(color), c.Width / 2 - size / 2, cursor.Height / 2 - size / 2, size, size);
                 }
                 else if (fill)
@@ -245,6 +245,7 @@ namespace Pictionary
                 }
                 else
                 {
+                    graphics.DrawEllipse(new Pen(Color.White), c.Width / 2 - size / 2-1, cursor.Height / 2 - size / 2-1, size+2, size+2);
                     graphics.FillEllipse(new SolidBrush(color), c.Width / 2 - size / 2, cursor.Height / 2 - size / 2, size, size);
                 }
             }
