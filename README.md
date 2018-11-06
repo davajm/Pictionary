@@ -16,5 +16,3 @@ The host has to create a txt.file (words.txt) containing words (one per line). T
 ![Screenshot3](/3.png?raw=true "Choosing word")
 
 ![Screenshot4](/4.png?raw=true "Drawing & guessing word")
-
-## Known bugs
